@@ -12,7 +12,9 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-
+    /**
+     * Exibe todas os Papéis com todas as permissões
+     */
     public function index()
     {
         $roles = cache()->rememberForever('roles_with_permissions', function () {
@@ -27,33 +29,66 @@ class RoleController extends Controller
         ]);
     }
 
-
+    /**
+     * Exibe um papél específico para edição
+     */
     public function show(Request $request, Role $role)
     {
+        $permissions = cache()->rememberForever('permissions_id_name', function () {
+            return Permission::orderBy('name')->get(['id', 'name'])->toArray();
+        });
+
+        $roleWithPermissions = $role::with([
+            'permissions' => function ($q) {
+                return $q->orderBy('name')->select('id', 'name');
+            }
+        ])->where('id', $request->id)->select('id', 'name')->get()->toArray();
+
+        if (count($roleWithPermissions[0]['permissions']) > 0) {
+
+            foreach ($permissions as $p) {
+                $rp[] = [
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'has' => in_array(
+                        $p['id'],
+                        array_column($roleWithPermissions[0]['permissions'], 'id')
+                    ) ? true : false
+                ];
+            }
+        } else {
+            foreach ($permissions as $v) {
+                $rp[] = ['id' => $v['id'], 'name' => $v['name'], 'has' => false];
+            }
+        }
+
         return Inertia::render('Admin/RoleEdit', [
-            'roleWithPermissions' => $role::with([
-                'permissions' => function ($q) {
-                    return $q->select('id', 'name');
-                }
-            ])->where('id', $request->id)->select('id', 'name')->get()->toArray()
+            'role' => $roleWithPermissions,
+            'permissions' => $rp,
+            '_checker' => setGetKey($request->id, 'edit_role_permissions')
         ]);
+    }
+
+    /**
+     * atualiza nome do papel e suas permissões
+     */
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string'],
+            'permissions' => ['array'],
+        ]);
+
+        $role = Role::where('name', $request->name)
+            ->select('id', 'name', 'guard_name')
+            ->first();
+        $role->update(['name' => $request->input('name')]);
+
+        $role->syncPermissions($request->input('permissions'));
     }
 
 
 
-
-
-
-
-
-
-
-    // public function index(): View
-    // {
-    //     $roles = Role::with('permissions')->get();
-
-    //     return view('PermissionsUI::roles.index', compact('roles'));
-    // }
 
     public function create(): View
     {
@@ -72,27 +107,6 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
 
         $role->givePermissionTo($request->input('permissions'));
-
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'roles.index');
-    }
-
-    public function edit(Role $role): View
-    {
-        $permissions = Permission::pluck('name', 'id');
-
-        return view('PermissionsUI::roles.edit', compact('role', 'permissions'));
-    }
-
-    public function update(Request $request, Role $role): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'permissions' => ['array'],
-        ]);
-
-        $role->update(['name' => $request->input('name')]);
-
-        $role->syncPermissions($request->input('permissions'));
 
         return redirect()->route(config('permission_ui.route_name_prefix') . 'roles.index');
     }

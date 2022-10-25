@@ -7,7 +7,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { computed, reactive } from '@vue/reactivity';
 
-
 const props = defineProps({
     user: Object,
     userRoles: Object,

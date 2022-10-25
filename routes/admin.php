@@ -12,7 +12,7 @@ Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(functi
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/role/{id}/edit', [RoleController::class, 'show'])->name('role.show');
-    Route::post('/role/{id}/edit', [RoleController::class, 'edit'])->name('role.edit');
+    Route::post('/role/{id}/update', [RoleController::class, 'update'])->name('role.permissions.update');
 
     Route::post('/users/search', [UserController::class, 'search'])->name('users.search');
     Route::get('/user/{id}/roles/list', [UserController::class, 'listUserAndRoles'])->name('user.roles.list');

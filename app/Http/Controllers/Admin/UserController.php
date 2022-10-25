@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Inertia\Inertia;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-
 class UserController extends Controller
 {
     public function index()
@@ -87,7 +84,7 @@ class UserController extends Controller
             'user' => $userRoles,
             'userRoles' => $ur,
             'edit' => $edit,
-            '_checker' => setGetKey($request->id, 'edit_role')
+            '_checker' => setGetKey($request->id, 'edit_user_role')
         ]);
     }
     /**
@@ -130,7 +127,7 @@ class UserController extends Controller
     public function editUserRole(Request $request)
     {
         $r = $request->all();
-        if (getKeyValue($r['_checker'], 'edit_role') === $request->id) {
+        if (getKeyValue($r['_checker'], 'edit_user_role') === $request->id) {
             return User::get('id', $request->id)->first()->syncRoles($r['roles']);
         }
         return false;
