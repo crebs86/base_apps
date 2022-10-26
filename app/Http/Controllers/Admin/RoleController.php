@@ -6,27 +6,35 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+
+    private $protectedPermissions = [
+        'Admin Apagar', 'Admin Criar', 'Admin Editar', 'Admin Ver',
+        'Cliente Apagar', 'Cliente Criar', 'Cliente Editar', 'Cliente Ver',
+        'Usuario Apagar', 'Usuario Criar', 'Usuario Editar', 'Usuario Ver'
+    ];
     /**
      * Exibe todas os Papéis com todas as permissões
      */
-    public function index()
+    public function index(User $user)
     {
-        $roles = cache()->rememberForever('roles_with_permissions', function () {
-            return Role::with([
+        if (auth()->user()->can('ACL Editar')) {
+            $roles = Role::with([
                 'permissions' => function ($q) {
                     return $q->select('id', 'name');
                 }
             ])->select('id', 'name')->get()->toArray();
-        });
-        return Inertia::render('Admin/Roles', [
-            'rolesWithPermissions' => $roles
-        ]);
+            return Inertia::render('Admin/Roles', [
+                'rolesWithPermissions' => $roles
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
@@ -34,9 +42,7 @@ class RoleController extends Controller
      */
     public function show(Request $request, Role $role)
     {
-        $permissions = cache()->rememberForever('permissions_id_name', function () {
-            return Permission::orderBy('name')->get(['id', 'name'])->toArray();
-        });
+        $permissions = Permission::orderBy('name')->get(['id', 'name'])->toArray();
 
         $roleWithPermissions = $role::with([
             'permissions' => function ($q) {

@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
     public function acl()
     {
-        return Inertia::render('Admin/Acl');
+        if (auth()->user()->hasRole(['Super Admin', 'Admin'])) {
+            return Inertia::render('Admin/Acl', [
+                'back' => ['url' => url()->previous() ?? '', 'method' => Route::current()->methods()[0]],
+                'forward' => url()->previous() ?? '',
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     public function index()

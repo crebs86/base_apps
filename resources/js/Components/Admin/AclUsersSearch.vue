@@ -4,20 +4,31 @@ import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { Link } from '@inertiajs/inertia-vue3';
 
+const props = defineProps(
+    {
+        'users': Object,
+        'keyword': String
+    }
+)
+
 const toast = useToast();
 
-const usersList = ref({});
-const searchUsers = ref('');
+const usersList = ref(props.users);
+const searchUsers = ref(props.keyword);
 
 function search() {
     if (!(searchUsers.value === undefined || searchUsers.value === '' || searchUsers.value === null)) {
         axios.post(route('admin.acl.users.search', searchUsers.value), { search: searchUsers.value })
             .then(r => {
-                usersList.value = r.data.users.data
+                usersList.value = r.data.users
                 if (usersList.value.length < 1) {
                     toast.warning("Nenhum usuário encontrado com estes termos");
                 }
-            }).catch()
+            }).catch(r => {
+                if (r.response.status) {
+                    toast.error(r.response.data);
+                }
+            })
     } else {
         toast.error("Insira um termo para a busca");
     }
@@ -25,7 +36,7 @@ function search() {
 
 </script>
 <template>
-    <h1 class="text-lg text-center mb-2">Usuários</h1>
+    <h1 class="text-lg text-center mb-2">Usuários do Sistema</h1>
     <form class="flex items-center" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
@@ -39,7 +50,7 @@ function search() {
                     </path>
                 </svg>
             </div>
-            <input type="text" v-model="searchUsers"
+            <input type="text" v-model="searchUsers" @keyup.enter="search"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5"
                 placeholder="Busque por nome, CPF ou e-mail">
         </div>
@@ -71,7 +82,7 @@ function search() {
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
-                                    <tr v-for="(v, i) in usersList" :key="i">
+                                    <tr v-for="(v, i) in usersList?.data" :key="i">
                                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'active'">
@@ -107,33 +118,33 @@ function search() {
                                     </tr>
                                 </tbody>
                             </table>
-                            <!-- <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
-                                    <div v-if="usersList.total > 0">
-                                        <p class="text-sm leading-5 text-blue-700">
-                                            Exibindo de
-                                            <span class="font-medium">{{ usersList.from }}</span>
-                                            a
-                                            <span class="font-medium">{{ usersList.to }}</span>
-                                            em
-                                            <span class="font-medium">{{ usersList.total }}</span>
-                                            resultados
-                                        </p>
-                                    </div>
-                                    <div v-else>
-                                        <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
-                                    </div>
-                                    <div v-if="usersList.links.length > 3">
-                                        <nav class="relative z-0 inline-flex shadow-sm">
-                                            <template v-for="(v, i) in usersList.links" :key="'link_'+i">
-                                                <div v-if="v.link === null" v-html="v.label"></div>
-                                                <inertia-link v-else :href="v.url" v-html="v.label"
-                                                    class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary"
-                                                    :class="{ 'bg-blue-300 text-white': v.active }">
-                                                </inertia-link>
-                                            </template>
-                                        </nav>
-                                    </div>
-                                </div> -->
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
+                                <div v-if="usersList?.total > 0">
+                                    <p class="text-sm leading-5 text-blue-700">
+                                        Exibindo de
+                                        <span class="font-medium">{{ usersList.from }}</span>
+                                        a
+                                        <span class="font-medium">{{ usersList.to }}</span>
+                                        em
+                                        <span class="font-medium">{{ usersList.total }}</span>
+                                        resultados
+                                    </p>
+                                </div>
+                                <div v-else>
+                                    <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
+                                </div>
+                                <div v-if="usersList?.links?.length > 3">
+                                    <nav class="relative z-0 inline-flex shadow-sm">
+                                        <template v-for="(v, i) in usersList.links" :key="'link_'+i">
+                                            <div v-if="v.link === null" v-html="v.label"></div>
+                                            <Link v-else :href="v.url" v-html="v.label"
+                                                class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary"
+                                                :class="{ 'bg-blue-300 text-white': v.active }">
+                                            </Link>
+                                        </template>
+                                    </nav>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

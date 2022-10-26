@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import AclUsers from '../../Components/Admin/AclUsers.vue';
+import { Inertia } from '@inertiajs/inertia';
 
 const tab = ref(1);
 const currentTab = (tabNumber) => (tab.value = tabNumber);
@@ -16,7 +16,7 @@ const currentTab = (tabNumber) => (tab.value = tabNumber);
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Controle de Acesso
+                Controle de Acesso - Início
             </h2>
         </template>
 
@@ -35,14 +35,13 @@ const currentTab = (tabNumber) => (tab.value = tabNumber);
                                         </button>
                                     </li>
                                     <li>
-                                        <button @click="currentTab(2)"
-                                            class="inline-block px-4 py-2 bg-blue-500 focus:outline-none">
-                                            <!-- <mdicon name="shield-account"/> -->
+                                        <Link :href="route('admin.acl.users.index')">
+                                        <button class="inline-block px-4 py-2 bg-blue-500 focus:outline-none">
                                             Usuários
                                         </button>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <!-- <button @click="currentTab(3)" -->
                                         <Link :href="route('admin.acl.roles.index')">
                                         <button class="inline-block px-4 py-2 bg-blue-500 focus:outline-none">
                                             Papéis
@@ -67,7 +66,7 @@ const currentTab = (tabNumber) => (tab.value = tabNumber);
                                             Paciente, Editar Paciente, Apagar Paciente, etc.</p>
                                     </div>
                                     <div v-if="tab === 2">
-                                        <AclUsers />
+                                        <!-- <AclUsers /> -->
                                     </div>
                                     <div v-if="tab === 3">
                                         Permissões

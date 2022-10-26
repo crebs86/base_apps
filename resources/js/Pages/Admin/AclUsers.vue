@@ -1,0 +1,41 @@
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useToast } from "vue-toastification";
+import { Link, Head } from '@inertiajs/inertia-vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import AclUsersSearch from '@/Components/Admin/AclUsersSearch.vue';
+import { Inertia } from '@inertiajs/inertia';
+
+const props = defineProps({
+    rolesWithPermissions: Object,
+    users: Object,
+    keyword: String
+})
+
+const toast = useToast();
+
+const rolesWithPermissions = ref(props.rolesWithPermissions);
+
+</script>
+<template>
+
+    <Head title="ACL Usuários" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Controle de Acesso
+            </h2>
+        </template>
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="py-6 px-1 bg-white border-b border-gray-200">
+                        <AclUsersSearch :users="$page.props.users" :keyword="$page.props.keyword"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
