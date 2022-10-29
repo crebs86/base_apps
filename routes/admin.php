@@ -15,7 +15,7 @@ Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(functi
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user?}', [UserController::class, 'list'])->name('users.list');
-    Route::post('/users/{user?}', [UserController::class, 'search'])->name('users.search');
+    //Route::post('/users/{user?}', [UserController::class, 'search'])->name('users.search');
     Route::get('/user/{id}/roles/list', [UserController::class, 'listUserAndRoles'])->name('user.roles.list');
     Route::get('/user/{id}/roles/show', [UserController::class, 'showUserAndRoles'])->name('user.roles.show');
     Route::post('/user/{id}/roles/edit', [UserController::class, 'editUserRole'])->name('user.roles.edit');

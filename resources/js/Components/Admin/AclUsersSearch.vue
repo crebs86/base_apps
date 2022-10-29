@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { Link } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
     {
@@ -18,17 +19,14 @@ const searchUsers = ref(props.keyword);
 
 function search() {
     if (!(searchUsers.value === undefined || searchUsers.value === '' || searchUsers.value === null)) {
-        axios.post(route('admin.acl.users.search', searchUsers.value), { search: searchUsers.value })
-            .then(r => {
-                usersList.value = r.data.users
-                if (usersList.value.length < 1) {
-                    toast.warning("Nenhum usuário encontrado com estes termos");
-                }
-            }).catch(r => {
-                if (r.response.status) {
-                    toast.error(r.response.data);
-                }
-            })
+        let s = parseInt(searchUsers.value) || 0
+        if ((s === 0) && !(searchUsers.value.length < 4) || s !== 0) {
+            Inertia.get(route('admin.acl.users.list', { user: searchUsers.value }))
+        } else {
+            usersList.value = []
+            toast.error("Para buscas por nome ou e-mail insira ao menos 4 caracteres");
+        }
+
     } else {
         toast.error("Insira um termo para a busca");
     }
@@ -50,9 +48,9 @@ function search() {
                     </path>
                 </svg>
             </div>
-            <input type="text" v-model="searchUsers" @keyup.enter="search"
+            <input type="text" v-model="searchUsers" @keypress.prevent.enter="search"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5"
-                placeholder="Busque por nome, CPF ou e-mail">
+                placeholder="Busque por nome, CPF, e-mail ou ID">
         </div>
         <button type="submit"
             class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
@@ -64,6 +62,7 @@ function search() {
             </svg>Buscar
         </button>
     </form>
+    <small class="text-blue-500 ml-2">Para buscas por nome ou e-mail insira ao menos 4 caracteres</small>
     <div class="py-0 px-0">
         <div class="max-w-7xl mx-auto">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -71,6 +70,35 @@ function search() {
                     <div class="py-2 overflow-x-auto mt-2">
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
+                                <div v-if="usersList?.total > 0">
+                                    <p class="text-sm leading-5 text-blue-700">
+                                        Exibindo de
+                                        <span class="font-medium">{{ usersList.from }}</span>
+                                        a
+                                        <span class="font-medium">{{ usersList.to }}</span>
+                                        em
+                                        <span class="font-medium">{{ usersList.total }}</span>
+                                        resultados
+                                    </p>
+                                </div>
+                                <div v-else>
+                                    <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
+                                </div>
+                            </div>
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
+                                <div v-if="usersList?.links?.length > 3">
+                                    <nav class="relative z-0 inline-flex shadow-sm">
+                                        <template v-for="(v, i) in usersList.links" :key="'link_'+i">
+                                            <div v-if="v.link === null" v-html="v.label"></div>
+                                            <Link v-else :href="v.url" v-html="v.label"
+                                                class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary"
+                                                :class="{ 'bg-blue-300 text-white': v.active }">
+                                            </Link>
+                                        </template>
+                                    </nav>
+                                </div>
+                            </div>
                             <table class="min-w-full mb-2">
                                 <thead>
                                     <tr>
@@ -118,7 +146,7 @@ function search() {
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
                                 <div v-if="usersList?.total > 0">
                                     <p class="text-sm leading-5 text-blue-700">
                                         Exibindo de
@@ -133,6 +161,8 @@ function search() {
                                 <div v-else>
                                     <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
                                 </div>
+                            </div>
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
                                 <div v-if="usersList?.links?.length > 3">
                                     <nav class="relative z-0 inline-flex shadow-sm">
                                         <template v-for="(v, i) in usersList.links" :key="'link_'+i">

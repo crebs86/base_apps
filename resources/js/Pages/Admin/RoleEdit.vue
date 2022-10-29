@@ -41,7 +41,12 @@ function editRolePermission() {
             Inertia.reload()
             toast.success('Permissões do papél redefinidas.');
         })
-        .catch()
+        .catch(r => {
+            let res = r.response
+            if(res.status === 403){
+                toast.error(res.data)
+            }
+        })
 }
 
 </script>
