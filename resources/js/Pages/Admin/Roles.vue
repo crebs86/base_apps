@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { Link, Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import SimpleModal from '@/Components/Common/SimpleModal.vue';
+import axios from 'axios';
 
 const props = defineProps({
     rolesWithPermissions: Object
@@ -12,6 +13,29 @@ const props = defineProps({
 const toast = useToast();
 
 const rolesWithPermissions = ref(props.rolesWithPermissions);
+
+const newRole = ref('');
+const message = ref({ mesage: '', code: 0 });
+
+function saveNewRole() {
+    axios.post(route('admin.acl.role.new'),
+        {
+            name: newRole.value,
+            permissions: []
+        }
+    ).then(r => {
+        message.value = {
+            message: r.data,
+            code: r.status
+        };
+    }).catch(e => {
+        message.value = e.response;
+        message.value = {
+            message: e.response.data.message,
+            code: e.response.status
+        }
+    })
+}
 
 </script>
 <template>
@@ -28,7 +52,39 @@ const rolesWithPermissions = ref(props.rolesWithPermissions);
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <h1 class="text-lg text-center my-2">Papéis</h1>
+                    <SimpleModal>
+                        <template #button_title>Papéis</template>
+                        <template #title>Novo Papél</template>
+                        <template #body>
+                            <form>
+                                <div class="grid xl:grid-cols-2 xl:gap-6">
+                                    <div class="relative z-0 mb-6 w-full group">
+                                        <input type="text" id="full_name" v-model="newRole"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
+                                            placeholder=" " />
+                                        <label for="full_name"
+                                            class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Nome do Papél
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                            <div v-if="message?.message">
+                                <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
+                                    class="text-sm text-white rounded-md shadow-lg mx-auto py-4 px-1" role="alert">
+                                    <div class="flex p-4">
+                                        {{ message?.message }}
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template #button>
+                            <button type="button" @click.prevent="saveNewRole"
+                                class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 hover:bg-green-100 focus:outline-none focus:shadow-outline">
+                                Salvar
+                            </button>
+                        </template>
+                    </SimpleModal>
                     <div class="py-0 px-0">
                         <div class="max-w-7xl mx-auto">
                             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -73,10 +129,6 @@ const rolesWithPermissions = ref(props.rolesWithPermissions);
                                                                 <Link :href="route('admin.acl.role.show', v.id)">
                                                                 <mdicon name="playlist-edit" class="text-blue-600"
                                                                     title="Editar" />
-                                                                </Link>
-                                                                <Link :href="route('admin.acl.user.roles.list', v.id)">
-                                                                <mdicon name="playlist-minus" class="text-yellow-500"
-                                                                    title="Desativar" />
                                                                 </Link>
                                                             </div>
                                                         </td>

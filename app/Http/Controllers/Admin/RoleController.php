@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Traits\ACL;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
@@ -14,24 +14,22 @@ use Spatie\Permission\Models\Permission;
 class RoleController extends Controller
 {
 
-    private $protectedPermissions = [
-        'Admin Apagar', 'Admin Criar', 'Admin Editar', 'Admin Ver',
-        'Cliente Apagar', 'Cliente Criar', 'Cliente Editar', 'Cliente Ver',
-        'Usuario Apagar', 'Usuario Criar', 'Usuario Editar', 'Usuario Ver'
-    ];
+    use ACL;
     /**
      * Exibe todas os Papéis com todas as permissões
      */
     public function index()
     {
-        dd(auth()->user()->can(['ACL Ver', 'ACL Editar']));
-        if (auth()->user()->hasAnyPermission(['ACL Ver', 'ACL Editar'])) {
-            //if (auth()->user()->hasAnyPermission(['ACL Ver', 'ACL Editar'])) {
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
+
             $roles = Role::with([
                 'permissions' => function ($q) {
-                    return $q->select('id', 'name');
+                    return $q->select('id', 'name')->orderBy('name');
                 }
-            ])->select('id', 'name')->get()->toArray();
+            ])
+                ->whereNot('name', ['Super Admin'])
+                ->select('id', 'name')->get()->toArray();
+
             return Inertia::render('Admin/Roles', [
                 'rolesWithPermissions' => $roles
             ]);
@@ -44,17 +42,29 @@ class RoleController extends Controller
      */
     public function show(Request $request, Role $role)
     {
-        if (auth()->user()->hasAnyPermission(['ACL Ver', 'ACL Editar'])) {
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
+
             $permissions = Permission::orderBy('name')->get(['id', 'name'])->toArray();
 
             $roleWithPermissions = $role::with([
                 'permissions' => function ($q) {
                     return $q->orderBy('name')->select('id', 'name');
                 }
-            ])->where('id', $request->id)->select('id', 'name')->get()->toArray();
+            ])
+                ->whereNot('name', 'Super Admin')
+                ->where('id', $request->id)->select('id', 'name')->get()->toArray();
+            /**
+             * se papél não existir ou necessitar de privilégios elevados não designados ao usuário
+             */
+            if (
+                !isset($roleWithPermissions[0]) //papél existe
+                || !(array_intersect([$roleWithPermissions[0]['name']], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
+                    && $this->hasRole(config('crebs86.admin_roles_edit'))) //..e usuário tem privilégio?
+            ) {
+                return Inertia::render('Admin/403');
+            }
 
             if (count($roleWithPermissions[0]['permissions']) > 0) {
-
                 foreach ($permissions as $p) {
                     $rp[] = [
                         'id' => $p['id'],
@@ -85,7 +95,12 @@ class RoleController extends Controller
      */
     public function update(Request $request)
     {
-        if (!auth()->user()->hasRole(['Super Admin', 'Admin']) || auth()->user()->can('ACL Editar')) {
+
+        if (
+            $this->can('ACL Editar')
+            && array_intersect([$request->name], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
+            && $this->hasRole(config('crebs86.admin_roles_edit')) //... e usuário possui privilégios?
+        ) {
             $request->validate([
                 'name' => ['required', 'string'],
                 'permissions' => ['array'],
@@ -101,18 +116,10 @@ class RoleController extends Controller
             return response()->json('Permissões em papéis: Você não possui permissão para acessar este recurso', 403);
         }
     }
-
-
-
-
-    public function create(): View
-    {
-        $permissions = Permission::pluck('name', 'id');
-
-        return view('PermissionsUI::roles.create', compact('permissions'));
-    }
-
-    public function store(Request $request): RedirectResponse
+    /**
+     * Cria novo papél
+     */
+    public function new(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string'],
@@ -122,11 +129,11 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
 
         $role->givePermissionTo($request->input('permissions'));
-
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'roles.index');
+        
+        return response()->json("Papél `{$request->name}` Criado Com Sucesso", 200);
     }
 
-    public function destroy(Role $role): RedirectResponse
+    public function delete(Role $role)
     {
         $role->delete();
 
