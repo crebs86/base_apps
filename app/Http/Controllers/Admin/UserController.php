@@ -7,15 +7,17 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Traits\ACL;
 
 class UserController extends Controller
 {
+    use ACL;
     /**
      * página inicial de controle de acesso de usuários
      */
     public function index(Request $request)
     {
-        if (auth()->user()->can('ACL Editar')) {
+        if ($this->can('ACL Editar')) {
             return Inertia::render('Admin/AclUsers');
         }
         return Inertia::render('Admin/403');
@@ -25,7 +27,7 @@ class UserController extends Controller
      */
     public function list(Request $request)
     {
-        if (auth()->user()->hasAnyPermission(['ACL Ver', 'ACL Editar'])) {
+        if ($this->can('ACL Ver', 'ACL Editar')) {
             if (!$request->user) {
                 $user = User::paginate(50)->through(
                     function ($user) {
@@ -126,7 +128,7 @@ class UserController extends Controller
      */
     public function showUserAndRoles(Request $request, $edit = true)
     {
-        if (auth()->user()->hasAnyPermission(['ACL Ver', 'ACL Editar'])) {
+        if ($this->can('ACL Ver', 'ACL Editar')) {
             $userRoles = $this->getUserRoles($request->id);
             $allRoles = cache()->rememberForever('role_id_name', function () {
                 return Role::orderBy('name')->select(['id', 'name'])->get()->toArray();
@@ -187,8 +189,11 @@ class UserController extends Controller
      */
     public function editUserRole(Request $request)
     {
-        if (auth()->user()->can('ACL Editar')) {
-            $r = $request->all();
+        $r = $request->all();
+        if (count(array_intersect($r['roles'], config('crebs86.admin_roles'))) > 0 && $this->hasRole(config('crebs86.admin_roles_edit'))) {
+            return response()->json('Papéis de usuário: você não possui permissão para editar papél administrador', 403);
+        }
+        if ($this->can('ACL Editar')) {
             if (getKeyValue($r['_checker'], 'edit_user_role') === $request->id) {
                 return
                     User::where('id', $request->id)->first()->syncRoles($r['roles']);

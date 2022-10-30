@@ -7,15 +7,17 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use App\Traits\ACL;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    use ACL;
     public function acl()
     {
-        if (auth()->user()->hasRole(['Super Admin', 'Admin'])) {
+        if ($this->hasRole(['Super Admin', 'Admin'])) {
             return Inertia::render('Admin/Acl', [
                 'back' => ['url' => url()->previous() ?? '', 'method' => Route::current()->methods()[0]],
                 'forward' => url()->previous() ?? '',
