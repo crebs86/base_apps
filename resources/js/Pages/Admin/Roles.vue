@@ -1,10 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { Link, Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
 import axios from 'axios';
+import { emittery } from '../../events'
+
+onMounted: {
+    emittery.on('getPermissionsListForm', async () => {
+        getPermissionsListForm();
+    })
+}
 
 const props = defineProps({
     rolesWithPermissions: Object
@@ -14,6 +21,7 @@ const toast = useToast();
 
 const rolesWithPermissions = ref(props.rolesWithPermissions);
 
+const permissionsList = ref({});
 const newRole = ref('');
 const message = ref({ mesage: '', code: 0 });
 
@@ -37,6 +45,19 @@ function saveNewRole() {
     })
 }
 
+function getPermissionsListForm() {
+    axios.get(route('admin.acl.permissions.list.form'))
+        .then(r => {
+            permissionsList.value = r.data;
+        }).catch(e => {
+            toast.error('Erro ao buscar lista de permissões: ' + e.response.data.mesage)
+        })
+
+}
+
+function teste() {
+    emittery.emit('getPermissionsListForm')
+}
 </script>
 <template>
 
@@ -52,29 +73,43 @@ function saveNewRole() {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <SimpleModal>
+                    <SimpleModal :loadData="'getPermissionsListForm'">
                         <template #button_title>Papéis</template>
                         <template #title>Novo Papél</template>
                         <template #body>
-                            <form>
-                                <div class="grid xl:grid-cols-2 xl:gap-6">
-                                    <div class="relative z-0 mb-6 w-full group">
-                                        <input type="text" id="full_name" v-model="newRole"
-                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
-                                            placeholder=" " />
-                                        <label for="full_name"
-                                            class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Nome do Papél
-                                        </label>
+                            <div>
+                                <form>
+                                    <div class="grid xl:grid-cols-2 xl:gap-6">
+                                        <div class="relative z-0 mb-6 w-full group">
+                                            <input type="text" id="full_name" v-model="newRole"
+                                                class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
+                                                placeholder=" " />
+                                            <label for="full_name"
+                                                class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                Nome do Papél
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div v-if="message?.message">
+                                    <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
+                                        class="text-sm text-white rounded-md shadow-lg mx-auto py-4 px-1" role="alert">
+                                        <div class="flex p-4">
+                                            {{ message?.message }}
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
-                            <div v-if="message?.message">
-                                <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
-                                    class="text-sm text-white rounded-md shadow-lg mx-auto py-4 px-1" role="alert">
-                                    <div class="flex p-4">
-                                        {{ message?.message }}
-                                    </div>
+                                <div class="permissions_content">
+                                    Permissões do papel
+                                    <tr v-for="(v, i) in permissionsList" :key="i">
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                            {{ v.name }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                            <input type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
+                                        </td>
+                                    </tr>
                                 </div>
                             </div>
                         </template>
@@ -146,3 +181,39 @@ function saveNewRole() {
         </div>
     </AuthenticatedLayout>
 </template>
+<style scoped>
+@media only screen and (max-height: 568px) {
+    .permissions_content {
+        height: 200px;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (max-height: 667px) {
+    .permissions_content {
+        height: 300px;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (max-height: 736px) {
+    .permissions_content {
+        height: 350px;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (max-height: 896px) {
+    .permissions_content {
+        height: 470px;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (min-height: 897px) {
+    .permissions_content {
+        height: 500px;
+        overflow-y: scroll;
+    }
+}
+</style>

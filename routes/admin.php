@@ -7,7 +7,8 @@ use App\Http\Controllers\Admin\PermissionController;
 
 Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(function () {
     Route::get('/', [PermissionController::class, 'acl'])->name('acl');
-    Route::get('/permissions', [PermissionController::class, 'index'])->name('index');
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions/list/form', [PermissionController::class, 'getPermissionsListForm'])->name('permissions.list.form');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/role/{id}/edit', [RoleController::class, 'show'])->name('role.show');

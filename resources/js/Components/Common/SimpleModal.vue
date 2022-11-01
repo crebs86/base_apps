@@ -2,7 +2,8 @@
     <div class="p-3">
         <h2 class="flex justify-center text-blue-500 text-lg">
             <slot name="button_title"></slot>
-            <mdicon name="plus" @click="openModal(true)" style="cursor: pointer;" title="Novo Papél"></mdicon>
+            <mdicon name="plus" @click="openModal(true)" style="cursor: pointer;" title="Novo Papél">
+            </mdicon>
         </h2>
     </div>
 
@@ -12,7 +13,7 @@
 
         <!-- modal -->
         <div id="modal" :class="modal_classes"
-            class="transform relative w-10/12 md:w-1/2 h-1/2 md:h-3/4 bg-white rounded shadow-lg transition-opacity transition-transform duration-300">
+            class="transform relative w-10/12 md:w-3/4 h-5/6 bg-white rounded shadow-lg transition-opacity transition-transform duration-300">
 
             <!-- button close -->
             <button @click="openModal(false)"
@@ -47,13 +48,22 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import { emittery } from '../../events'
+
+const props = defineProps({
+    loadData: String | null
+});
 
 const modal_classes = ref(' opacity-0 -translate-y-full scale-150 ');
 const modal_overlay_classes = ref('hidden');
 
 function openModal(value) {
-
     if (value) {
+
+        if (props.loadData !== undefined) {
+            emittery.emit(props.loadData)
+        }
+
         modal_overlay_classes.value = ' '
         setTimeout(() => {
             modal_classes.value = ' '

@@ -30,7 +30,20 @@ class PermissionController extends Controller
     {
         $permissions = Permission::all(['id', 'name'])->toArray();
 
-        dd($permissions);
+        foreach ($permissions as $v) {
+            $rp[] = ['id' => $v['id'], 'name' => $v['name'], 'has' => false];
+        }
+    }
+
+    public function getPermissionsListForm()
+    {
+        $permissions = Permission::all(['id', 'name'])->toArray();
+
+        foreach ($permissions as $permission) {
+            $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'has' => false];
+        }
+
+        return response()->json($p);
     }
 
     public function create(): View
