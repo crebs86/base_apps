@@ -6,6 +6,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
 import axios from 'axios';
 import { emittery } from '../../events'
+import serialize from 'form-serialize'
 
 onMounted: {
     emittery.on('getPermissionsListForm', async () => {
@@ -23,26 +24,46 @@ const rolesWithPermissions = ref(props.rolesWithPermissions);
 
 const permissionsList = ref({});
 const newRole = ref('');
+const permissionsRole = ref([]);
 const message = ref({ mesage: '', code: 0 });
 
 function saveNewRole() {
-    axios.post(route('admin.acl.role.new'),
-        {
-            name: newRole.value,
-            permissions: []
-        }
-    ).then(r => {
+    if (newRole.value === '') {
         message.value = {
-            message: r.data,
-            code: r.status
+            message: 'Informe um nome para o novo papél!',
+            code: 500
         };
-    }).catch(e => {
-        message.value = e.response;
-        message.value = {
-            message: e.response.data.message,
-            code: e.response.status
-        }
-    })
+    } else {
+
+        let form = document.querySelector('#new_permissions_role');
+        let values = serialize(form, { hash: true });
+        axios.post(route('admin.acl.role.new'),
+            {
+                name: newRole.value,
+                permissions: values
+            }
+        ).then(r => {
+            message.value = {
+                message: r.data.message,
+                code: r.status
+            };
+
+            rolesWithPermissions.value = r.data.rolesWithPermissions;
+
+            form.reset();
+
+        }).catch(e => {
+            if (e.response.status === 403) {
+                toast.error(e.response.data)
+            } else {
+                message.value = e.response;
+                message.value = {
+                    message: e.response.data.message,
+                    code: e.response.status
+                }
+            }
+        })
+    }
 }
 
 function getPermissionsListForm() {
@@ -55,9 +76,6 @@ function getPermissionsListForm() {
 
 }
 
-function teste() {
-    emittery.emit('getPermissionsListForm')
-}
 </script>
 <template>
 
@@ -72,18 +90,18 @@ function teste() {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3">
                     <SimpleModal :loadData="'getPermissionsListForm'">
                         <template #button_title>Papéis</template>
                         <template #title>Novo Papél</template>
                         <template #body>
-                            <div>
+                            <div class="grid gap-1">
                                 <form>
-                                    <div class="grid xl:grid-cols-2 xl:gap-6">
+                                    <div>
                                         <div class="relative z-0 mb-6 w-full group">
                                             <input type="text" id="full_name" v-model="newRole"
                                                 class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
-                                                placeholder=" " />
+                                                required />
                                             <label for="full_name"
                                                 class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                 Nome do Papél
@@ -93,23 +111,25 @@ function teste() {
                                 </form>
                                 <div v-if="message?.message">
                                     <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
-                                        class="text-sm text-white rounded-md shadow-lg mx-auto py-4 px-1" role="alert">
-                                        <div class="flex p-4">
+                                        class="text-sm text-white rounded-md shadow-lg mx-auto py-2 px-1" role="alert">
+                                        <div class="flex p-3">
                                             {{ message?.message }}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="permissions_content">
+                                <div class="permissions_content grid justify-items-center">
                                     Permissões do papel
-                                    <tr v-for="(v, i) in permissionsList" :key="i">
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                            {{ v.name }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                            <input type="checkbox"
-                                                class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
-                                        </td>
-                                    </tr>
+                                    <form id="new_permissions_role">
+                                        <tr v-for="(v, i) in permissionsList" :key="i">
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                                {{ v.name }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                                <input type="checkbox" :name="v.name" :value="v.name"
+                                                    class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
+                                            </td>
+                                        </tr>
+                                    </form>
                                 </div>
                             </div>
                         </template>
@@ -191,7 +211,7 @@ function teste() {
 
 @media only screen and (max-height: 667px) {
     .permissions_content {
-        height: 300px;
+        height: 250px;
         overflow-y: scroll;
     }
 }
@@ -205,14 +225,14 @@ function teste() {
 
 @media only screen and (max-height: 896px) {
     .permissions_content {
-        height: 470px;
+        height: 430px;
         overflow-y: scroll;
     }
 }
 
 @media only screen and (min-height: 897px) {
     .permissions_content {
-        height: 500px;
+        height: 440px;
         overflow-y: scroll;
     }
 }

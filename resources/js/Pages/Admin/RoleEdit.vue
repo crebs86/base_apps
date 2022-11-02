@@ -18,8 +18,6 @@ const toast = useToast();
 
 const editPermissions = reactive(props.permissions);
 
-const permissions = ref(props.permissions);
-
 const hasPermissions = computed(() =>
     editPermissions
         .filter(v => v.has)
@@ -43,7 +41,7 @@ function editRolePermission() {
         })
         .catch(r => {
             let res = r.response
-            if(res.status === 403){
+            if (res.status === 403) {
                 toast.error(res.data)
             }
         })

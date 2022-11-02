@@ -24,6 +24,7 @@
         "vue-toastification": "^2.0.0-rc.5"
     },
     "dependencies": {
-        "emittery": "^1.0.0"
+        "emittery": "^1.0.0",
+        "form-serialize": "^0.7.2"
     }
 }

@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Traits\ACL;
-use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 
@@ -121,22 +119,32 @@ class RoleController extends Controller
      */
     public function new(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'permissions' => ['array'],
-        ]);
+        if (
+            $this->can('ACL Editar')
+            && array_intersect([$request->name], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
+            && $this->hasRole(config('crebs86.admin_roles_edit')) //... e usuário possui privilégios?
+        ) {
+            $request->validate([
+                'name' => ['required', 'string', 'unique:roles,name'],
+                'permissions' => ['array'],
+            ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
+            // $role = Role::create(['name' => $request->input('name')]);
 
-        $role->givePermissionTo($request->input('permissions'));
-        
-        return response()->json("Papél `{$request->name}` Criado Com Sucesso", 200);
-    }
+            // $role->givePermissionTo($request->input('permissions'));
 
-    public function delete(Role $role)
-    {
-        $role->delete();
-
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'roles.index');
+            return response()->json([
+                "message" => "Papél `{$request->name}` Criado Com Sucesso",
+                "rolesWithPermissions" => Role::with([
+                    'permissions' => function ($q) {
+                        return $q->select('id', 'name')->orderBy('name');
+                    }
+                ])
+                    ->whereNot('name', ['Super Admin'])
+                    ->select('id', 'name')->get()->toArray()
+            ], 200);
+        } else {
+            return response()->json('Novo Papél: Você não possui permissão para acessar este recurso', 403);
+        }
     }
 }
