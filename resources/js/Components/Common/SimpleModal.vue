@@ -1,51 +1,45 @@
 <template>
-    <div class="p-3">
+    <div>
         <h2 class="flex justify-center text-blue-500 text-lg">
             <slot name="button_title"></slot>
             <mdicon name="plus" @click="openModal(true)" style="cursor: pointer;" title="Novo Papél">
             </mdicon>
         </h2>
-    </div>
-
-    <!-- overlay -->
-    <div id="modal_overlay" :class="modal_overlay_classes" style="z-index: 100;"
-        class="absolute inset-0 bg-black bg-opacity-30 h-screen w-full flex justify-center items-start md:items-center pt-10 md:pt-0">
-
-        <!-- modal -->
-        <div id="modal" :class="modal_classes"
-            class="transform relative w-10/12 md:w-3/4 h-5/6 bg-white rounded shadow-lg transition-opacity transition-transform duration-300">
-
-            <!-- button close -->
-            <button @click="openModal(false)"
-                class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-2xl w-10 h-10 rounded-full focus:outline-none text-white">
-                &cross;
-            </button>
-
-            <!-- header -->
-            <div class="px-4 py-3 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-600">
-                    <slot name="title"></slot>
-                </h2>
-            </div>
-
-            <!-- body -->
-            <div class="w-full p-3">
-                <slot name="body"></slot>
-            </div>
-
-            <!-- footer -->
-            <div
-                class="absolute bottom-0 left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-                <slot name="button"></slot>
-                <button type="button" @click="openModal(false)"
-                    class="border border-red-500 bg-red-500 text-white hover:text-red-800 rounded-md px-4 py-2 m-2 transition duration-300 ease select-none hover:bg-red-200 focus:outline-none focus:shadow-outline">
-                    Fechar
-                </button>
+        <div v-if="showModal"
+            class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex pt-52 md:pt-0">
+            <div class="relative my-6 mx-auto w-11/12 md:w-9/12 max-w-6xl">
+                <!--content-->
+                <div
+                    class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    <!--header-->
+                    <div class="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                        <h3 class="text-3xl font-semibold">
+                            <slot name="title"></slot>
+                        </h3>
+                        <button @click="openModal(false)"
+                            class="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-2xl w-10 h-10 rounded-full focus:outline-none text-white">
+                            &cross;
+                        </button>
+                    </div>
+                    <!--body-->
+                    <div class="relative p-6 flex-auto">
+                        <slot name="body" class="my-4 text-slate-500 text-lg leading-relaxed"></slot>
+                    </div>
+                    <!--footer-->
+                    <div class="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                        <slot name="button"></slot>
+                        <button type="button" @click="openModal(false)"
+                            class="border border-red-500 bg-red-500 text-white hover:text-red-800 rounded-md px-4 py-2 m-2 transition duration-300 ease select-none hover:bg-red-200 focus:outline-none focus:shadow-outline">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-
+        <div v-if="showModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import { emittery } from '../../events'
@@ -54,8 +48,7 @@ const props = defineProps({
     loadData: String | null
 });
 
-const modal_classes = ref(' opacity-0 -translate-y-full scale-150 ');
-const modal_overlay_classes = ref('hidden');
+const showModal = ref(false);
 
 function openModal(value) {
     if (value) {
@@ -63,17 +56,9 @@ function openModal(value) {
         if (props.loadData !== undefined) {
             emittery.emit(props.loadData)
         }
-
-        modal_overlay_classes.value = ' '
-        setTimeout(() => {
-            modal_classes.value = ' '
-        }, 100);
+        showModal.value = true
     } else {
-        modal_classes.value += ' -translate-y-full '
-        setTimeout(() => {
-            modal_classes.value += ' opacity-0 scale-150 '
-        }, 100);
-        setTimeout(() => modal_overlay_classes.value += ' hidden ', 300);
+        showModal.value = false
     }
 }
 
