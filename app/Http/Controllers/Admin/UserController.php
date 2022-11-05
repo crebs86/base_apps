@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if ($this->can('ACL Editar')) {
+        if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar')) {
             return Inertia::render('Admin/AclUsers');
         }
         return Inertia::render('Admin/403');
@@ -45,19 +45,6 @@ class UserController extends Controller
         }
         return Inertia::render('Admin/403');
     }
-    /**
-     * responde ao formulário de pesquisa de usuários - POST
-     */
-    // public function search(Request $request)
-    // {
-    //     if (auth()->user()->can(['Usuario Ver'])) {
-    //         return response()->json([
-    //             'users' => $this->findUsers($request->user)
-    //         ]);
-    //     }
-    //     return response()->json('Recurso não encontrado', 401);
-    // }
-
     /**
      * Pesquisa por usuários na base de dados;
      * termos aproximados: name e email;
@@ -121,23 +108,38 @@ class UserController extends Controller
 
     public function listUserAndRoles(Request $request)
     {
-        return $this->showUserAndRoles($request, false);
+        return $this->showUserAndRoles($request);
     }
     /**
      * página exibe dados básicos do usuário e papéis vinculados a este
      */
-    public function showUserAndRoles(Request $request, $edit = true)
+    public function showUserAndRoles(Request $request)
     {
         if ($this->can('ACL Ver', 'ACL Editar')) {
             $userRoles = $this->getUserRoles($request->id);
-            $allRoles = cache()->rememberForever('role_id_name', function () {
-                return Role::orderBy('name')->select(['id', 'name'])->get()->toArray();
-            });
+            $allRoles = Role::orderBy('name')
+                ->where(function ($q) {
+                    if (!$this->hasRole(config('crebs86.admin_roles_edit'))) {
+                        $a = [];
+                        foreach (config('crebs86.admin_roles') as $v) {
+                            $a[] = ['name', '<>', $v];
+                        }
+                        $q->where($a);
+                    } else {
+                        $q;
+                    }
+                })
+                ->select(['id', 'name'])
+                ->get()->toArray();
 
-            $r = $userRoles[0];
+            $r = $userRoles->toArray();
 
             if (isset($r['roles'])) {
                 $ur = $this->setCurrentRoles($allRoles, $r);
+            }
+            $edit = true;
+            if ($userRoles->hasRole(config('crebs86.admin_roles'))) {
+                $edit = $this->hasRole(config('crebs86.admin_roles_edit'));
             }
 
             return Inertia::render('Admin/UserRoles', [
@@ -167,13 +169,11 @@ class UserController extends Controller
         }
         return $ur;
     }
-
     /**
      * busca papeis de usuários
      */
     private function getUserRoles($id)
     {
-        //if (auth()->user()->hasRole(['Super Admin', 'Admin']) || auth()->user()->can('ACL Editar')) {}
         return User::select('id', 'name', 'cpf', 'email')->where('id', $id)
             ->with(
                 [
@@ -182,7 +182,7 @@ class UserController extends Controller
                     }
                 ]
             )
-            ->get()->toArray();
+            ->first();
     }
     /**
      * Sincroniza papéis dos usuários
@@ -190,13 +190,18 @@ class UserController extends Controller
     public function editUserRole(Request $request)
     {
         $r = $request->all();
-        if (count(array_intersect($r['roles'], config('crebs86.admin_roles'))) > 0 && $this->hasRole(config('crebs86.admin_roles_edit'))) {
+        $hasNoPrivileges = !$this->hasRole(config('crebs86.admin_roles_edit'));
+        if (count(array_intersect($r['roles'], config('crebs86.admin_roles'))) > 0 && $hasNoPrivileges) {
             return response()->json('Papéis de usuário: você não possui permissão para editar papél administrador', 403);
         }
         if ($this->can('ACL Editar')) {
             if (getKeyValue($r['_checker'], 'edit_user_role') === $request->id) {
+                $user = User::where('id', $request->id)->first();
+                if ($user->hasRole(config('crebs86.admin_roles')) && $hasNoPrivileges) {
+                    return response()->json('Papéis de usuário: você não possui permissão para editar usuário administrador', 403);
+                }
                 return
-                    User::where('id', $request->id)->first()->syncRoles($r['roles']);
+                    $user->syncRoles($r['roles']);
             }
             return response()->json('Payload: erro ao acessar aplicação', 403);
         }

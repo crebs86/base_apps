@@ -15,7 +15,8 @@ onMounted: {
 }
 
 const props = defineProps({
-    rolesWithPermissions: Object
+    rolesWithPermissions: Object,
+    new: Boolean
 })
 
 const toast = useToast();
@@ -91,7 +92,8 @@ function getPermissionsListForm() {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3">
-                    <SimpleModal :loadData="'getPermissionsListForm'">
+                    <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
+                        :showOpenModalButton="$page.props.new">
                         <template #button_title>Papéis</template>
                         <template #title>Novo Papél</template>
                         <template #body>

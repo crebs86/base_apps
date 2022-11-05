@@ -2,7 +2,7 @@
     <div>
         <h2 class="flex justify-center text-blue-500 text-lg">
             <slot name="button_title"></slot>
-            <mdicon name="plus" @click="openModal(true)" style="cursor: pointer;" title="Novo Papél">
+            <mdicon v-if="showOpenModalButton" name="plus" @click="openModal(true)" style="cursor: pointer;" :title="buttonTitle">
             </mdicon>
         </h2>
         <div v-if="showModal"
@@ -45,7 +45,9 @@ import { ref } from 'vue';
 import { emittery } from '../../events'
 
 const props = defineProps({
-    loadData: String | null
+    loadData: String | null,
+    buttonTitle: String,
+    showOpenModalButton: Boolean
 });
 
 const showModal = ref(false);

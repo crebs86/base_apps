@@ -18,7 +18,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar', 'ACL Criar')) {
 
             $roles = Role::with([
                 'permissions' => function ($q) {
@@ -26,10 +26,23 @@ class RoleController extends Controller
                 }
             ])
                 ->whereNot('name', ['Super Admin'])
-                ->select('id', 'name')->get()->toArray();
-
+                ->where(function ($q) {
+                    if (!$this->hasRole(config('crebs86.admin_roles_edit'))) {
+                        $a = [];
+                        foreach (config('crebs86.admin_roles') as $v) {
+                            $a[] = ['name', '<>', $v];
+                        }
+                        $q->where($a);
+                    } else {
+                        $q;
+                    }
+                })
+                ->select('id', 'name')
+                ->get()
+                ->toArray();
             return Inertia::render('Admin/Roles', [
-                'rolesWithPermissions' => $roles
+                'rolesWithPermissions' => $roles,
+                'new'=> $this->can('ACL Criar')
             ]);
         }
         return Inertia::render('Admin/403');
@@ -119,19 +132,15 @@ class RoleController extends Controller
      */
     public function new(Request $request)
     {
-        if (
-            $this->can('ACL Editar')
-            && array_intersect([$request->name], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
-            && $this->hasRole(config('crebs86.admin_roles_edit')) //... e usuário possui privilégios?
-        ) {
+        if ($this->can('ACL Criar')) {
             $request->validate([
                 'name' => ['required', 'string', 'unique:roles,name'],
                 'permissions' => ['array'],
             ]);
 
-            // $role = Role::create(['name' => $request->input('name')]);
+            $role = Role::create(['name' => $request->input('name')]);
 
-            // $role->givePermissionTo($request->input('permissions'));
+            $role->givePermissionTo($request->input('permissions'));
 
             return response()->json([
                 "message" => "Papél `{$request->name}` Criado Com Sucesso",

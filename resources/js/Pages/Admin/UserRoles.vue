@@ -26,13 +26,13 @@ const hasRoles = computed(() =>
         .map(v => v.name))
 
 function checkRole(role) {
-    return Object.keys(props.user[0].roles)
-        .map(key => props.user[0].roles[key]['id'])
+    return Object.keys(props.user.roles)
+        .map(key => props.user.roles[key]['id'])
         .includes(role)
 }
 
 function editUserRole() {
-    axios.post(route('admin.acl.user.roles.edit', props.user[0].id), {
+    axios.post(route('admin.acl.user.roles.edit', props.user.id), {
         roles: hasRoles.value,
         _checker: props._checker
     })
@@ -42,7 +42,7 @@ function editUserRole() {
         })
         .catch(r => {
             let res = r.response
-            if(res.status === 403){
+            if (res.status === 403) {
                 toast.error(res.data)
             }
         })
@@ -57,9 +57,9 @@ function editUserRole() {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <p class="text-blue-900"><strong>Papéis de: </strong></p>
-                <p class="text-blue-900">Nome: {{ $page.props.user[0].name }}</p>
-                <p class="text-blue-900">E-mail: {{ $page.props.user[0].email }}</p>
-                <p class="text-blue-900">CPF: {{ $page.props.user[0].cpf }}</p>
+                <p class="text-blue-900">Nome: {{ $page.props.user.name }}</p>
+                <p class="text-blue-900">E-mail: {{ $page.props.user.email }}</p>
+                <p class="text-blue-900">CPF: {{ $page.props.user.cpf }}</p>
             </h2>
         </template>
         <div class="py-0 px-0 mt-3">
@@ -73,10 +73,6 @@ function editUserRole() {
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
                                     :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''" :disabled="!changed">
                                     Atualizar
-                                </button>
-                                <button @click="$page.props.edit = true, changed = false" v-if="!$page.props.edit"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-                                    Editar
                                 </button>
                                 <table class="min-w-full mb-2">
                                     <thead class="text-center">
