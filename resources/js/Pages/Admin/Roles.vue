@@ -84,14 +84,14 @@ function getPermissionsListForm() {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl dark:text-gray-300 leading-tight">
                 Controle de Acesso
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3">
+        <div class="py-12 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:bg-gray-800">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3 dark:bg-gray-600">
                     <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
                         :showOpenModalButton="$page.props.new">
                         <template #button_title>Papéis</template>
@@ -105,7 +105,7 @@ function getPermissionsListForm() {
                                                 class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
                                                 required />
                                             <label for="full_name"
-                                                class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
                                                 Nome do Papél
                                             </label>
                                         </div>
@@ -142,57 +142,56 @@ function getPermissionsListForm() {
                             </button>
                         </template>
                     </SimpleModal>
-                    <div class="py-0 px-0">
-                        <div class="max-w-7xl mx-auto">
-                            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                                <div class="relative flex items-top justify-center sm:items-center sm:pt-0">
-                                    <div class="py-2 overflow-x-auto mt-2">
-                                        <div
-                                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
-                                            <table class="min-w-full mb-2">
-                                                <thead>
-                                                    <tr>
-                                                        <th v-for="(value, index) in ['ID', 'Nome', 'Permissões', 'Ações']"
-                                                            :key="index + '' + value"
-                                                            class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">
-                                                            {{ value }}
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="bg-white">
-                                                    <tr v-for="(v, i) in rolesWithPermissions" :key="i">
-                                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500"
-                                                            v-for="(value, index) in v" :key="i.id + '' + index">
-                                                            <template v-if="index === 'permissions'">
-                                                                <span v-for="(p, i) in v.permissions"
-                                                                    class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
-                                                                    <span aria-hidden
-                                                                        class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
-                                                                    </span>
-                                                                    <span class="relative text-xs">
-                                                                        {{ p.name }}
-                                                                    </span>
+                    <div class="py-0 px-0 dark:bg-gray-800">
+                        <div class="max-w-7xl mx-auto dark:bg-gray-600">
+                            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
+                                <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
+                                    <div
+                                        class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-600">
+                                        <table class="min-w-full mb-2 px-1">
+                                            <thead>
+                                                <tr>
+                                                    <th v-for="(value, index) in ['ID', 'Nome', 'Permissões', 'Ações']"
+                                                        :key="index + '' + value"
+                                                        class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-600 dark:text-gray-300">
+                                                        {{ value }}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white dark:bg-gray-600">
+                                                <tr v-for="(v, i) in rolesWithPermissions" :key="i">
+                                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500"
+                                                        v-for="(value, index) in v" :key="i.id + '' + index">
+                                                        <template v-if="index === 'permissions'">
+                                                            <span v-for="(p, i) in v.permissions"
+                                                                class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
+                                                                <span aria-hidden
+                                                                    class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
                                                                 </span>
-                                                            </template>
-                                                            <template v-else>
-                                                                <div class="text-sm leading-5 text-blue-900">
-                                                                    {{ value }}
-                                                                </div>
-                                                            </template>
-                                                        </td>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                                            <div class="grid grid-cols-4 gap-6">
-                                                                <Link :href="route('admin.acl.role.show', v.id)">
-                                                                <mdicon name="playlist-edit" class="text-blue-600"
-                                                                    title="Editar" />
-                                                                </Link>
+                                                                <span class="relative text-xs">
+                                                                    {{ p.name }}
+                                                                </span>
+                                                            </span>
+                                                        </template>
+                                                        <template v-else>
+                                                            <div
+                                                                class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                                                {{ value }}
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        </template>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                                        <div class="grid grid-cols-4 gap-6">
+                                                            <Link :href="route('admin.acl.role.show', v.id)">
+                                                            <mdicon name="playlist-edit"
+                                                                class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                                title="Editar" />
+                                                            </Link>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

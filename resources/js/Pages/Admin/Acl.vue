@@ -15,19 +15,19 @@ const currentTab = (tabNumber) => (tab.value = tabNumber);
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl dark:text-gray-300 leading-tight">
                 Controle de Acesso - Início
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="py-6 px-1 bg-white border-b border-gray-200">
+                <div class="bg-white overflow-hidden shadow-md sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-600">
+                    <div class="py-6 px-1 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border dark:border-gray-600">
                         <!-- ACL Tabs Start -->
                         <div>
                             <div class="container mx-auto">
-                                <ul class="flex justify-center space-x-2 text-white ">
+                                <ul class="flex justify-center space-x-2 text-white dark:text-gray-300">
                                     <li>
                                         <button @click="currentTab(1)"
                                             class="inline-block px-4 py-2 bg-blue-500 focus:outline-none">
@@ -55,7 +55,7 @@ const currentTab = (tabNumber) => (tab.value = tabNumber);
                                         </button>
                                     </li>
                                 </ul>
-                                <div class="py-3 mt-6 text-justify bg-white">
+                                <div class="py-3 px-2 mt-6 text-justify bg-white dark:bg-gray-600">
                                     <div v-if="tab === 1">
                                         <p class="mb-2"><strong>Usuários</strong>: Busque por usuários do sistema.
                                             Ative, desative, atribua e remova papéis atribuídos.</p>

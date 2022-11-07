@@ -6,7 +6,6 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
 
 const showingNavigationDropdown = ref(false);
 
@@ -14,7 +13,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-800 dark:text-gray-100">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-800 dark:text-gray-300">
             <nav class="bg-white border-b border-gray-100 dark:bg-gray-600">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +22,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                <ApplicationLogo class="block h-9 w-auto dark:text-gray-100" />
+                                <ApplicationLogo class="block h-9 w-auto dark:text-gray-300" />
                                 </Link>
                             </div>
 
@@ -93,16 +92,16 @@ const showingNavigationDropdown = ref(false);
 
                 <!-- Responsive Navigation Menu -->
                 <div :class="{ 'block': showingNavigationDropdown, 'hidden': !showingNavigationDropdown }"
-                    class="sm:hidden dark:text-gray-100">
+                    class="sm:hidden dark:text-gray-300">
                     <div class="pt-2 pb-3 space-y-1">
 
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')"
-                            :class="route().current('dashboard') ? 'dark:text-green-500 dark:border-green-300' : 'dark:text-gray-100 hover:dark:text-gray-200 dark:border-gray-100'">
+                            :class="route().current('dashboard') ? 'dark:text-green-500 dark:border-green-300' : 'dark:text-gray-300 hover:dark:text-gray-200 dark:border-gray-100'">
                             Painel
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')"
-                            :class="route().current('admin.acl.*') ? 'dark:text-green-500 dark:border-green-300' : 'dark:text-gray-100 hover:dark:text-gray-200 dark:border-gray-100'">
+                            :class="route().current('admin.acl.*') ? 'dark:text-green-500 dark:border-green-300' : 'dark:text-gray-300 hover:dark:text-gray-200 dark:border-gray-100'">
                             Controle de Acesso
                         </ResponsiveNavLink>
 

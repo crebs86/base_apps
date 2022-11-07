@@ -54,41 +54,42 @@ function editRolePermission() {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl dark:text-gray-300 leading-tight dark:text-gray-300">
                 Controle de Acesso
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-transparent overflow-hidden shadow-sm sm:rounded-lg">
                     <h1 class="text-lg text-center my-2">Permissões do Papél: <strong>{{
                             $page.props.role[0].name
                     }}</strong></h1>
                     <div class="py-0 px-0">
                         <div class="max-w-7xl mx-auto">
                             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                                <div class="relative flex items-top justify-center sm:items-center sm:pt-0">
-                                    <div class="py-2 overflow-x-auto mt-2">
+                                <div
+                                    class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-600">
+                                    <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-500">
                                         <div
-                                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
+                                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-500">
                                             <button @click="editRolePermission"
                                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-2"
                                                 :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''"
                                                 :disabled="!changed">
                                                 Atualizar
                                             </button>
-                                            <table class="min-w-full mb-2">
+                                            <table class="min-w-full mb-2 dark:bg-gray-600 dark:text-gray-200">
                                                 <thead>
                                                     <tr>
                                                         <th v-for="(value, index) in ['ID', 'Permissão', 'Atual/Alterar']"
                                                             :key="index + '' + value"
-                                                            class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">
+                                                            class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:text-gray-300">
                                                             {{ value }}
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody class="bg-white text-center">
+                                                <tbody class="bg-white text-center dark:bg-gray-400">
                                                     <tr v-for="(v, i) in editPermissions" :key="i">
                                                         <td
                                                             class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">

@@ -41,20 +41,20 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" class="dark:text-gray-100"/>
+                <InputLabel for="password" value="Password" class="dark:text-gray-300"/>
                 <TextInput id="password" type="password" class="mt-1 block w-full dark:bg-gray-500" v-model="form.password" required autocomplete="current-password" />
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="block mt-4">
-                <label class="flex items-center dark:text-gray-100">
+                <label class="flex items-center dark:text-gray-300">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-100">Remember me</span>
+                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Remember me</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-500">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-500">
                     Forgot your password?
                 </Link>
 

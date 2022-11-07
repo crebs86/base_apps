@@ -55,36 +55,36 @@ function editUserRole() {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <p class="text-blue-900"><strong>Papéis de: </strong></p>
-                <p class="text-blue-900">Nome: {{ $page.props.user.name }}</p>
-                <p class="text-blue-900">E-mail: {{ $page.props.user.email }}</p>
-                <p class="text-blue-900">CPF: {{ $page.props.user.cpf }}</p>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight text-blue-900 dark:text-gray-300">
+                <p><strong>Papéis de: </strong></p>
+                <p>Nome: {{ $page.props.user.name }}</p>
+                <p>E-mail: {{ $page.props.user.email }}</p>
+                <p>CPF: {{ $page.props.user.cpf }}</p>
             </h2>
         </template>
-        <div class="py-0 px-0 mt-3">
-            <div class="max-w-7xl mx-auto">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div class="relative flex items-top justify-center sm:items-center sm:pt-0">
-                        <div class="py-2 overflow-x-auto mt-2">
+        <div class="py-0 px-0 mt-3 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto dark:bg-gray-800">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
+                    <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
+                        <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <div
-                                class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
+                                class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-800">
                                 <button @click="editUserRole" v-if="$page.props.edit"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
                                     :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''" :disabled="!changed">
                                     Atualizar
                                 </button>
                                 <table class="min-w-full mb-2">
-                                    <thead class="text-center">
+                                    <thead class="text-center dark:text-gray-300">
                                         <tr>
                                             <th v-for="(value, index) in ['#', 'Papel', $page.props.edit ? 'Atual/Alterar' : 'Atual']"
                                                 :key="index + '' + value"
-                                                class="px-6 py-3 border-b-2 border-gray-300 leading-4 text-blue-500 tracking-wider">
+                                                class="px-6 py-3 border-b-2 border-gray-300 leading-4 text-blue-500 tracking-wider dark:text-gray-300">
                                                 {{ value }}
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white text-center">
+                                    <tbody class="bg-white text-center dark:bg-gray-800 dark:text-gray-300">
                                         <tr v-for="(v, i) in editRoles" :key="'role_' + v.id">
                                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
                                                 {{ v.id }}
