@@ -35,7 +35,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" class="dark:text-white"/>
+                <InputLabel for="email" value="Email" class="dark:text-gray-300"/>
                 <TextInput id="email" type="email" class="mt-1 block w-full dark:bg-gray-500" v-model="form.email" required autofocus autocomplete="username" />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>

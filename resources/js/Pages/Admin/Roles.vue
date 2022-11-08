@@ -4,9 +4,10 @@ import { useToast } from "vue-toastification";
 import { Link, Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
+import SubNavMenu from '@/Components/Admin/SubNavMenu.vue';
 import axios from 'axios';
-import { emittery } from '../../events'
-import serialize from 'form-serialize'
+import { emittery } from '../../events';
+import serialize from 'form-serialize';
 
 onMounted: {
     emittery.on('getPermissionsListForm', async () => {
@@ -88,8 +89,14 @@ function getPermissionsListForm() {
                 Controle de Acesso
             </h2>
         </template>
-
-        <div class="py-12 dark:bg-gray-800">
+        <div class="py-1 mx-1 dark:bg-gray-800">
+            <div class="mx-auto">
+                <div class="bg-white overflow-hidden shadow-md sm:rounded-lg dark:bg-gray-800 dark:shadow-gray-600">
+                    <SubNavMenu />
+                </div>
+            </div>
+        </div>
+        <div class="py-6 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:bg-gray-800">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3 dark:bg-gray-600">
                     <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
