@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
@@ -132,12 +131,12 @@ function search() {
                                                 }}</div>
                                             </template>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
                                             <div class="grid grid-cols-4 gap-6">
-                                                <Link :href="route('admin.acl.user.roles.list', v.id)">
+                                                <Link :href="route('admin.acl.users.roles.list', v.id)">
                                                 <mdicon name="shield-account" class="text-green-600 hover:text-green-400" title="Detalhes" />
                                                 </Link>
-                                                <Link :href="route('admin.acl.user.roles.show', v.id)">
+                                                <Link :href="route('admin.acl.users.roles.show', v.id)">
                                                 <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400" title="Editar" />
                                                 </Link>
                                                 <!-- <mdicon name="account-cancel" class="text-yellow-500"

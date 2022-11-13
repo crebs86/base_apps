@@ -1,13 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
 import MainMenu from '@/Components/Admin/Menus/MainMenu.vue';
-import { Link } from '@inertiajs/inertia-vue3';
-
-const showingNavigationDropdown = ref(false);
 
 </script>
 

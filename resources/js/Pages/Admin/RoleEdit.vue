@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from 'vue';
 import axios from 'axios';
 import { useToast } from "vue-toastification";
-import { Link, Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Inertia } from '@inertiajs/inertia';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
@@ -31,7 +31,7 @@ function checkPermission(permission) {
 }
 
 function editRolePermission() {
-    axios.post(route('admin.acl.role.permissions.update', props.role[0].id), {
+    axios.post(route('admin.acl.roles.permissions.update', props.role[0].id), {
         permissions: hasPermissions.value,
         name: props.role[0].name,
         _checker: props._checker
@@ -51,7 +51,7 @@ function editRolePermission() {
 </script>
 <template>
 
-    <Head title="Painel" />
+    <Head :title="'Editar: '+$page.props.role[0].name" />
 
     <AuthenticatedLayout>
         <template #inner_menu>

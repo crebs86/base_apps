@@ -9,40 +9,31 @@ import axios from 'axios';
 import { emittery } from '../../events';
 import serialize from 'form-serialize';
 
-onMounted: {
-    emittery.on('getPermissionsListForm', async () => {
-        getPermissionsListForm();
-    })
-}
-
 const props = defineProps({
-    rolesWithPermissions: Object,
+    permissions: Object,
     new: Boolean
 })
 
 const toast = useToast();
 
-const rolesWithPermissions = ref(props.rolesWithPermissions);
+const permissions = ref(props.permissions);
 
-const permissionsList = ref({});
-const newRole = ref('');
-const permissionsRole = ref([]);
+const newPermission = ref('');
 const message = ref({ mesage: '', code: 0 });
 
-function saveNewRole() {
-    if (newRole.value === '') {
+function saveNewPermission() {
+    if (newPermission.value === '') {
         message.value = {
-            message: 'Informe um nome para o novo papél!',
+            message: 'Informe um nome para a nova permissão!',
             code: 500
         };
     } else {
 
-        let form = document.querySelector('#new_permissions_role');
+        let form = document.querySelector('#new_permission');
         let values = serialize(form, { hash: true });
-        axios.post(route('admin.acl.roles.new'),
+        axios.post(route('admin.acl.permissions.new'),
             {
-                name: newRole.value,
-                permissions: values
+                name: newPermission.value
             }
         ).then(r => {
             message.value = {
@@ -50,7 +41,7 @@ function saveNewRole() {
                 code: r.status
             };
 
-            rolesWithPermissions.value = r.data.rolesWithPermissions;
+            permissions.value = r.data.permissions;
 
             form.reset();
 
@@ -68,20 +59,10 @@ function saveNewRole() {
     }
 }
 
-function getPermissionsListForm() {
-    axios.get(route('admin.acl.permissions.list.form'))
-        .then(r => {
-            permissionsList.value = r.data;
-        }).catch(e => {
-            toast.error('Erro ao buscar lista de permissões: ' + e.response.data.mesage)
-        })
-
-}
-
 </script>
 <template>
 
-    <Head title="Papéis" />
+    <Head title="Permissões" />
 
     <AuthenticatedLayout>
         <template #inner_menu>
@@ -90,21 +71,20 @@ function getPermissionsListForm() {
         <div
             class="container mx-auto mt-1 text-justify px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
 
-            <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
-                :showOpenModalButton="$page.props.new">
-                <template #button_title>Papéis</template>
-                <template #title>Novo Papél</template>
+            <SimpleModal buttonTitle="Nova Permissão" :showOpenModalButton="$page.props.new">
+                <template #button_title>Permissões</template>
+                <template #title>Nova Permissão</template>
                 <template #body>
                     <div class="grid gap-1">
                         <form>
                             <div>
                                 <div class="relative z-0 mb-6 w-full group">
-                                    <input type="text" id="full_name" v-model="newRole"
+                                    <input type="text" id="full_name" v-model="newPermission"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
                                         required />
                                     <label for="full_name"
                                         class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
-                                        Nome do Papél
+                                        Nome da Permissão
                                     </label>
                                 </div>
                             </div>
@@ -117,24 +97,10 @@ function getPermissionsListForm() {
                                 </div>
                             </div>
                         </div>
-                        <div class="permissions_content grid justify-items-center">
-                            Permissões do papel
-                            <form id="new_permissions_role">
-                                <tr v-for="(v, i) in permissionsList" :key="i">
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                        {{ v.name }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                        <input type="checkbox" :name="v.name" :value="v.name"
-                                            class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
-                                    </td>
-                                </tr>
-                            </form>
-                        </div>
                     </div>
                 </template>
                 <template #button>
-                    <button type="button" @click.prevent="saveNewRole"
+                    <button type="button" @click.prevent="saveNewPermission"
                         class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 hover:bg-green-100 focus:outline-none focus:shadow-outline">
                         Salvar
                     </button>
@@ -148,42 +114,33 @@ function getPermissionsListForm() {
                             <table class="min-w-full mb-2 px-1">
                                 <thead>
                                     <tr>
-                                        <th v-for="(value, index) in ['ID', 'Nome', 'Permissões', 'Ações']"
-                                            :key="index + '' + value"
+                                        <th v-for="(value, index) in ['ID', 'Nome', 'Ações']" :key="index + '' + value"
                                             class="bg-gray-100 px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-600">
-                                    <tr v-for="(v, i) in rolesWithPermissions" :key="i">
+                                    <tr v-for="(v, i) in permissions" :key="i">
                                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
-                                            <template v-if="index === 'permissions'">
-                                                <span v-for="(p, i) in v.permissions"
-                                                    class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
-                                                    <span aria-hidden
-                                                        class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
-                                                    </span>
-                                                    <span class="relative text-xs">
-                                                        {{ p.name }}
-                                                    </span>
-                                                </span>
+                                            <template v-if="index === 'can'">
+                                                <div class="grid grid-cols-4 gap-6">
+                                                    <Link v-if="value" :href="route('admin.acl.roles.show', v.id)">
+                                                    <mdicon name="playlist-edit"
+                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
+                                                        title="Editar" />
+                                                    </Link>
+                                                    <mdicon v-else name="playlist-remove"
+                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
+                                                        title="Proibido Editar" />
+                                                </div>
                                             </template>
                                             <template v-else>
                                                 <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
                                                     {{ value }}
                                                 </div>
                                             </template>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                                            <div class="grid grid-cols-4 gap-6">
-                                                <Link :href="route('admin.acl.roles.show', v.id)">
-                                                <mdicon name="playlist-edit"
-                                                    class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
-                                                    title="Editar" />
-                                                </Link>
-                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

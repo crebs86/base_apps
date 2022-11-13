@@ -7,18 +7,22 @@ use App\Http\Controllers\Admin\PermissionController;
 
 Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(function () {
     Route::get('/', [PermissionController::class, 'acl'])->name('acl');
+
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/list/form', [PermissionController::class, 'getPermissionsListForm'])->name('permissions.list.form');
+    Route::get('/permissions/{id}/edit', [PermissionController::class, 'show'])->name('permissions.show');
+    //Route::post('/permissions/{id}/update', [PermissionController::class, 'update'])->name('permissions.permissions.update');
+    Route::post('/permissions/new', [PermissionController::class, 'new'])->name('permissions.new');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('/role/{id}/edit', [RoleController::class, 'show'])->name('role.show');
-    Route::post('/role/{id}/update', [RoleController::class, 'update'])->name('role.permissions.update');
-    Route::post('/role/new', [RoleController::class, 'new'])->name('role.new');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'show'])->name('roles.show');
+    Route::post('/roles/{id}/update', [RoleController::class, 'update'])->name('roles.permissions.update');
+    Route::post('/roles/new', [RoleController::class, 'new'])->name('roles.new');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user?}', [UserController::class, 'list'])->name('users.list');
     //Route::post('/users/{user?}', [UserController::class, 'search'])->name('users.search');
-    Route::get('/user/{id}/roles/list', [UserController::class, 'listUserAndRoles'])->name('user.roles.list');
-    Route::get('/user/{id}/roles/edit', [UserController::class, 'showUserAndRoles'])->name('user.roles.show');
-    Route::post('/user/{id}/roles/edit', [UserController::class, 'editUserRole'])->name('user.roles.edit');
+    Route::get('/users/{id}/roles/list', [UserController::class, 'listUserAndRoles'])->name('users.roles.list');
+    Route::get('/users/{id}/roles/edit', [UserController::class, 'showUserAndRoles'])->name('users.roles.show');
+    Route::post('/users/{id}/roles/edit', [UserController::class, 'editUserRole'])->name('users.roles.edit');
 });

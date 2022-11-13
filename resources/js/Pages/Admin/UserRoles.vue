@@ -2,10 +2,11 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useToast } from "vue-toastification";
-import { Link, Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { computed, reactive } from '@vue/reactivity';
+import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 
 const props = defineProps({
     user: Object,
@@ -32,7 +33,7 @@ function checkRole(role) {
 }
 
 function editUserRole() {
-    axios.post(route('admin.acl.user.roles.edit', props.user.id), {
+    axios.post(route('admin.acl.users.roles.edit', props.user.id), {
         roles: hasRoles.value,
         _checker: props._checker
     })
@@ -52,15 +53,9 @@ function editUserRole() {
 <template>
 
     <Head title="Editar Papéis" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight text-blue-900 dark:text-gray-300">
-                <p><strong>Papéis de: </strong></p>
-                <p>Nome: {{ $page.props.user.name }}</p>
-                <p>E-mail: {{ $page.props.user.email }}</p>
-                <p>CPF: {{ $page.props.user.cpf }}</p>
-            </h2>
+        <template #inner_menu>
+            <AclMenu />
         </template>
         <div class="py-0 px-0 mt-3 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto dark:bg-gray-800">
@@ -69,6 +64,13 @@ function editUserRole() {
                         <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <div
                                 class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-800">
+                                <h2
+                                    class="font-semibold text-xl text-gray-800 leading-tight text-blue-900 dark:text-gray-300 pb-4">
+                                    <p><strong>Papéis de: </strong></p>
+                                    <p>Nome: {{ $page.props.user.name }}</p>
+                                    <p>E-mail: {{ $page.props.user.email }}</p>
+                                    <p>CPF: {{ $page.props.user.cpf }}</p>
+                                </h2>
                                 <button @click="editUserRole" v-if="$page.props.edit"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
                                     :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''" :disabled="!changed">

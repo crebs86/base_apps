@@ -23,8 +23,8 @@ import { Link } from '@inertiajs/inertia-vue3';
                     :class="route().current('admin.acl.*') ? 'text-lime-300' : 'text-teal-100'">Acesso</span>
             </div>
             <div class="col-span-1 flex flex-col items-center text-teal-100 hover:text-emerald-400">
-                <mdicon name="account-arrow-right" title="Controle de Acesso" class="h-6 w-6" />
-                <span class="text-[10.5px] font-medium text-center text-teal-100">Sair</span>
+                <mdicon name="account" title="Controle de Acesso" class="h-6 w-6" />
+                <span class="text-[10.5px] font-medium text-center text-teal-100">Conta</span>
             </div>
         </div>
     </div>

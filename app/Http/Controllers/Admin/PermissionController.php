@@ -17,7 +17,7 @@ class PermissionController extends Controller
     use ACL;
     public function acl()
     {
-        if ($this->hasRole(['Super Admin', 'Admin'])) {
+        if ($this->can('ACL Ver', 'ACL Criar', 'ACL Editar', 'ACL Apagar')) {
             return Inertia::render('Admin/Acl', [
                 'back' => ['url' => url()->previous() ?? '', 'method' => Route::current()->methods()[0]],
                 'forward' => url()->previous() ?? '',
@@ -28,11 +28,20 @@ class PermissionController extends Controller
 
     public function index()
     {
-        $permissions = Permission::all(['id', 'name'])->toArray();
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar', 'ACL Criar')) {
 
-        foreach ($permissions as $v) {
-            $rp[] = ['id' => $v['id'], 'name' => $v['name'], 'has' => false];
+            $permissions = Permission::select('id', 'name')
+                ->get()
+                ->toArray();
+            foreach ($permissions as $permission) {
+                $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'can' => !in_array($permission['name'], config('crebs86.protected_permissions'))];
+            }
+            return Inertia::render('Admin/Permissions', [
+                'permissions' => $p,
+                'new' => $this->can('ACL Criar')
+            ]);
         }
+        return Inertia::render('Admin/403');
     }
 
     public function getPermissionsListForm()
