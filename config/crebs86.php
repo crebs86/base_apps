@@ -11,6 +11,7 @@ return [
      * define permissões que não podem ser editadas/removidas do banco de dados
      */
     'protected_permissions' => [
+        'ACL Apagar', 'ACL Criar', 'ACL Editar', 'ACL Ver', 
         'Admin Apagar', 'Admin Criar', 'Admin Editar', 'Admin Ver',
         'Cliente Apagar', 'Cliente Criar', 'Cliente Editar', 'Cliente Ver',
         'Usuario Apagar', 'Usuario Criar', 'Usuario Editar', 'Usuario Ver'
