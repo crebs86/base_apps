@@ -10,8 +10,8 @@ Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(functi
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/list/form', [PermissionController::class, 'getPermissionsListForm'])->name('permissions.list.form');
-    Route::get('/permissions/{id}/edit', [PermissionController::class, 'show'])->name('permissions.show');
-    //Route::post('/permissions/{id}/update', [PermissionController::class, 'update'])->name('permissions.permissions.update');
+    Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::post('/permissions/{id}/update', [PermissionController::class, 'update'])->name('permissions.permission.update');
     Route::post('/permissions/new', [PermissionController::class, 'new'])->name('permissions.new');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');

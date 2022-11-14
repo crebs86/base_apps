@@ -1,13 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { Link, Head } from '@inertiajs/inertia-vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
 import axios from 'axios';
-import { emittery } from '../../events';
-import serialize from 'form-serialize';
 
 const props = defineProps({
     permissions: Object,
@@ -29,8 +27,6 @@ function saveNewPermission() {
         };
     } else {
 
-        let form = document.querySelector('#new_permission');
-        let values = serialize(form, { hash: true });
         axios.post(route('admin.acl.permissions.new'),
             {
                 name: newPermission.value
@@ -43,11 +39,13 @@ function saveNewPermission() {
 
             permissions.value = r.data.permissions;
 
-            form.reset();
+            newPermission.value = '';
 
         }).catch(e => {
+
+            console.log(e)
             if (e.response.status === 403) {
-                toast.error(e.response.data)
+                toast.error(e.response.data.message)
             } else {
                 message.value = e.response;
                 message.value = {
@@ -76,7 +74,7 @@ function saveNewPermission() {
                 <template #title>Nova Permissão</template>
                 <template #body>
                     <div class="grid gap-1">
-                        <form>
+                        <form id="new_permission">
                             <div>
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" id="full_name" v-model="newPermission"
@@ -126,7 +124,7 @@ function saveNewPermission() {
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'can'">
                                                 <div class="grid grid-cols-4 gap-6">
-                                                    <Link v-if="value" :href="route('admin.acl.roles.show', v.id)">
+                                                    <Link v-if="value" :href="route('admin.acl.permissions.edit', v.id)">
                                                     <mdicon name="playlist-edit"
                                                         :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
                                                         title="Editar" />

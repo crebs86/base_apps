@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
 use App\Traits\ACL;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
@@ -16,7 +19,7 @@ class RoleController extends Controller
     /**
      * Exibe todas os Papéis com todas as permissões
      */
-    public function index()
+    public function index(): Response
     {
         if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar', 'ACL Criar')) {
 
@@ -42,7 +45,7 @@ class RoleController extends Controller
                 ->toArray();
             return Inertia::render('Admin/Roles', [
                 'rolesWithPermissions' => $roles,
-                'new'=> $this->can('ACL Criar')
+                'new' => $this->can('ACL Criar')
             ]);
         }
         return Inertia::render('Admin/403');
@@ -51,7 +54,7 @@ class RoleController extends Controller
     /**
      * Exibe um papél específico para edição
      */
-    public function show(Request $request, Role $role)
+    public function show(Request $request, Role $role): Response
     {
         if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
 
@@ -104,7 +107,7 @@ class RoleController extends Controller
     /**
      * atualiza nome do papel e suas permissões
      */
-    public function update(Request $request)
+    public function update(Request $request): JsonResponse|null
     {
 
         if (
@@ -123,6 +126,7 @@ class RoleController extends Controller
             $role->update(['name' => $request->input('name')]);
 
             $role->syncPermissions($request->input('permissions'));
+            return null;
         } else {
             return response()->json('Permissões em papéis: Você não possui permissão para acessar este recurso', 403);
         }
@@ -130,13 +134,10 @@ class RoleController extends Controller
     /**
      * Cria novo papél
      */
-    public function new(Request $request)
+    public function new(RoleRequest $request): JsonResponse
     {
         if ($this->can('ACL Criar')) {
-            $request->validate([
-                'name' => ['required', 'string', 'unique:roles,name'],
-                'permissions' => ['array'],
-            ]);
+            $request->validated();
 
             $role = Role::create(['name' => $request->input('name')]);
 
@@ -152,8 +153,7 @@ class RoleController extends Controller
                     ->whereNot('name', ['Super Admin'])
                     ->select('id', 'name')->get()->toArray()
             ], 200);
-        } else {
-            return response()->json('Novo Papél: Você não possui permissão para acessar este recurso', 403);
         }
+        return response()->json(['message' => 'Novo Papél: Você não possui permissão para acessar este recurso'], 403);
     }
 }

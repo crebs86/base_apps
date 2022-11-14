@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Illuminate\Contracts\View\View;
-use App\Http\Controllers\Controller;
 use App\Traits\ACL;
-use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Requests\PermissionRequest;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
     use ACL;
-    public function acl()
+    /**
+     * página inicial do controle de acesso
+     */
+    public function acl(): Response
     {
         if ($this->can('ACL Ver', 'ACL Criar', 'ACL Editar', 'ACL Apagar')) {
             return Inertia::render('Admin/Acl', [
@@ -25,82 +28,104 @@ class PermissionController extends Controller
         }
         return Inertia::render('Admin/403');
     }
-
-    public function index()
+    /**
+     * página inicial das permissões
+     */
+    public function index(): Response
     {
         if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar', 'ACL Criar')) {
 
-            $permissions = Permission::select('id', 'name')
-                ->get()
-                ->toArray();
-            foreach ($permissions as $permission) {
-                $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'can' => !in_array($permission['name'], config('crebs86.protected_permissions'))];
-            }
+            $permissions = $this->permissions(true);
+
             return Inertia::render('Admin/Permissions', [
-                'permissions' => $p,
+                'permissions' => $permissions,
                 'new' => $this->can('ACL Criar')
             ]);
         }
         return Inertia::render('Admin/403');
     }
-
-    public function getPermissionsListForm()
+    /**
+     * retorna lista de permissões: id e name
+     */
+    public function getPermissionsListForm(): JsonResponse
+    {
+        return response()->json($this->permissions());
+    }
+    /**
+     * retorna permissões do banco de dados
+     */
+    private function permissions(bool $checkCanEdit = false): array
     {
         $permissions = Permission::all(['id', 'name'])->toArray();
 
-        foreach ($permissions as $permission) {
-            $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'has' => false];
+        if ($checkCanEdit) {
+            foreach ($permissions as $permission) {
+                $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'can' => !in_array($permission['name'], config('crebs86.protected_permissions'))];
+            }
+        } else {
+            foreach ($permissions as $permission) {
+                $p[] = ['id' => $permission['id'], 'name' => $permission['name'], 'has' => false];
+            }
         }
-
-        return response()->json($p);
+        return $p;
     }
-
-    public function create(): View
+    /**
+     * cria uma nova permissão
+     */
+    public function new(PermissionRequest $request): JsonResponse
     {
-        $roles = Role::pluck('name', 'id');
+        if ($this->can('ACL Criar')) {
+            $data = $request->validated();
 
-        return view('PermissionsUI::permissions.create', compact('roles'));
+            Permission::create($data);
+
+            return response()->json([
+                "message" => "Permissão `{$request->name}` Criada Com Sucesso",
+                "permissions" => $this->permissions(true)
+            ], 200);
+        }
+        return response()->json(['message' => 'Nova Permissão: Você não possui permissão para acessar este recurso'], 403);
     }
-
-    public function store(Request $request): RedirectResponse
+    /**
+     * formulário para edição de permissão
+     */
+    public function edit(Request $request, Permission $permissions): Response
     {
-        $data = $request->validate([
-            'name' => ['required', 'string'],
-            'roles' => ['array'],
-        ]);
+        if ($this->can('ACL Editar')) {
 
-        $permission = Permission::create($data);
+            $permission = $permissions->select('id', 'name')->find($request->id);
 
-        $permission->syncRoles($request->input('roles'));
+            if (!in_array($permission->name, config('crebs86.protected_permissions'))) {
 
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'permissions.index');
+                return Inertia::render('Admin/PermissionEdit', [
+                    'permission' => $permission,
+                    '_checker' => setGetKey($request->id, 'edit_permission')
+                ]);
+            }
+        }
+        return Inertia::render('Admin/403');
     }
-
-    public function edit(Permission $permission): View
+    /**
+     * atualiza permissão no banco de dados
+     */
+    public function update(PermissionRequest $request): JsonResponse|null
     {
-        $roles = Role::pluck('name', 'id');
-
-        return view('PermissionsUI::permissions.edit', compact('permission', 'roles'));
-    }
-
-    public function update(Request $request, Permission $permission): RedirectResponse
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string'],
-            'roles' => ['array'],
-        ]);
-
-        $permission->update($data);
-
-        $permission->syncRoles($request->input('roles'));
-
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'permissions.edit', 7);
-    }
-
-    public function destroy(Permission $permission): RedirectResponse
-    {
-        $permission->delete();
-
-        return redirect()->route(config('permission_ui.route_name_prefix') . 'permissions.index');
+        if (
+            $this->can('ACL Editar')
+            && !in_array($request->name, config('crebs86.protected_permissions')) //é uma permissão protegida?...
+        ) {
+            $permission = Permission::select('id', 'name', 'guard_name')
+                ->where('id', $request->id)
+                ->first();
+            if ($permission->name === $request->input('name') || in_array($permission->name, config('crebs86.protected_permissions'))) {
+                return response()->json([
+                    'message' => 'Permissões: Nenhuma alteração foi feita',
+                    'reload' => in_array($permission->name, config('crebs86.protected_permissions'))
+                ], 418);
+            }
+            $permission->update(['name' => $request->input('name')]);
+            return null;
+        }
+        return response()->json(['message' => 'Permissões: Você não possui permissão para editar esta permissão'], 403);
     }
 }

@@ -26,7 +26,6 @@ const rolesWithPermissions = ref(props.rolesWithPermissions);
 
 const permissionsList = ref({});
 const newRole = ref('');
-const permissionsRole = ref([]);
 const message = ref({ mesage: '', code: 0 });
 
 function saveNewRole() {
@@ -56,7 +55,7 @@ function saveNewRole() {
 
         }).catch(e => {
             if (e.response.status === 403) {
-                toast.error(e.response.data)
+                toast.error(e.response.data.message)
             } else {
                 message.value = e.response;
                 message.value = {
