@@ -48,7 +48,7 @@ function search() {
                 </svg>
             </div>
             <input type="text" v-model="searchUsers" @keypress.prevent.enter="search"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 dark:bg-gray-600 dark:text-gray-300"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 rounded-md dark:bg-gray-600 dark:text-gray-300"
                 placeholder="Busque por nome, CPF, e-mail ou ID">
         </div>
         <button type="submit"
@@ -63,14 +63,14 @@ function search() {
     </form>
     <small class="text-blue-500 ml-2 dark:text-gray-300">Para buscas por nome ou e-mail insira ao menos 4
         caracteres</small>
-    <div class="py-0 px-0 dark:bg-gray-800">
-        <div class="max-w-7xl mx-auto dark:bg-gray-800">
+    <div class="py-0 px-0">
+        <div class="mx-auto dark:bg-gray-800 rounded-xl">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
                 <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
                     <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                                 <div v-if="usersList?.total > 0">
                                     <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
                                         Exibindo de
@@ -87,7 +87,7 @@ function search() {
                                         encontrado</p>
                                 </div>
                             </div>
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans pb-4">
                                 <div v-if="usersList?.links?.length > 3">
                                     <nav class="relative z-0 inline-flex shadow-sm">
                                         <template v-for="(v, i) in usersList.links" :key="'link_'+i">
@@ -131,13 +131,16 @@ function search() {
                                                 }}</div>
                                             </template>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
+                                        <td
+                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
                                             <div class="grid grid-cols-4 gap-6">
                                                 <Link :href="route('admin.acl.users.roles.list', v.id)">
-                                                <mdicon name="shield-account" class="text-green-600 hover:text-green-400" title="Detalhes" />
+                                                <mdicon name="shield-account"
+                                                    class="text-green-600 hover:text-green-400" title="Detalhes" />
                                                 </Link>
                                                 <Link :href="route('admin.acl.users.roles.show', v.id)">
-                                                <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400" title="Editar" />
+                                                <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
+                                                    title="Editar" />
                                                 </Link>
                                                 <!-- <mdicon name="account-cancel" class="text-yellow-500"
                                                     title="Desativar" />
@@ -147,7 +150,7 @@ function search() {
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                                 <div v-if="usersList?.total > 0">
                                     <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
                                         Exibindo de
@@ -163,7 +166,7 @@ function search() {
                                     <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
                                 </div>
                             </div>
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans pb-4">
+                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans pb-4">
                                 <div v-if="usersList?.links?.length > 3">
                                     <nav class="relative z-0 inline-flex shadow-sm">
                                         <template v-for="(v, i) in usersList.links" :key="'link_'+i">

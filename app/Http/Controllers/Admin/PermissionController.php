@@ -114,17 +114,20 @@ class PermissionController extends Controller
             $this->can('ACL Editar')
             && !in_array($request->name, config('crebs86.protected_permissions')) //é uma permissão protegida?...
         ) {
-            $permission = Permission::select('id', 'name', 'guard_name')
-                ->where('id', $request->id)
-                ->first();
-            if ($permission->name === $request->input('name') || in_array($permission->name, config('crebs86.protected_permissions'))) {
-                return response()->json([
-                    'message' => 'Permissões: Nenhuma alteração foi feita',
-                    'reload' => in_array($permission->name, config('crebs86.protected_permissions'))
-                ], 418);
+            if ((int) getKeyValue($request->_checker, 'edit_permission') === (int) $request->id) {
+                $permission = Permission::select('id', 'name', 'guard_name')
+                    ->where('id', $request->id)
+                    ->first();
+                if ($permission->name === $request->input('name') || in_array($permission->name, config('crebs86.protected_permissions'))) {
+                    return response()->json([
+                        'message' => 'Permissões: Nenhuma alteração foi feita',
+                        'reload' => in_array($permission->name, config('crebs86.protected_permissions'))
+                    ], 418);
+                }
+                $permission->update(['name' => $request->input('name')]);
+                return null;
             }
-            $permission->update(['name' => $request->input('name')]);
-            return null;
+            return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);
         }
         return response()->json(['message' => 'Permissões: Você não possui permissão para editar esta permissão'], 403);
     }

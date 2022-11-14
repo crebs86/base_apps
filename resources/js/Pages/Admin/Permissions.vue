@@ -67,7 +67,7 @@ function saveNewPermission() {
             <AclMenu />
         </template>
         <div
-            class="container mx-auto mt-1 text-justify px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
+            class="container sm:mx-auto mx-3 mt-1 p-3 text-justify rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400">
 
             <SimpleModal buttonTitle="Nova Permissão" :showOpenModalButton="$page.props.new">
                 <template #button_title>Permissões</template>
@@ -104,8 +104,8 @@ function saveNewPermission() {
                     </button>
                 </template>
             </SimpleModal>
-            <div class="py-0 px-0 dark:bg-gray-800">
-                <div class="max-w-7xl mx-auto dark:bg-gray-600">
+            <div class="p-0 dark:bg-gray-800 rounded-lg">
+                <div class="mx-auto dark:bg-gray-800 p-3 rounded-lg">
                     <div class="py-2 overflow-x-auto mt-2 bg-transparent">
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-600">
@@ -124,7 +124,8 @@ function saveNewPermission() {
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'can'">
                                                 <div class="grid grid-cols-4 gap-6">
-                                                    <Link v-if="value" :href="route('admin.acl.permissions.edit', v.id)">
+                                                    <Link v-if="value"
+                                                        :href="route('admin.acl.permissions.edit', v.id)">
                                                     <mdicon name="playlist-edit"
                                                         :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
                                                         title="Editar" />

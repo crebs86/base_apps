@@ -98,7 +98,8 @@ class RoleController extends Controller
             return Inertia::render('Admin/RoleEdit', [
                 'role' => $roleWithPermissions,
                 'permissions' => $rp,
-                '_checker' => setGetKey($request->id, 'edit_role_permissions')
+                '_checker' => setGetKey($request->id, 'edit_role_permissions'),
+                'edit_name' => !in_array($roleWithPermissions[0]['name'], config('crebs86.protected_roles'))
             ]);
         }
         return Inertia::render('Admin/403');
@@ -107,7 +108,7 @@ class RoleController extends Controller
     /**
      * atualiza nome do papel e suas permissões
      */
-    public function update(Request $request): JsonResponse|null
+    public function update(RoleRequest $request): JsonResponse|null
     {
 
         if (
@@ -115,20 +116,21 @@ class RoleController extends Controller
             && array_intersect([$request->name], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
             && $this->hasRole(config('crebs86.admin_roles_edit')) //... e usuário possui privilégios?
         ) {
-            $request->validate([
-                'name' => ['required', 'string'],
-                'permissions' => ['array'],
-            ]);
+            if ((int) getKeyValue($request->_checker, 'edit_role_permissions') === (int) $request->id) {
+                $request->validated();
 
-            $role = Role::where('name', $request->name)
-                ->select('id', 'name', 'guard_name')
-                ->first();
-            $role->update(['name' => $request->input('name')]);
-
-            $role->syncPermissions($request->input('permissions'));
-            return null;
+                $role = Role::where('id', $request->id)
+                    ->select('id', 'name', 'guard_name')
+                    ->first();
+                if (!in_array($role->name, config('crebs86.protected_roles'))) {
+                    $role->update(['name' => $request->input('name')]);
+                }
+                $role->syncPermissions($request->input('permissions'));
+                return null;
+            }
+            return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);
         } else {
-            return response()->json('Permissões em papéis: Você não possui permissão para acessar este recurso', 403);
+            return response()->json(['message' => 'Permissões em papéis: Você não possui permissão para acessar este recurso'], 403);
         }
     }
     /**

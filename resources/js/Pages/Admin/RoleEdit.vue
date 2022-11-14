@@ -10,12 +10,15 @@ import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 const props = defineProps({
     role: Object,
     permissions: Object,
-    _checker: String
+    _checker: String,
+    edit_name: Boolean
 })
 
 const changed = ref(false);
 
 const toast = useToast();
+
+const roleName = ref(props.role[0].name)
 
 const editPermissions = reactive(props.permissions);
 
@@ -33,7 +36,8 @@ function checkPermission(permission) {
 function editRolePermission() {
     axios.post(route('admin.acl.roles.permissions.update', props.role[0].id), {
         permissions: hasPermissions.value,
-        name: props.role[0].name,
+        id: props.role[0].id,
+        name: roleName.value,
         _checker: props._checker
     })
         .then(r => {
@@ -42,32 +46,30 @@ function editRolePermission() {
         })
         .catch(r => {
             let res = r.response
-            if (res.status === 403) {
-                toast.error(res.data)
-            }
+            toast.error(res.data.message)
         })
 }
 
 </script>
 <template>
 
-    <Head :title="'Editar: '+$page.props.role[0].name" />
+    <Head :title="'Editar: ' + $page.props.role[0].name" />
 
     <AuthenticatedLayout>
         <template #inner_menu>
             <AclMenu />
         </template>
         <div
-            class="container mx-auto mt-1 text-justify px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
+            class="container sm:mx-auto mx-3 mt-1 p-3 text-justify rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400">
 
             <h1 class="text-lg text-center my-2">Permissões do Papél:
                 <strong>
                     {{ $page.props.role[0].name }}
                 </strong>
             </h1>
-            <div class="py-0 px-0">
-                <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-600">
-                    <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-500">
+            <div class="p-0  dark:bg-gray-800 rounded-lg">
+                <div class="relative flex items-top justify-center sm:items-center rounded-lg sm:pt-0 dark:bg-gray-800">
+                    <div class="m-2 md:py-2 overflow-x-auto dark:bg-gray-500 rounded-lg">
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-500">
                             <button @click="editRolePermission"
@@ -75,6 +77,17 @@ function editRolePermission() {
                                 :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''" :disabled="!changed">
                                 Atualizar
                             </button>
+
+                            <div class="relative z-0 mb-6 w-full group" v-if="edit_name">
+                                <input type="text" id="full_name" v-model="roleName" @input="changed = true"
+                                    class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
+                                    required />
+                                <label for="full_name"
+                                    class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
+                                    Nome do Papél
+                                </label>
+                            </div>
+
                             <table class="min-w-full mb-2 dark:bg-gray-600 dark:text-gray-200">
                                 <thead>
                                     <tr>

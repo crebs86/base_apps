@@ -57,9 +57,9 @@ function editUserRole() {
         <template #inner_menu>
             <AclMenu />
         </template>
-        <div class="py-0 px-0 mt-3 dark:bg-gray-800">
-            <div class="max-w-7xl mx-auto dark:bg-gray-800">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
+        <div class="py-2 px-0 mt-3 mx-1 md:mx-3 dark:bg-gray-600 rounded-lg">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
                         <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <div
