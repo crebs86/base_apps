@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/inertia-vue3';
 </script>
 <template>
-    <div class="shadow-lg pb-1 rounded-b-3xl bg-teal-500">
+    <div class="shadow-lg pb-1 rounded-b-3xl bg-teal-500 min-w-full md:min-w-[50%] lg:min-w-[35%] mx-auto">
         <div class="flex rounded-b-3xl bg-gray-100 dark:bg-gray-700 space-y-5 flex-col items-center py-1">
         </div>
         <div class="grid px-2 py-1 items-center justify-around grid-cols-3">
