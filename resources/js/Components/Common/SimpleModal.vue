@@ -6,8 +6,8 @@
             </mdicon>
         </h2>
         <div v-if="showModal"
-            class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex pt-52 md:pt-0">
-            <div class="relative my-6 mx-auto w-11/12 md:w-9/12 max-w-6xl">
+            class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex pt-52 md:pt-0 ">
+            <div class="relative my-6 mx-auto w-11/12 md:w-9/12 max-w-6xl h-5/6">
                 <!--content-->
                 <div
                     class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-800">

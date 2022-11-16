@@ -60,18 +60,18 @@ function editRolePermission() {
             <AclMenu />
         </template>
         <div
-            class="container sm:mx-auto mx-3 mt-1 p-3 text-justify rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400">
+            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
 
             <h1 class="text-lg text-center my-2">Permissões do Papél:
                 <strong>
                     {{ $page.props.role[0].name }}
                 </strong>
             </h1>
-            <div class="p-0  dark:bg-gray-800 rounded-lg">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative flex items-top justify-center sm:items-center rounded-lg sm:pt-0 dark:bg-gray-800">
-                    <div class="m-2 md:py-2 overflow-x-auto dark:bg-gray-500 rounded-lg">
+                    <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                         <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-500">
+                        class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                             <button @click="editRolePermission"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-2"
                                 :class="!changed ? 'bg-blue-200 hover:bg-blue-200' : ''" :disabled="!changed">
@@ -100,13 +100,13 @@ function editRolePermission() {
                                 </thead>
                                 <tbody class="bg-white text-center dark:bg-gray-400">
                                     <tr v-for="(v, i) in editPermissions" :key="i">
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                             {{ v.id }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                             {{ v.name }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                             <input type="checkbox"
                                                 class="w-4 h-4 text-blue-600 bg-red-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2"
                                                 :checked="checkPermission(v.id)" disabled />

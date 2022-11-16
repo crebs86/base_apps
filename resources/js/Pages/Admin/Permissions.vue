@@ -67,7 +67,7 @@ function saveNewPermission() {
             <AclMenu />
         </template>
         <div
-            class="container sm:mx-auto mx-3 mt-1 p-3 text-justify rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400">
+            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
 
             <SimpleModal buttonTitle="Nova Permissão" :showOpenModalButton="$page.props.new">
                 <template #button_title>Permissões</template>
@@ -108,31 +108,28 @@ function saveNewPermission() {
                 <div class="mx-auto dark:bg-gray-800 p-3 rounded-lg">
                     <div class="py-2 overflow-x-auto mt-2 bg-transparent">
                         <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-600">
+                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                             <table class="min-w-full mb-2 px-1">
                                 <thead>
                                     <tr>
                                         <th v-for="(value, index) in ['ID', 'Nome', 'Ações']" :key="index + '' + value"
-                                            class="bg-gray-100 px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-gray-600">
+                                <tbody class="bg-white text-center dark:bg-gray-600">
                                     <tr v-for="(v, i) in permissions" :key="i">
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500"
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'can'">
-                                                <div class="grid grid-cols-4 gap-6">
-                                                    <Link v-if="value"
-                                                        :href="route('admin.acl.permissions.edit', v.id)">
-                                                    <mdicon name="playlist-edit"
-                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
-                                                        title="Editar" />
+                                                <div class="flex text-sm leading-5 text-blue-900 dark:text-gray-300 justify-center">
+                                                    <Link v-if="value" class="text-center" :href="route('admin.acl.permissions.edit', v.id)">
+                                                    <mdicon name="playlist-edit" class="justify-center"
+                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''" title="Editar" />
                                                     </Link>
                                                     <mdicon v-else name="playlist-remove"
-                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
-                                                        title="Proibido Editar" />
+                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400 text-center' : ''" title="Proibido Editar" />
                                                 </div>
                                             </template>
                                             <template v-else>

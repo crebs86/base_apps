@@ -26,7 +26,7 @@ const rolesWithPermissions = ref(props.rolesWithPermissions);
             <AclMenu />
         </template>
         <div
-            class="container mx-auto mt-1 text-justify px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
+            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
             <AclUsersSearch :users="$page.props.users" :keyword="$page.props.keyword" />
         </div>
     </AuthenticatedLayout>

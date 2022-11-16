@@ -34,7 +34,7 @@ function search() {
 </script>
 <template>
     <h1 class="text-lg text-center mb-2 dark:text-gray-300">Usuários do Sistema</h1>
-    <form class="flex items-center" @submit.prevent="search()">
+    <form class="flex items-center h-5/6 p-1 m-1" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
             <div class="flex absolute inset-y-0 left-0 items-center pl-1 pointer-events-none">
@@ -52,7 +52,7 @@ function search() {
                 placeholder="Busque por nome, CPF, e-mail ou ID">
         </div>
         <button type="submit"
-            class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
             <!-- search icon -->
             <svg aria-hidden="true" class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -69,7 +69,7 @@ function search() {
                 <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
                     <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                         <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
+                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                             <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                                 <div v-if="usersList?.total > 0">
                                     <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
@@ -87,14 +87,14 @@ function search() {
                                         encontrado</p>
                                 </div>
                             </div>
-                            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans pb-4">
+                            <div class="sm:flex sm:items-center sm:justify-center mt-4 work-sans pb-4">
                                 <div v-if="usersList?.links?.length > 3">
-                                    <nav class="relative z-0 inline-flex shadow-sm">
+                                    <nav class="relative z-0 inline-flex shadow-md">
                                         <template v-for="(v, i) in usersList.links" :key="'link_'+i">
                                             <div v-if="v.link === null" v-html="v.label"></div>
                                             <Link v-else :href="v.url" v-html="v.label"
-                                                class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary dark:bg-gray-600 dark:text-gray-300"
-                                                :class="{ 'bg-blue-300 text-white dark:bg-white dark:text-gray-800': v.active }">
+                                                class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 dark:bg-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-300 dark:hover:text-gray-800"
+                                                :class="v.active ? 'bg-blue-300 text-white dark:bg-gray-100 dark:text-gray-800' : ''">
                                             </Link>
                                         </template>
                                     </nav>
@@ -105,14 +105,14 @@ function search() {
                                     <tr>
                                         <th v-for="(value, index) in ['ID', 'Nome', 'E-mail', 'CPF', 'Situação', 'Ações']"
                                             :key="index + '' + value"
-                                            class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:text-gray-300">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-500 dark:text-gray-300">
                                     <tr v-for="(v, i) in usersList?.data" :key="i">
-                                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600"
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'active'">
                                                 <span
@@ -132,7 +132,7 @@ function search() {
                                             </template>
                                         </td>
                                         <td
-                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
                                             <div class="grid grid-cols-4 gap-6">
                                                 <Link :href="route('admin.acl.users.roles.list', v.id)">
                                                 <mdicon name="shield-account"

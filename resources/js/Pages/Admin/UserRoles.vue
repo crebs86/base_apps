@@ -63,11 +63,10 @@ function editUserRole() {
                     <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
                         <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <div
-                                class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg dark:bg-gray-800">
+                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                                 <h2
-                                    class="font-semibold text-xl text-gray-800 leading-tight text-blue-900 dark:text-gray-300 pb-4">
-                                    <p><strong>Papéis de: </strong></p>
-                                    <p>Nome: {{ $page.props.user.name }}</p>
+                                    class="font-semibold text-lg text-gray-800 leading-tight text-blue-900 dark:text-gray-300 pb-4">
+                                    <p><strong>Papéis de: </strong> {{ $page.props.user.name }}</p>
                                     <p>E-mail: {{ $page.props.user.email }}</p>
                                     <p>CPF: {{ $page.props.user.cpf }}</p>
                                 </h2>
@@ -81,20 +80,20 @@ function editUserRole() {
                                         <tr>
                                             <th v-for="(value, index) in ['#', 'Papel', $page.props.edit ? 'Atual/Alterar' : 'Atual']"
                                                 :key="index + '' + value"
-                                                class="px-6 py-3 border-b-2 border-gray-300 leading-4 text-blue-500 tracking-wider dark:text-gray-300">
+                                                class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 leading-4 text-blue-500 tracking-wider dark:text-gray-300">
                                                 {{ value }}
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white text-center dark:bg-gray-800 dark:text-gray-300">
                                         <tr v-for="(v, i) in editRoles" :key="'role_' + v.id">
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                            <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                                 {{ v.id }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                            <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                                 {{ v.name }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                                            <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                                 <input type="checkbox"
                                                     class="w-4 h-4 text-blue-600 bg-red-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2"
                                                     :checked="checkRole(v.id)" disabled />
