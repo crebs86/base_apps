@@ -105,7 +105,7 @@ function search() {
                                     <tr>
                                         <th v-for="(value, index) in ['ID', 'Nome', 'E-mail', 'CPF', 'Situação', 'Ações']"
                                             :key="index + '' + value"
-                                            class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:text-gray-300">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-center leading-4 text-blue-500 tracking-wider dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
@@ -133,18 +133,18 @@ function search() {
                                         </td>
                                         <td
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
-                                            <div class="grid grid-cols-4 gap-6">
+                                            <div class="flex justify-center gap-1">
                                                 <Link :href="route('admin.acl.users.roles.list', v.id)">
                                                 <mdicon name="shield-account"
-                                                    class="text-green-600 hover:text-green-400" title="Detalhes" />
+                                                    class="text-green-600 hover:text-green-400" title="Detalhar Papéis" />
                                                 </Link>
                                                 <Link :href="route('admin.acl.users.roles.show', v.id)">
                                                 <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
-                                                    title="Editar" />
+                                                    title="Editar Papéis" />
                                                 </Link>
-                                                <!-- <mdicon name="account-cancel" class="text-yellow-500"
-                                                    title="Desativar" />
-                                                <mdicon name="account-remove" class="text-red-500" title="Apagar" /> -->
+                                                <Link :href="route('admin.acl.users.edit', v.id)">
+                                                <mdicon name="account-edit" class="text-yellow-500" title="Editar Conta" />
+                                                </Link>
                                             </div>
                                         </td>
                                     </tr>

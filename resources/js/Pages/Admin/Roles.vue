@@ -177,11 +177,16 @@ function getPermissionsListForm() {
                                         </td>
                                         <td
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                            <div class="grid grid-cols-4 gap-6">
+                                            <div class="grid grid-cols-2 gap-1">
                                                 <Link :href="route('admin.acl.roles.show', v.id)">
                                                 <mdicon name="playlist-edit"
                                                     class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
                                                     title="Editar" />
+                                                </Link>
+                                                <Link :href="route('admin.acl.roles.list.users', v.id)">
+                                                <mdicon name="text-account"
+                                                    class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                    :title="'Usuários com o papél: ' + v.name" />
                                                 </Link>
                                             </div>
                                         </td>

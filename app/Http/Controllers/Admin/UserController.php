@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Traits\ACL;
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use App\Traits\ACL;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserController extends Controller
 {
@@ -15,7 +19,7 @@ class UserController extends Controller
     /**
      * página inicial de controle de acesso de usuários
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar')) {
             return Inertia::render('Admin/AclUsers');
@@ -25,7 +29,7 @@ class UserController extends Controller
     /**
      * Paginação do uruário
      */
-    public function list(Request $request)
+    public function list(Request $request): Response
     {
         if ($this->can('ACL Ver', 'ACL Editar')) {
             if (!$request->user) {
@@ -50,7 +54,7 @@ class UserController extends Controller
      * termos aproximados: name e email;
      * termos exatos: id e CPF.
      */
-    private function findUsers(string $keyword)
+    private function findUsers(string $keyword): LengthAwarePaginator
     {
         $x = [
             'len' => strlen($keyword),
@@ -113,7 +117,7 @@ class UserController extends Controller
     /**
      * página exibe dados básicos do usuário e papéis vinculados a este
      */
-    public function showUserAndRoles(Request $request)
+    public function showUserAndRoles(Request $request): Response
     {
         if ($this->can('ACL Ver', 'ACL Editar')) {
             $userRoles = $this->getUserRoles($request->id);
@@ -154,7 +158,7 @@ class UserController extends Controller
     /**
      * define a situação de cada papél em relaçao ao usuário
      */
-    private function setCurrentRoles($allRoles, $r)
+    private function setCurrentRoles($allRoles, $r): array
     {
         $ur = [];
         foreach ($allRoles as $ar) {
@@ -172,7 +176,7 @@ class UserController extends Controller
     /**
      * busca papeis de usuários
      */
-    private function getUserRoles($id)
+    private function getUserRoles($id): User
     {
         return User::select('id', 'name', 'cpf', 'email')->where('id', $id)
             ->with(
@@ -187,7 +191,7 @@ class UserController extends Controller
     /**
      * Sincroniza papéis dos usuários
      */
-    public function editUserRole(Request $request)
+    public function editUserRole(Request $request): JsonResponse|User
     {
         $r = $request->all();
         $hasNoPrivileges = !$this->hasRole(config('crebs86.admin_roles_edit'));
@@ -206,5 +210,51 @@ class UserController extends Controller
             return response()->json('Payload: erro ao acessar aplicação', 403);
         }
         return response()->json('Papéis de usuário: você não possui permissão para acessar este recurso', 403);
+    }
+    /**
+     * exibe formulário de edição do usuário selecionado
+     */
+    public function userEditForm(Request $request): Response
+    {
+        if ($this->can('Usuario Ver', 'Usuario Editar', 'Usuario Apagar')) {
+            if ($user = User::select('id', 'name', 'cpf', 'email', 'active')->find($request->id) ?? []) {
+                return Inertia::render(
+                    'Admin/UserEdit',
+                    [
+                        'user' => $user,
+                        '_checker' => setGetKey($request->id, 'edit_user_account')
+                    ]
+                );
+            }
+        }
+        return Inertia::render('Admin/403');
+    }
+    /**
+     * atualiza usuário com dados recebidos do formulário
+     */
+    public function userEdit(UserRequest $request): User|JsonResponse
+    {
+        if ($this->can('Usuario Editar', 'Usuario Apagar')) {
+
+            if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
+
+                $user = User::select('id', 'name', 'cpf', 'email', 'active')
+                    ->find($request->id);
+
+                $updated = $user->update($request->only('email', 'name', 'cpf', 'active'));
+                if ($updated) {
+                    return $user;
+                } else {
+                    return response()->json([
+                        'message' => 'Erro ao atualizar conta do usuário'
+                    ], 403);
+                }
+            } else {
+                return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);
+            }
+        }
+        return response()->json([
+            'message' => 'Você não possui permissão para usar este recurso'
+        ], 403);
     }
 }

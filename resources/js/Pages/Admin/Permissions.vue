@@ -123,13 +123,19 @@ function saveNewPermission() {
                                         <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <template v-if="index === 'can'">
-                                                <div class="flex text-sm leading-5 text-blue-900 dark:text-gray-300 justify-center">
-                                                    <Link v-if="value" class="text-center" :href="route('admin.acl.permissions.edit', v.id)">
+                                                <div
+                                                    class="flex text-sm leading-5 text-blue-900 dark:text-gray-300 justify-center">
+                                                    <Link v-if="value" class="text-center"
+                                                        :href="route('admin.acl.permissions.edit', v.id)">
                                                     <mdicon name="playlist-edit" class="justify-center"
-                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''" title="Editar" />
+                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
+                                                        title="Editar" />
                                                     </Link>
-                                                    <mdicon v-else name="playlist-remove"
-                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400 text-center' : ''" title="Proibido Editar" />
+                                                    <Link :href="route('admin.acl.permissions.list.users', v.id)">
+                                                    <mdicon name="account-lock-open"
+                                                        class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                        :title="'Usuários com a permissão: ' + v.name" />
+                                                    </Link>
                                                 </div>
                                             </template>
                                             <template v-else>

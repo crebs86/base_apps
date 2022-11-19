@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleRequest;
 use App\Traits\ACL;
-use Illuminate\Http\JsonResponse;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\RoleRequest;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
@@ -157,5 +158,22 @@ class RoleController extends Controller
             ], 200);
         }
         return response()->json(['message' => 'Novo Papél: Você não possui permissão para acessar este recurso'], 403);
+    }
+
+    public function listUsers(Request $request): Response
+    {
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
+            $role = Role::where('id', $request->id)->select('name')->first();
+            if ($role) {
+                return Inertia::render(
+                    'Admin/RoleListUsers',
+                    [
+                        'users' => User::role($role->name)->select('id', 'name', 'cpf')->get()->toArray(),
+                        'role' => $role
+                    ]
+                );
+            }
+        }
+        return Inertia::render('Admin/403');
     }
 }

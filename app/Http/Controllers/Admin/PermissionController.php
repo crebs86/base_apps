@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Traits\ACL;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -130,5 +131,21 @@ class PermissionController extends Controller
             return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);
         }
         return response()->json(['message' => 'Permissões: Você não possui permissão para editar esta permissão'], 403);
+    }
+    public function listUsers(Request $request): Response
+    {
+        if ($this->can('ACL Ver', 'ACL Editar', 'ACL Apagar')) {
+            $permission = Permission::where('id', $request->id)->select('name')->first();
+            if ($permission) {
+                return Inertia::render(
+                    'Admin/PermissionListUsers',
+                    [
+                        'users' => User::permission($permission->name)->select('id', 'name', 'cpf')->get()->toArray(),
+                        'permission' => $permission
+                    ]
+                );
+            }
+        }
+        return Inertia::render('Admin/403');
     }
 }

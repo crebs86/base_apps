@@ -10,6 +10,13 @@
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
   ),
+  'geekcom/validator-docs' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'geekcom\\ValidatorDocs\\ValidatorProvider',
+    ),
+  ),
   'inertiajs/inertia-laravel' => 
   array (
     'providers' => 
