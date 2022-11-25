@@ -38,12 +38,27 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
-                'permissions' => $request->user()?->getPermissionsViaRoles(),
+                'permissions' => function () use ($request) {
+                    if ($request->user()) {
+                        $a = [];
+                        foreach ($request->user()?->getPermissionsViaRoles() as $v) {
+                            $a[] = $v['name'];
+                        }
+                        return $a;
+                    }
+                },
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
                 ]);
+            },
+            'app' => function () {
+                return [
+                    'version' => '0.0.1',
+                    'year' => 2022,
+                    'released' => '2022-11-25'
+                ];
             },
         ]);
     }
