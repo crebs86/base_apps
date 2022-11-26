@@ -5,6 +5,11 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionController;
 
+Route::middleware('auth')->prefix('/dashboard/account')->group(function () {
+    Route::get('/users/account', [UserController::class, 'account'])->name('user.account');
+    Route::post('/users/account', [UserController::class, 'updateAccount'])->name('user.account.update');
+    Route::post('/users/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
+});
 Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(function () {
     Route::get('/', [PermissionController::class, 'acl'])->name('acl');
 

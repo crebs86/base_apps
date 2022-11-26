@@ -2,6 +2,7 @@
 import { Link, usePage } from '@inertiajs/inertia-vue3';
 import { onMounted, ref } from 'vue';
 import hasPermission from '@/permissions'
+import { computed } from '@vue/reactivity';
 
 const numberMenuItems = ref(2);
 
@@ -10,24 +11,22 @@ onMounted: {
         usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']
     )) {
         numberMenuItems.value++
-        console.log(numberMenuItems.value)
     }
 
     if (hasPermission(
         usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar']
     )) {
         numberMenuItems.value++
-        console.log(numberMenuItems.value)
     }
 }
-const showMenuItems = numberMenuItems.value;
+const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
 
 </script>
 <template>
     <div class="shadow-lg pb-1 rounded-b-3xl bg-teal-500 min-w-full md:min-w-[50%] lg:min-w-[35%] mx-auto">
         <div class="flex rounded-b-3xl bg-gray-100 dark:bg-gray-700 space-y-5 flex-col items-center py-1">
         </div>
-        <div class="grid px-2 py-1 items-center justify-around" :class="'grid-cols-' + showMenuItems">
+        <div class="px-2 py-1 items-center justify-around " :class="showMenuItems">
             <div class="col-span-1 flex flex-col items-center">
                 <Link :href="route('dashboard')" :active="route().current('dashboard')"
                     :class="route().current('dashboard') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
@@ -66,3 +65,32 @@ const showMenuItems = numberMenuItems.value;
         </div>
     </div>
 </template>
+<style scoped>
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.grid-cols-7 {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+</style>

@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserController extends Controller
@@ -21,11 +22,62 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
-        if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar')) {
+        if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar')) {
             return Inertia::render('Admin/AclUsers');
         }
         return Inertia::render('Admin/403');
     }
+
+    /**
+     * página da conta do usuário
+     */
+    public function account(): Response
+    {
+        return Inertia::render('Admin/Account');
+    }
+
+    /**
+     * atualiza os dados do usuário
+     */
+    public function updateAccount(Request $request): Response
+    {
+        $request->validate(
+            [
+                'name' => 'string|required|min:3|max:255',
+                'email' => 'email|required|unique:users,id'
+            ]
+        );
+
+        $request->user()->update([
+            'name' => $request->name
+        ]);
+
+        return Inertia::render('Admin/Account', [
+            'message' => 'Sua conta foi atualizada!'
+        ]);
+    }
+
+    /**
+     * atualizada senha
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|confirmed',
+        ]);
+
+        if (!Hash::check($request->old_password, auth()->user()->password)) {
+            return response()->json(["message" => "Senha atual está incorreta!"], 422);
+        }
+
+        User::whereId(auth()->user()->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json(["message" => "Sua senha foi alterada com sucesso"], 200);
+    }
+
     /**
      * Paginação do uruário
      */
