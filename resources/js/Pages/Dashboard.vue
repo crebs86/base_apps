@@ -29,6 +29,12 @@ import { Head } from '@inertiajs/inertia-vue3';
                         <p class="pt-2">
                             <span class="font-bold">E-mail:</span> {{ $page.props.auth.user.email }}
                         </p>
+                        <p class="pt-2">Papéis no sistema:</p>
+                        <p class="pl-3">
+                        <ul>
+                            <li v-for="v in $page.props.auth.roles" :key="v"> - {{ v }}</li>
+                        </ul>
+                        </p>
                         <p class="pt-2">Permissões no sistema:</p>
                         <p class="pl-3">
                         <ul>
@@ -38,7 +44,8 @@ import { Head } from '@inertiajs/inertia-vue3';
                     </div>
                     <div class="p-6">
                         <p>Novidades:</p>
-                        <p class="pl-3">Versão {{ $page.props.app.version }}, lançada em {{ $page.props.app.released }}.</p>
+                        <p class="pl-3">Versão {{ $page.props.app.version }}, lançada em {{ $page.props.app.released }}.
+                        </p>
                     </div>
                 </div>
             </div>

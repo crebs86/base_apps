@@ -20,10 +20,14 @@ import MainMenu from '@/Components/Admin/Menus/MainMenu.vue';
             </a-->
         </div>
         <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-800 lg:my-8">
-        <span class="block text-sm sm:text-center dark:text-gray-300">© {{$page.props.app.year}}-2022 Rodando com <a
-                href="https://crebs.dev" class="text-blue-500 hover:text-blue-900 dark:hover:text-white">BaseApp</a>,
-            desenvolvido por <a class="text-blue-500 hover:text-blue-900 dark:hover:text-white" href="https://crebs.dev"
-                target="_blank">CrebsDev</a>. Todos os direitos reservados.
+        <span class="block text-sm sm:text-center dark:text-gray-300">
+            © {{ $page.props.app.year }}-2022 Rodando com <a href="https://crebs.dev"
+                class="text-blue-500 hover:text-blue-900 dark:hover:text-white">
+                BaseApp v{{ $page.props.app.version }}
+            </a>, desenvolvido por
+            <a class="text-blue-500 hover:text-blue-900 dark:hover:text-white" href="https://crebs.dev" target="_blank">
+                CrebsDev
+            </a>. Todos os direitos reservados.
         </span>
     </footer>
 </template>

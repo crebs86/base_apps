@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -67,15 +68,25 @@ class UserController extends Controller
             'password' => 'required|confirmed',
         ]);
 
-        if (!Hash::check($request->old_password, auth()->user()->password)) {
-            return response()->json(["message" => "Senha atual está incorreta!"], 422);
+        // if (!Hash::check($request->current_password, auth()->user()->password)) {
+        //return redirect()->back()->with('message', 'Error');
+        try {
+            !Hash::check($request->current_password, auth()->user()->password);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors([
+                'message' => 'ups, there was an error'
+            ]);
         }
 
-        User::whereId(auth()->user()->id)->update([
-            'password' => Hash::make($request->new_password)
-        ]);
 
-        return response()->json(["message" => "Sua senha foi alterada com sucesso"], 200);
+        // }
+
+        // User::whereId(auth()->user()->id)->update([
+        //     'password' => Hash::make($request->new_password)
+        // ]);
+        return Inertia::render('Admin/Account', [
+            'message' => 'Sua senha foi alterada com sucesso!'
+        ]);
     }
 
     /**

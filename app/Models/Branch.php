@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 
-class Client extends Model
+class Branch extends Model
 {
     use HasFactory, HasRoles;
-
-    public function branch()
-    {
-        return $this->hasOne(Branch::class, 'id', 'branch_id');
-    }
 }
