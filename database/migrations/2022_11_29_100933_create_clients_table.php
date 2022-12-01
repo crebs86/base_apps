@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('cpf', 11)->unique()->nullable();
             $table->string('email', 155)->nullable();
+            $table->string('cep', 8)->nullable();
             $table->string('address', 510);
+            $table->string('phones', 105)->nullable();
+            $table->string('notes', 255)->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->foreign('branch_id')
                 ->references('id')

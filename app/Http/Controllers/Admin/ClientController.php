@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Traits\ACL;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Branch;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Branch;
+use App\Http\Requests\ClientRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ClientController extends Controller
@@ -21,7 +22,7 @@ class ClientController extends Controller
      */
     public function index(Request $request): Response
     {
-        if ($this->can('Clientes Ver', 'Clientes Editar', 'Clientes Apagar', 'Clientes Criar')) {
+        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar', 'Cliente Criar')) {
             if (!$request->client) {
                 $client = Client::orderBy('updated_at', 'desc')->orderBy('id', 'desc')->paginate(20)->through(
                     function ($client) {
@@ -67,9 +68,9 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Inertia\Response
      */
-    public function show(Client $client)
+    public function show(Client $client): Response
     {
-        if ($this->can('Clientes Ver', 'Clientes Editar', 'Clientes Apagar', 'Clientes Criar')) {
+        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar', 'Cliente Criar')) {
 
             return Inertia::render('Admin/Client', [
                 'client' => $client,
@@ -86,21 +87,35 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Inertia\Response
      */
-    public function edit(Client $client)
+    public function edit(Client $client): Response
     {
-        //
+        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar', 'Cliente Criar')) {
+
+            return Inertia::render('Admin/Client', [
+                'client' => $client,
+                'branch_id' => $client->branch_id ? Branch::where('id', $client->branch_id)->first()->name : [],
+                'edit' => true
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\ClientRequest  $request
      * @param  \App\Models\Client  $client
      * @return \Inertia\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(ClientRequest $request, Client $client)
     {
-        //
+        if (!$this->can('Cliente Editar', 'Cliente Apagar')) {
+            if (!$client->update($request->validated())) {
+                return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
+            }
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
