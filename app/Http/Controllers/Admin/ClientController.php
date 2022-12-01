@@ -48,7 +48,10 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        if ($this->can('Cliente Criar')) {
+            return Inertia::render('Admin/ClientCreate');
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
@@ -57,9 +60,16 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-    public function store(Request $request)
+    public function store(ClientRequest $request, Client $client)
     {
-        //
+        if ($this->can('Cliente Criar')) {
+dd();
+            if ($c = $client->create($request->validated())) {
+                return redirect(route('clients.show', $c->id))->with('success', 'Cliente criado com sucesso!');
+            }
+            return redirect()->back()->with('error', 'Ocorreu um erro ao criar cliente');
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
@@ -70,7 +80,7 @@ class ClientController extends Controller
      */
     public function show(Client $client): Response
     {
-        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar', 'Cliente Criar')) {
+        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar')) {
 
             return Inertia::render('Admin/Client', [
                 'client' => $client,
@@ -89,7 +99,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client): Response
     {
-        if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar', 'Cliente Criar')) {
+        if ($this->can('Cliente Editar')) {
 
             return Inertia::render('Admin/Client', [
                 'client' => $client,
@@ -109,8 +119,8 @@ class ClientController extends Controller
      */
     public function update(ClientRequest $request, Client $client)
     {
-        if (!$this->can('Cliente Editar', 'Cliente Apagar')) {
-            if (!$client->update($request->validated())) {
+        if ($this->can('Cliente Editar', 'Cliente Apagar')) {
+            if ($client->update($request->validated())) {
                 return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
             }
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
@@ -126,7 +136,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        if ($this->can('Cliente Apagar')) {
+        }
     }
 
     private function findClients(string $keyword): LengthAwarePaginator

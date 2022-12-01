@@ -24,7 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'cpf',
-        'active'
+        'active',
+        'updated_at',
+        'created_at'
     ];
 
     /**

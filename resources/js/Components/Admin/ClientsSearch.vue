@@ -33,7 +33,13 @@ function search() {
 
 </script>
 <template>
-    <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded">Clientes</h1>
+
+    <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
+        Clientes
+        <Link :href="route('clients.create')" class="pl-1 ml-1">
+        <mdicon name="account-plus" title="Criar Cliente" class="justify-center" />
+        </Link>
+    </h1>
     <form class="flex items-center h-5/6 p-1 m-1" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
@@ -128,8 +134,7 @@ function search() {
                                                     title="Detalhar Cliente" />
                                                 </Link>
                                                 <Link :href="route('clients.edit', v.id)">
-                                                <mdicon name="account-edit"
-                                                    class="text-blue-600 hover:text-blue-400"
+                                                <mdicon name="account-edit" class="text-blue-600 hover:text-blue-400"
                                                     title="Editar Cliente" />
                                                 </Link>
                                             </div>

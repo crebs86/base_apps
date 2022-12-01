@@ -39,12 +39,12 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 'roles' => function () use ($request) {
                     if ($request->user()) {
-                        return $request->user()->roles->pluck('name');
+                        return $request->user()->roles->sortBy('name')->pluck('name');
                     }
                 },
                 'permissions' => function () use ($request) {
                     if ($request->user()) {
-                        return $request->user()->getPermissionsViaRoles()->pluck('name');
+                        return $request->user()->getPermissionsViaRoles()->sortBy('name')->pluck('name')->unique()->values()->all();
                     }
                 },
             ],

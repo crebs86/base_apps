@@ -1,15 +1,16 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
-import { computed } from '@vue/reactivity';
 import { useToast } from "vue-toastification";
 import { ref } from 'vue';
+import hasPermission from '@/permissions'
 
 const toast = useToast();
 
 const edit = ref(usePage().props.value.edit);
 
 const client = useForm({
+    id: usePage().props.value.client.id,
     name: usePage().props.value.client.name,
     email: usePage().props.value.client.email,
     cep: usePage().props.value.client.cep,
@@ -22,9 +23,18 @@ const client = useForm({
 
 function saveClient() {
     client.put(route('clients.update', usePage().props.value.client.id), {
-        onSuccess: () => toast.success(usePage().props.value.flash.success),
+        onSuccess: () => {
+            if (usePage().props.value.flash.success) {
+                toast.success(usePage().props.value.flash.success);
+            } else if (usePage().props.value.flash.error) {
+                toast.error(usePage().props.value.flash.error);
+            }
+
+        },
         onError: () => {
-            toast.error(usePage().props.value.flash.error)
+            if (usePage().props.value.errors) {
+                toast.error('Foram encontrado erros ao processar sua solicitação');
+            }
         },
     })
 }
@@ -58,6 +68,8 @@ function saveClient() {
 
                             <div class="grid xl:grid-cols-3 xl:gap-6">
                                 <div class="relative z-0 mb-6 w-full group">
+                                    <input type="hidden" name="id" id="id" v-model="client.id" />
+
                                     <input type="text" name="name" id="name" v-model="client.name"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
@@ -171,7 +183,7 @@ function saveClient() {
                                     <label for="notes"
                                         :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                        Endereço
+                                        Observações
                                     </label>
                                     <div v-if="usePage().props.value.errors.notes" class="text-sm text-red-500">
                                         {{ usePage().props.value.errors.notes }}
@@ -179,18 +191,26 @@ function saveClient() {
                                 </div>
                             </div>
                             <div class="text-center">
-                                <button type="button" @click.prevent="edit = true" v-if="!edit"
+                                <button type="button" @click.prevent="edit = true"
+                                    v-if="!edit && hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Habilitar Edição
                                 </button>
-                                <template v-else>
+                                <template
+                                    v-else-if="edit && hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])">
                                     <button type="button" @click.prevent="edit = false"
-                                        class="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-800 focus:outline-none focus:shadow-outline">
+                                        class="border border-yellow-500 bg-yellow-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-yellow-800 focus:outline-none focus:shadow-outline">
                                         Cancelar
                                     </button>
                                     <button type="button" @click.prevent="saveClient"
+                                        v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
                                         class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
                                         Atualizar Cliente
+                                    </button>
+                                    <button type="button"
+                                        v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                                        class="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-800 focus:outline-none focus:shadow-outline">
+                                        Excluir Cliente
                                     </button>
                                 </template>
                             </div>

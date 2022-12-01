@@ -25,8 +25,8 @@ class ClientRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:255|string',
-            'email' => 'required|unique:clients,id',
-            'cpf' => 'nullable|cpf|unique:clients,id',
+            'email' => 'required|unique:clients,email,' . $this->id,
+            'cpf' => 'nullable|cpf|unique:clients,cpf',
             'cep' => 'nullable|size:8',
             'address' => 'string|nullable|max:510',
             'branch_id' => 'exists:branches,id',

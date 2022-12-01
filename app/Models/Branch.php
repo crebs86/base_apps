@@ -9,4 +9,6 @@ use Spatie\Permission\Traits\HasRoles;
 class Branch extends Model
 {
     use HasFactory, HasRoles;
+
+    protected $fillable = ['name', 'cnpj', 'email', 'address', 'updated_at', 'created_at'];
 }
