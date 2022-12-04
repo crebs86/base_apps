@@ -25,6 +25,7 @@ function saveClient() {
     client.put(route('clients.update', usePage().props.value.client.id), {
         onSuccess: () => {
             if (usePage().props.value.flash.success) {
+                edit.value = false;
                 toast.success(usePage().props.value.flash.success);
             } else if (usePage().props.value.flash.error) {
                 toast.error(usePage().props.value.flash.error);
@@ -197,12 +198,12 @@ function saveClient() {
                             </div>
                             <div class="text-center">
                                 <button type="button" @click.prevent="edit = true"
-                                    v-if="!edit && hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                                    v-if="!edit && (hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin']))"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Habilitar Edição
                                 </button>
                                 <template
-                                    v-else-if="edit && hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])">
+                                    v-else-if="edit && (hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin']))">
                                     <button type="button" @click.prevent="edit = false"
                                         class="border border-yellow-500 bg-yellow-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-yellow-800 focus:outline-none focus:shadow-outline">
                                         Cancelar

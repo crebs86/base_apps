@@ -120,7 +120,7 @@ class ClientController extends Controller
      */
     public function update(ClientRequest $request, Client $client)
     {
-        if ($this->can('Cliente Editar', 'Cliente Apagar')) {
+        if ($this->can('Cliente Editar')) {
             if ($client->update($request->validated())) {
                 return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
             }
