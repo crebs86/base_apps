@@ -49,7 +49,9 @@ class ClientController extends Controller
     public function create()
     {
         if ($this->can('Cliente Criar')) {
-            return Inertia::render('Admin/ClientCreate');
+            return Inertia::render('Admin/ClientCreate', [
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
+            ]);
         }
         return Inertia::render('Admin/403');
     }
@@ -63,7 +65,6 @@ class ClientController extends Controller
     public function store(ClientRequest $request, Client $client)
     {
         if ($this->can('Cliente Criar')) {
-dd();
             if ($c = $client->create($request->validated())) {
                 return redirect(route('clients.show', $c->id))->with('success', 'Cliente criado com sucesso!');
             }
@@ -84,8 +85,8 @@ dd();
 
             return Inertia::render('Admin/Client', [
                 'client' => $client,
-                'branch' => $client->branch_id ? Branch::where('id', $client->branch_id)->first()->name : [],
-                'edit' => false
+                'edit' => false,
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
             ]);
         }
         return Inertia::render('Admin/403');
@@ -103,8 +104,8 @@ dd();
 
             return Inertia::render('Admin/Client', [
                 'client' => $client,
-                'branch_id' => $client->branch_id ? Branch::where('id', $client->branch_id)->first()->name : [],
-                'edit' => true
+                'edit' => true,
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
             ]);
         }
         return Inertia::render('Admin/403');

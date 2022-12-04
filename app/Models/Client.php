@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 class Client extends Model
 {
 
-    protected $fillable = ['name', 'email', 'cpf', 'cep', 'address', 'phones', 'notes', 'updated_at', 'created_at'];
+    protected $fillable = ['name', 'email', 'cpf', 'cep', 'address', 'phones', 'branch_id', 'notes', 'updated_at', 'created_at'];
 
     use HasFactory, HasRoles, SoftDeletes;
 

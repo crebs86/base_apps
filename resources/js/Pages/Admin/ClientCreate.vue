@@ -8,22 +8,14 @@ import hasPermission from '@/permissions'
 const toast = useToast();
 
 const client = useForm({
-    name: 'Marlucia Martins',
-    email: 'marlucia@crebs.dev',
-    cep: '29128506',
-    address: 'Rua da Jaca, 494',
-    cpf: '08010104700',
-    phones: '27998298541',
-    notes: 'Nada',
-    branch_id: '1'
-    // name: '',
-    // email: '',
-    // cep: '',
-    // address: '',
-    // cpf: '',
-    // phones: '',
-    // notes: '',
-    // branch_id: ''
+    name: '',
+    email: '',
+    cep: '',
+    address: '',
+    cpf: '',
+    phones: '',
+    notes: '',
+    branch_id: ''
 })
 
 function createClient() {
@@ -142,10 +134,14 @@ function createClient() {
                                     </div>
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
-                                    <input type="text" name="branch_id" id="branch_id"
-                                        :value="usePage().props.value.branch_id"
-                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=" " />
+                                    <select name="branch_id" id="branch_id" v-model="client.branch_id"
+                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                        <option value="" selected>selecione</option>
+                                        <option v-for="branch in usePage().props.value.branches" :value="branch.id"
+                                            :key="('branch' + branch.id)">
+                                            {{ branch.name }}
+                                        </option>
+                                    </select>
                                     <label for="branch_id"
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         Unidade
