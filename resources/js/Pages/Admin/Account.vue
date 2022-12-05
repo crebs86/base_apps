@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import NavLink from '@/Components/NavLink.vue';
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { computed } from '@vue/reactivity';
 import { useToast } from "vue-toastification";
@@ -51,7 +52,13 @@ function updatePassword() {
         <div
             class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
             <h1 class="text-lg text-center mb-2 dark:text-gray-300">
-                Dados da conta, {{ $page.props.auth.user.name }}:
+                Dados da conta, {{ $page.props.auth.user.name }}
+                <button type="button"
+                    class="border rounded-md px-1 py-0.5 m-0.5 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
+                    <NavLink :href="route('logout')" method="post" :class="'text-gray-800 dark:text-white'">
+                        Sair
+                    </NavLink>
+                </button>
             </h1>
             <div v-if="changeEmail">
                 <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">

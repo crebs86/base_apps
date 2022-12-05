@@ -10,6 +10,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ClientController extends Controller
@@ -30,12 +31,13 @@ class ClientController extends Controller
                     }
                 );
             } else {
-                $client = $this->findClients($request->client);
+                $client = $this->findClients($request->client, $request->includeTrash === 'true');
             }
 
             return Inertia::render('Admin/Clients', [
                 'clients' => $client,
-                'keyword' => $request->client ?? ''
+                'keyword' => $request->client ?? '',
+                'includeTrash' => $request->includeTrash === 'true' ?? false
             ]);
         }
         return Inertia::render('Admin/403');
@@ -46,7 +48,7 @@ class ClientController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(): Response
     {
         if ($this->can('Cliente Criar')) {
             return Inertia::render('Admin/ClientCreate', [
@@ -62,7 +64,7 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-    public function store(ClientRequest $request, Client $client)
+    public function store(ClientRequest $request, Client $client): Response|RedirectResponse
     {
         if ($this->can('Cliente Criar')) {
             if ($c = $client->create($request->validated())) {
@@ -86,7 +88,8 @@ class ClientController extends Controller
             return Inertia::render('Admin/Client', [
                 'client' => $client,
                 'edit' => false,
-                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get(),
+                '_checker' => setGetKey($client->id, 'edit_client_account')
             ]);
         }
         return Inertia::render('Admin/403');
@@ -105,7 +108,8 @@ class ClientController extends Controller
             return Inertia::render('Admin/Client', [
                 'client' => $client,
                 'edit' => true,
-                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get(),
+                '_checker' => setGetKey($client->id, 'edit_client_account')
             ]);
         }
         return Inertia::render('Admin/403');
@@ -118,13 +122,17 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Inertia\Response
      */
-    public function update(ClientRequest $request, Client $client)
+    public function update(ClientRequest $request, Client $client): Response|RedirectResponse
     {
-        if ($this->can('Cliente Editar')) {
-            if ($client->update($request->validated())) {
-                return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
+        if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
+            if ($this->can('Cliente Editar')) {
+                if ($client->update($request->validated())) {
+                    return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
             }
-            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
         }
         return Inertia::render('Admin/403');
     }
@@ -135,13 +143,42 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Inertia\Response
      */
-    public function destroy(Client $client)
+    public function destroy(Client $client, Request $request): Response|RedirectResponse
     {
-        if ($this->can('Cliente Apagar')) {
+        if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
+            if ($this->can('Cliente Apagar')) {
+                if ($client->delete()) {
+                    return redirect()->route('clients.index')->with('success', 'Conta do cliente foi enviada para lixeira com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao apagar conta do cliente');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
         }
+        return Inertia::render('Admin/403');
     }
 
-    private function findClients(string $keyword): LengthAwarePaginator
+    /**
+     * Restore the especified resource
+     * @param  \App\Models\Client  $client
+     * @return \Inertia\Response
+     */
+    public function restore(Client $client, Request $request)
+    {
+        if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
+            if ($this->can('Cliente Apagar', 'Cliente Editar')) {
+                if ($client->restore()) {
+                    return redirect()->back()->with('success', 'Cadastro do cliente foi restaurado com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao restaurar cadastro do cliente');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    private function findClients(string $keyword, $includeTrash = false): LengthAwarePaginator
     {
         $x = [
             'len' => strlen($keyword),
@@ -162,21 +199,22 @@ class ClientController extends Controller
                 }
             )
             ->orWhere(
-                function ($q) use ($keyword, $x) {
+                function ($q) use ($keyword, $x, $includeTrash) {
                     if (!($x['is_num']) && $x['len'] >= 4) {
-                        return $q->where('name', 'like', '%' . $keyword . '%');
+                        return $q->where('name', 'like', '%' . $keyword . '%')->withTrashed($includeTrash);
                     }
                     return $q;
                 }
             )
             ->orWhere(
-                function ($q) use ($keyword, $x) {
+                function ($q) use ($keyword, $x, $includeTrash) {
                     if (!$x['is_num'] && $x['len'] >= 4) {
-                        return $q->where('email', 'like', '%' . $keyword . '%');
+                        return $q->where('email', 'like', '%' . $keyword . '%')->withTrashed($includeTrash);
                     }
                     return $q;
                 }
             )
+            ->withTrashed($includeTrash)
             ->paginate(50)->through(
                 function ($client) {
                     return $this->setClient($client);

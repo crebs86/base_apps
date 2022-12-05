@@ -3,7 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { useToast } from "vue-toastification";
 import { ref } from 'vue';
-import hasPermission from '@/permissions'
+import hasPermission from '@/permissions';
+import moment from 'moment';
+import swal from 'sweetalert';
 
 const toast = useToast();
 
@@ -18,7 +20,8 @@ const client = useForm({
     cpf: usePage().props.value.client.cpf,
     phones: usePage().props.value.client.phones,
     notes: usePage().props.value.client.notes,
-    branch_id: usePage().props.value.client.branch_id
+    branch_id: usePage().props.value.client.branch_id,
+    _checker: usePage().props.value._checker
 })
 
 function saveClient() {
@@ -38,6 +41,65 @@ function saveClient() {
             }
         },
     })
+}
+
+function deleteClient() {
+
+    swal({
+        title: "Desativar cadastro?",
+        text: "Você está prestes a desativar o cadastro de " + usePage().props.value.client.name,
+        icon: "error",
+        buttons: ['Cancelar', 'Desativar'],
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                client.delete(route('clients.destroy', usePage().props.value.client.id), {
+                    onSuccess: () => {
+                        if (usePage().props.value.flash.success) {
+                            toast.success(usePage().props.value.flash.success);
+                        } else if (usePage().props.value.flash.error) {
+                            toast.error(usePage().props.value.flash.error);
+                        }
+
+                    },
+                    onError: () => {
+                        if (usePage().props.value.errors) {
+                            toast.error('Não foi possível processar sua solicitação');
+                        }
+                    },
+                })
+            }
+        });
+}
+
+function restoreClient() {
+    swal({
+        title: "Restaurar cadastro?",
+        text: "Você está prestes a reativar o cadastro de " + usePage().props.value.client.name,
+        icon: "warning",
+        buttons: ['Cancelar', 'Restaurar'],
+        dangerMode: true,
+    })
+        .then((willRestore) => {
+            if (willRestore) {
+                client.put(route('clients.restore', usePage().props.value.client.id), {
+                    onSuccess: () => {
+                        if (usePage().props.value.flash.success) {
+                            toast.success(usePage().props.value.flash.success);
+                        } else if (usePage().props.value.flash.error) {
+                            toast.error(usePage().props.value.flash.error);
+                        }
+
+                    },
+                    onError: () => {
+                        if (usePage().props.value.errors) {
+                            toast.error('Não foi possível processar sua solicitação');
+                        }
+                    },
+                })
+            }
+        });
 }
 
 </script>
@@ -196,6 +258,26 @@ function saveClient() {
                                     </div>
                                 </div>
                             </div>
+                            <div class="grid xl:grid-cols-1 xl:gap-6">
+                                <small>
+                                    Criado:
+                                    {{
+                                            moment(usePage().props.value.client.created_at).format('DD/MM/YYYY HH:mm:ss')
+                                    }}
+                                </small>
+                                <small>
+                                    Atualizado:
+                                    {{
+                                            moment(usePage().props.value.client.updated_at).format('DD/MM/YYYY HH:mm:ss')
+                                    }}
+                                </small>
+                                <small v-show="(usePage().props.value.client.deleted_at)">
+                                    Desativado:
+                                    {{
+                                            moment(usePage().props.value.client.deleted_at).format('DD/MM/YYYY HH:mm:ss')
+                                    }}
+                                </small>
+                            </div>
                             <div class="text-center">
                                 <button type="button" @click.prevent="edit = true"
                                     v-if="!edit && (hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin']))"
@@ -213,10 +295,15 @@ function saveClient() {
                                         class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
                                         Atualizar Cliente
                                     </button>
-                                    <button type="button"
-                                        v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                                    <button type="button" @click.prevent="deleteClient"
+                                        v-if="usePage().props.value.client.deleted_at === null && (hasPermission(usePage().props.value.auth.permissions, ['Cliente Apagar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin']))"
                                         class="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-800 focus:outline-none focus:shadow-outline">
                                         Excluir Cliente
+                                    </button>
+                                    <button type="button" @click.prevent="restoreClient"
+                                        v-if="usePage().props.value.client.deleted_at !== null && (hasPermission(usePage().props.value.auth.permissions, ['Cliente Apagar', 'Cliente Editar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin']))"
+                                        class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
+                                        Restaurar Cliente
                                     </button>
                                 </template>
                             </div>

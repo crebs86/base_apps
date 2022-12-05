@@ -11,7 +11,8 @@ Route::middleware('auth')->prefix('/dashboard')->group(function () {
     Route::post('/account/users/account', [UserController::class, 'updateAccount'])->name('user.account.update');
     Route::post('/account/users/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
 
-    Route::resource('/clients', ClientController::class);
+    Route::resource('/clients', ClientController::class)->withTrashed(['show', 'edit', 'update']);
+    Route::put('/clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 });
 
 Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(function () {

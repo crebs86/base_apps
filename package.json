@@ -25,6 +25,8 @@
     },
     "dependencies": {
         "emittery": "^1.0.0",
-        "form-serialize": "^0.7.2"
+        "form-serialize": "^0.7.2",
+        "moment": "^2.29.4",
+        "sweetalert": "^2.1.2"
     }
 }

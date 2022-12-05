@@ -1,26 +1,30 @@
 <script setup>
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
     {
         'clients': Object,
-        'keyword': String
+        'keyword': String,
+        'includeTrash': Boolean
     }
 )
 
 const toast = useToast();
 
 const clientsList = ref(props.clients);
-const searchClients = ref(props.keyword);
+const searchClients = useForm({
+    client: props.keyword,
+    includeTrash: props.includeTrash === true
+});
 
 function search() {
-    if (!(searchClients.value === undefined || searchClients.value === '' || searchClients.value === null)) {
-        let s = parseInt(searchClients.value) || 0
-        if ((s === 0) && !(searchClients.value.length < 4) || s !== 0) {
-            Inertia.get(route('clients.index', { client: searchClients.value }))
+    if (!(searchClients.client === undefined || searchClients.client === '' || searchClients.client === null)) {
+        let s = parseInt(searchClients.client) || 0
+        if ((s === 0) && !(searchClients.client.length < 4) || s !== 0) {
+            searchClients.get(route('clients.index'))
         } else {
             clientsList.value = []
             toast.error("Para buscas por nome ou e-mail insira ao menos 4 caracteres");
@@ -40,7 +44,7 @@ function search() {
         <mdicon name="account-plus" title="Criar Cliente" class="justify-center" />
         </Link>
     </h1>
-    <form class="flex items-center h-5/6 p-1 m-1" @submit.prevent="search()">
+    <form class="flex items-center h-5/6 px-1 mx-1" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
             <div class="flex absolute inset-y-0 left-0 items-center pl-1 pointer-events-none">
@@ -53,11 +57,11 @@ function search() {
                     </path>
                 </svg>
             </div>
-            <input type="text" v-model="searchClients" @keypress.prevent.enter="search"
+            <input type="text" v-model="searchClients.client" @keypress.prevent.enter="search"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 rounded-md dark:bg-gray-600 dark:text-gray-300"
                 placeholder="Busque por nome, CPF, e-mail ou ID">
         </div>
-        <button type="submit"
+        <button type="submit" :disabled="searchClients.processing"
             class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
             <!-- search icon -->
             <svg aria-hidden="true" class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -67,6 +71,13 @@ function search() {
             </svg>Buscar
         </button>
     </form>
+    <div class="mx-0.5 p-1.5">
+        <label class="flex items-center dark:text-gray-300">
+            <input type="checkbox" v-model="searchClients.includeTrash"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            <span class="ml-2 text-xs text-gray-600 dark:text-gray-300">Incluir contas desativadas</span>
+        </label>
+    </div>
     <small class="text-blue-500 ml-2 dark:text-gray-300">
         Para buscas por nome ou e-mail insira ao menos 4 caracteres
     </small>
