@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Requests\PermissionRequest;
+use App\Http\Requests\Admin\PermissionRequest;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class PermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -24,10 +24,14 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3|max:255|string',
-            'email' => 'required|unique:users,id',
-            'cpf' => 'nullable|cpf|unique:users,id',
-            'active' => 'boolean'
+            'name' => ['required', 'string', 'max:55', 'unique:permissions,id']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.unique' => 'Já existe uma permissão com o nome: \':input\''
         ];
     }
 }

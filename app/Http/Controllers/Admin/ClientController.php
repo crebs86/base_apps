@@ -9,7 +9,7 @@ use App\Models\Branch;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ClientRequest;
+use App\Http\Requests\Admin\ClientRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 

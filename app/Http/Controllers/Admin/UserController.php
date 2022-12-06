@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Admin\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Exception;
