@@ -180,7 +180,7 @@ function getPermissionsListForm() {
                                             <div class="grid grid-cols-2 gap-1">
                                                 <Link :href="route('admin.acl.roles.show', v.id)">
                                                 <mdicon name="playlist-edit"
-                                                    class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                    class="text-yellow-400 hover:text-yellow-200"
                                                     title="Editar" />
                                                 </Link>
                                                 <Link :href="route('admin.acl.roles.list.users', v.id)">

@@ -15,6 +15,7 @@ return [
         'Admin Apagar', 'Admin Criar', 'Admin Editar', 'Admin Ver',
         'Cliente Apagar', 'Cliente Criar', 'Cliente Editar', 'Cliente Ver',
         'Usuario Apagar', 'Usuario Criar', 'Usuario Editar', 'Usuario Ver',
+        'Unidade Apagar', 'Unidade Criar', 'Unidade Editar', 'Unidade Ver',
         'Dados Lancar', 'Relatorio Criar'
     ],
 
@@ -23,7 +24,7 @@ return [
      */
     'protected_roles' => [
         'Super Admin', 'Admin', 'Usuario Administrar',
-        'ACL Administrar', 'Cliente Administrar', 'Viewer'
+        'ACL Administrar', 'Cliente Administrar', 'Unidade Administrar', 'Viewer'
     ],
 
     /**

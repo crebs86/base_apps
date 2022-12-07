@@ -143,7 +143,7 @@ function search() {
                                                     title="Editar Papéis" />
                                                 </Link>
                                                 <Link :href="route('admin.acl.users.edit', v.id)">
-                                                <mdicon name="account-edit" class="text-yellow-500" title="Editar Conta" />
+                                                <mdicon name="account-edit" class="text-yellow-400 hover:text-yellow-200" title="Editar Conta" />
                                                 </Link>
                                             </div>
                                         </td>

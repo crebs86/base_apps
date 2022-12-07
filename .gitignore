@@ -17,4 +17,4 @@ yarn-error.log
 /bootstrap/ssr
 /bootstrap/public
 Testes.vue
-/database/migrations/2022_11_30_144843_add*
+/database/migrations/2022_11_30_144843_*

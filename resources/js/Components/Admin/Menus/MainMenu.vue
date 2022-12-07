@@ -21,6 +21,13 @@ onMounted: {
     ) {
         numberMenuItems.value++
     }
+    if (hasPermission(
+        usePage().props.value.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar']
+    )
+        || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])
+    ) {
+        numberMenuItems.value++
+    }
 }
 const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
 
@@ -54,10 +61,20 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 class="col-span-1 flex flex-col items-center"
                 :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('clients.index')" :active="route().current('clients.index')">
-                <mdicon name="shield-lock-outline" title="Clientes" class="h-6 w-6" />
+                <mdicon name="account-heart" title="Clientes" class="h-6 w-6" />
                 </Link>
                 <span class="text-[10.5px] font-medium text-center"
                     :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100'">Clientes</span>
+            </div>
+            <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
+            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                class="col-span-1 flex flex-col items-center"
+                :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+                <Link :href="route('branches.index')" :active="route().current('branches.*')">
+                <mdicon name="source-branch" title="Unidades" class="h-6 w-6" />
+                </Link>
+                <span class="text-[10.5px] font-medium text-center"
+                    :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100'">Unidades</span>
             </div>
             <div class="col-span-1 flex flex-col items-center"
                 :class="route().current('user.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">

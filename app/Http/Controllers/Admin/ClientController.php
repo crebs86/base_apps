@@ -161,9 +161,9 @@ class ClientController extends Controller
     /**
      * Restore the especified resource
      * @param  \App\Models\Client  $client
-     * @return \Inertia\Response
+     * @return \Inertia\Response|Illuminate\Http\RedirectResponse
      */
-    public function restore(Client $client, Request $request)
+    public function restore(Client $client, Request $request): Response|RedirectResponse
     {
         if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
             if ($this->can('Cliente Apagar', 'Cliente Editar')) {

@@ -145,7 +145,7 @@ function search() {
                                                     title="Detalhar Cliente" />
                                                 </Link>
                                                 <Link :href="route('clients.edit', v.id)">
-                                                <mdicon name="account-edit" class="text-blue-600 hover:text-blue-400"
+                                                <mdicon name="account-edit" class="text-yellow-400 hover:text-yellow-200"
                                                     title="Editar Cliente" />
                                                 </Link>
                                             </div>

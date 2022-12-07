@@ -2,26 +2,37 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Traits\ACL;
+use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BranchRequest;
+use Illuminate\Http\RedirectResponse;
 
 class BranchController extends Controller
 {
+    use ACL;
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
-    public function index()
+    public function index(Branch $branch): Response
     {
-        dd('index');
+        if ($this->can('Unidade Ver', 'Unidade Editar', 'Unidade Apagar', 'Unidade Criar')) {
+            return Inertia::render('Admin/Branches', [
+                'branches' => $branch->withTrashed()->get(['id', 'name', 'cnpj', 'email', 'address', 'deleted_at'])
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create()
     {
@@ -32,7 +43,7 @@ class BranchController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function store(Request $request)
     {
@@ -42,45 +53,98 @@ class BranchController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Branch $branch
+     * @return \Inertia\Response
      */
-    public function show(Branch $branch)
+    public function show(Branch $branch): Response
     {
-        //
+        if ($this->can('Unidade Ver', 'Unidade Editar', 'Unidade Apagar')) {
+            return Inertia::render('Admin/Branch', [
+                'edit' => false,
+                'branch' => $branch,
+                '_checker' => setGetKey($branch->id, 'edit_branch')
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Branch $branch
+     * @return \Inertia\Response
      */
-    public function edit(Branch $branch)
+    public function edit(Branch $branch): Response
     {
-        //
+        if ($this->can('Unidade Editar')) {
+            return Inertia::render('Admin/Branch', [
+                'edit' => true,
+                'branch' => $branch,
+                '_checker' => setGetKey($branch->id, 'edit_branch')
+            ]);
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\Admin\BranchRequest $request
      * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response|Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Branch $branch)
+    public function update(BranchRequest $request, Branch $branch): Response|RedirectResponse
     {
-        //
+        if ((int) getKeyValue($request->_checker, 'edit_branch') === (int) $request->id) {
+            if ($this->can('Unidade Editar')) {
+                if ($branch->update($request->validated())) {
+                    return redirect()->back()->with('success', 'Unidade alterada com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados da unidade');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+        }
+        return Inertia::render('Admin/403');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param App\Http\Requests\Admin\BranchRequest $request
+     * @param  \App\Models\Branch $branch
+     * @return \Inertia\Response|Illuminate\Http\RedirectResponse
      */
-    public function destroy(Branch $branch)
+    public function destroy(Branch $branch, Request $request): Response|RedirectResponse
     {
-        //
+        if ((int) getKeyValue($request->_checker, 'edit_branch') === (int) $request->id) {
+            if ($this->can('Unidade Apagar')) {
+                if ($branch->delete()) {
+                    return redirect()->back()->with('success', 'Unidade foi desativada com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao desativar unidade');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+        }
+        return Inertia::render('Admin/403');
+    }
+    /**
+     * Restore the especified resource
+     * @param  \App\Models\Branch $branch
+     * @return \Inertia\Response|Illuminate\Http\RedirectResponse
+     */
+    public function restore(Branch $branch, Request $request): Response|RedirectResponse
+    {
+        if ((int) getKeyValue($request->_checker, 'edit_branch') === (int) $request->id) {
+            if ($this->can('Unidade Apagar', 'Unidade Editar')) {
+                if ($branch->restore()) {
+                    return redirect()->back()->with('success', 'Unidade restaurada com sucesso!');
+                }
+                return redirect()->back()->with('error', 'Ocorreu um erro ao restaurar unidade');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+        }
+        return Inertia::render('Admin/403');
     }
 }

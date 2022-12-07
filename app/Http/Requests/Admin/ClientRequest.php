@@ -39,7 +39,8 @@ class ClientRequest extends FormRequest
     public function messages()
     {
         return [
-            'branch_id.exists' => 'Selecione uma unidade válida'
+            'branch_id.exists' => 'Selecione uma unidade válida',
+            'cpf.unique'=> 'CPF já está em uso'
         ];
     }
 }

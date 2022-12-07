@@ -128,7 +128,7 @@ function saveNewPermission() {
                                                     <Link v-if="value" class="text-center"
                                                         :href="route('admin.acl.permissions.edit', v.id)">
                                                     <mdicon name="playlist-edit" class="justify-center"
-                                                        :class="value ? 'text-blue-600 hover:text-blue-300 dark:text-blue-400' : ''"
+                                                        :class="value ? 'text-yellow-400 hover:text-yellow-200' : ''"
                                                         title="Editar" />
                                                     </Link>
                                                     <Link :href="route('admin.acl.permissions.list.users', v.id)">

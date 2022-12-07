@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\PermissionController;
 
@@ -11,6 +12,8 @@ Route::middleware('auth')->prefix('/dashboard')->group(function () {
     Route::post('/account/users/account', [UserController::class, 'updateAccount'])->name('user.account.update');
     Route::post('/account/users/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
 
+    Route::resource('/branches', BranchController::class)->withTrashed();
+    Route::put('/branches/{branch}/restore', [BranchController::class, 'restore'])->name('branches.restore')->withTrashed();
     Route::resource('/clients', ClientController::class)->withTrashed(['show', 'edit', 'update']);
     Route::put('/clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 });
