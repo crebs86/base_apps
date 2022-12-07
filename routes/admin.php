@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\PermissionController;
 
-Route::middleware('auth')->prefix('/dashboard')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function () {
     Route::get('/account/users/account', [UserController::class, 'account'])->name('user.account');
     Route::post('/account/users/account', [UserController::class, 'updateAccount'])->name('user.account.update');
     Route::post('/account/users/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
@@ -18,7 +18,7 @@ Route::middleware('auth')->prefix('/dashboard')->group(function () {
     Route::put('/clients/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 });
 
-Route::middleware('auth')->prefix('admin/acl')->name('admin.acl.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin/acl')->name('admin.acl.')->group(function () {
     Route::get('/', [PermissionController::class, 'acl'])->name('acl');
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
