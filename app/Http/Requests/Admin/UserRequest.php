@@ -25,9 +25,17 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:255|string',
-            'email' => 'required|unique:users,id',
-            'cpf' => 'nullable|cpf|unique:users,id',
-            'active' => 'boolean'
+            'email' => 'email|required|max:255|unique:users,email,' . $this->user,
+            'cpf' => 'nullable|cpf|unique:users,cpf,' . $this->user,
+            'branch_id' => 'nullable|exists:branches,id',
+            'notes' => 'nullable|min:3|max:510'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'cpf.unique' => 'Este CPF já se encontra em uso'
         ];
     }
 }

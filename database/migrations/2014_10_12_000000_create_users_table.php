@@ -17,12 +17,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('cpf', 11)->unique();
-            $table->boolean('active')->default(true);
+            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->foreign('branch_id')
+                ->references('id')
+                ->on('branches');
+            $table->string('cpf', 11)->nullable()->unique();
+            $table->string('notes')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

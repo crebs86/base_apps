@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { computed } from '@vue/reactivity';
+import swal from 'sweetalert';
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
@@ -21,22 +22,47 @@ const changeEmail = computed(() => {
     return usePage().props.value.auth.user.email !== user.email
 })
 
-function saveUser() {
+function save() {
     user.post(route('user.account.update'), {
         onSuccess: (data) => toast.success(data.props.message),
         onError: (errors) => {
             toast.error('Erro ao salvar atualizações!')
-            console.log(errors)
         },
     })
 }
+
+function saveUser() {
+    if (usePage().props.value.auth.user.email !== user.email) {
+        swal({
+            title: "Alteração de endereço de e-mail",
+            text: "Você está alterando seu endereço de e-mail e sua validação poderá ser solicitada.",
+            icon: "warning",
+            buttons: ['Cancelar', 'Prosseguir'],
+            dangerMode: true,
+        })
+            .then((willRestore) => {
+                if (willRestore) {
+                    save();
+                }
+            });
+    } else {
+        save();
+    }
+}
+
 function updatePassword() {
     password.post(route('user.account.update.password'), {
-        onSuccess: (data) => toast.success(data.props.message),
-        onError: (errors) => {
-            toast.error('Erro ao atualizar sua senha!')
-            toast.error(toast.error(data.props))
-            console.log(errors)
+        onSuccess: () => {
+            if (usePage().props.value.flash.success) {
+                toast.success(usePage().props.value.flash.success);
+            } else if (usePage().props.value.flash.error) {
+                toast.error(usePage().props.value.flash.error);
+            }
+        },
+        onError: () => {
+            if (usePage().props.value.errors) {
+                toast.error('Erro ao alterar senha.');
+            }
         },
     })
 }

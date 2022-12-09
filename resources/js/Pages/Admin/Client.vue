@@ -90,7 +90,6 @@ function restoreClient() {
                         } else if (usePage().props.value.flash.error) {
                             toast.error(usePage().props.value.flash.error);
                         }
-
                     },
                     onError: () => {
                         if (usePage().props.value.errors) {

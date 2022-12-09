@@ -34,11 +34,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin/acl')->name('admin.acl.')
     Route::post('/roles/new', [RoleController::class, 'new'])->name('roles.new');
     Route::get('/roles/{id}/listUsers', [RoleController::class, 'listUsers'])->name('roles.list.users');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/{id}/edit', [UserController::class, 'userEditForm'])->name('users.edit');
-    Route::post('/users/{id}/edit', [UserController::class, 'userEdit'])->name('users.edit.post');
+
+    Route::resource('/users', UserController::class);
     Route::get('/users/{user?}', [UserController::class, 'list'])->name('users.list');
-    //Route::post('/users/{user?}', [UserController::class, 'search'])->name('users.search');
+    Route::post('/users/{id}/verifyEmail', [UserController::class, 'userVerifyEmail'])->name('users.verify.email');
+    Route::post('/users/{id}/requireEmailVerification', [UserController::class, 'requireEmailVerification'])->name('users.require.email.verification');
     Route::get('/users/{id}/roles/list', [UserController::class, 'listUserAndRoles'])->name('users.roles.list');
     Route::get('/users/{id}/roles/edit', [UserController::class, 'showUserAndRoles'])->name('users.roles.show');
     Route::post('/users/{id}/roles/edit', [UserController::class, 'editUserRole'])->name('users.roles.edit');

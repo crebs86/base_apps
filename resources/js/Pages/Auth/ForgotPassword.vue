@@ -42,8 +42,10 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton class="dark:bg-gray-300 hover:dark:bg-gray-500 dark:text-gray-600 hover:dark:text-gray-300" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
+                <PrimaryButton
+                    class="dark:bg-gray-300 hover:dark:bg-gray-500 dark:text-gray-600 hover:dark:text-gray-300"
+                    :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Enviar link de redefinição de senha
                 </PrimaryButton>
             </div>
         </form>

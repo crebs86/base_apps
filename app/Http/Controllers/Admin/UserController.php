@@ -6,14 +6,19 @@ use App\Traits\ACL;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Branch;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\Admin\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Admin\UserRequest;
+use App\Mail\WelcomeUser;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -24,94 +29,23 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar')) {
-            return Inertia::render('Admin/AclUsers');
-        }
-        return Inertia::render('Admin/403');
-    }
-
-    /**
-     * página da conta do usuário
-     */
-    public function account(): Response
-    {
-        return Inertia::render('Admin/Account');
-    }
-
-    /**
-     * atualiza os dados do usuário
-     */
-    public function updateAccount(Request $request): Response
-    {
-        $request->validate(
-            [
-                'name' => 'string|required|min:3|max:255',
-                'email' => 'email|required|unique:users,id'
-            ]
-        );
-
-        $request->user()->update([
-            'name' => $request->name
-        ]);
-
-        return Inertia::render('Admin/Account', [
-            'message' => 'Sua conta foi atualizada!'
-        ]);
-    }
-
-    /**
-     * atualizada senha
-     */
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|confirmed',
-        ]);
-
-        // if (!Hash::check($request->current_password, auth()->user()->password)) {
-        //return redirect()->back()->with('message', 'Error');
-        try {
-            !Hash::check($request->current_password, auth()->user()->password);
-        } catch (Exception $e) {
-            return redirect()->back()->withErrors([
-                'message' => 'ups, there was an error'
-            ]);
-        }
-
-
-        // }
-
-        // User::whereId(auth()->user()->id)->update([
-        //     'password' => Hash::make($request->new_password)
-        // ]);
-        return Inertia::render('Admin/Account', [
-            'message' => 'Sua senha foi alterada com sucesso!'
-        ]);
-    }
-
-    /**
-     * Paginação do uruário
-     */
-    public function list(Request $request): Response
-    {
-        if ($this->can('ACL Ver', 'ACL Editar')) {
             if (!$request->user) {
-                $user = User::paginate(50)->through(
-                    function ($user) {
-                        return $this->setUsers($user);
+                $users = User::orderBy('updated_at', 'desc')->orderBy('id', 'desc')->paginate(10)->through(
+                    function ($users) {
+                        return $this->setUser($users);
                     }
                 );
             } else {
-                $user = $this->findUsers($request->user);
+                $users = $this->findUsers($request->user);
             }
-
             return Inertia::render('Admin/AclUsers', [
-                'users' => $user,
+                'users' => $users ?? null,
                 'keyword' => $request->user ?? ''
             ]);
         }
         return Inertia::render('Admin/403');
     }
+
     /**
      * Pesquisa por usuários na base de dados;
      * termos aproximados: name e email;
@@ -126,7 +60,7 @@ class UserController extends Controller
         if (!($x['is_num']) && $x['len'] < 4) {
             return [];
         }
-        return User::select('id', 'name', 'email', 'cpf', 'active')
+        return User::select('id', 'name', 'email', 'cpf', 'deleted_at')
             ->where(
                 function ($q) use ($keyword, $x) {
                     if ($x['is_num'] && $x['len'] < 11) {
@@ -153,6 +87,7 @@ class UserController extends Controller
                     return $q;
                 }
             )
+            ->withTrashed()
             ->paginate(50)->through(
                 function ($user) {
                     return $this->setUser($user);
@@ -169,7 +104,7 @@ class UserController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'cpf' => $user->cpf,
-            'active' => $user->active
+            'deleted_at' => $user->deleted_at
         ];
     }
 
@@ -274,18 +209,77 @@ class UserController extends Controller
         }
         return response()->json('Papéis de usuário: você não possui permissão para acessar este recurso', 403);
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Inertia\Response
+     */
+    public function create(): Response
+    {
+        if ($this->can('Usuario Criar')) {
+            return Inertia::render('Admin/UserCreate', [
+                'branches' => Branch::orderBy('name')->select(['id', 'name'])->get()
+            ]);
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Inertia\Response
+     */
+    public function store(Request $request, User $user): Response|RedirectResponse
+    {
+        if ($this->can('Usuario Criar')) {
+            $pass = Str::random(8);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'cpf' => 'nullable|cpf|unique:users',
+                'branch_id' => 'nullable|exists:branches,id',
+                'notes' => 'nullable|min:3|max:510'
+            ], [
+                'cpf.unique' => 'Este CPF já se encontra em uso'
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'cpf' => $request->cpf,
+                'branch_id' => $request->branch_id,
+                'notes' => $request->notes,
+                'password' => Hash::make($pass),
+            ]);
+
+            Mail::to($user)->send(new WelcomeUser($user, $pass));
+
+            if ($user) {
+                return redirect(route('admin.acl.users.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
+            }
+            return redirect()->back()->with('error', 'Ocorreu um erro ao criar usuário');
+        }
+        return Inertia::render('Admin/403');
+    }
     /**
      * exibe formulário de edição do usuário selecionado
      */
-    public function userEditForm(Request $request): Response
+    public function show(Request $request): Response
+    {
+        return $this->edit($request);
+    }
+    public function edit(Request $request): Response
     {
         if ($this->can('Usuario Ver', 'Usuario Editar', 'Usuario Apagar')) {
-            if ($user = User::select('id', 'name', 'cpf', 'email', 'active')->find($request->id) ?? []) {
+            if ($user = User::select('id', 'name', 'cpf', 'email', 'notes', 'branch_id', 'deleted_at', 'email_verified_at')->withTrashed()->find($request->user) ?? []) {
                 return Inertia::render(
                     'Admin/UserEdit',
                     [
                         'user' => $user,
-                        '_checker' => setGetKey($request->id, 'edit_user_account')
+                        'branches' => Branch::orderBy('name')->select(['id', 'name'])->get(),
+                        '_checker' => setGetKey($request->user, 'edit_user_account')
                     ]
                 );
             }
@@ -295,29 +289,133 @@ class UserController extends Controller
     /**
      * atualiza usuário com dados recebidos do formulário
      */
-    public function userEdit(UserRequest $request): User|JsonResponse
+    public function update(UserRequest $request): Response|RedirectResponse
     {
         if ($this->can('Usuario Editar', 'Usuario Apagar')) {
 
-            if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
+            if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->user) {
 
-                $user = User::select('id', 'name', 'cpf', 'email', 'active')
-                    ->find($request->id);
+                $user = User::withTrashed()
+                    ->find($request->user);
 
-                $updated = $user->update($request->only('email', 'name', 'cpf', 'active'));
+                $updated = $user->update(
+                    [
+                        'email' => $request->email,
+                        'name' => $request->name,
+                        'cpf' => $request->cpf,
+                        'deleted_at' => $request->active ? null : now(),
+                        'branch_id' => $request->branch_id,
+                        'notes' => $request->notes
+                    ]
+                );
                 if ($updated) {
-                    return $user;
+                    return redirect()->back()->with('success', 'O usuário foi atuzalizado');
                 } else {
-                    return response()->json([
-                        'message' => 'Erro ao atualizar conta do usuário'
-                    ], 403);
+                    return redirect()->back()->with('error', 'Erro ao atualizar conta do usuário');
                 }
             } else {
-                return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);
+                return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
             }
         }
-        return response()->json([
-            'message' => 'Você não possui permissão para usar este recurso'
-        ], 403);
+        return Inertia::render(
+            'Admin/403',
+            [
+                'flash.error' => 'Você não possui permissão para usar este recurso'
+            ]
+        );
+    }
+    /**
+     * marca e-mail como verificado
+     */
+    public function userVerifyEmail(Request $request): Response|RedirectResponse
+    {
+        if ($this->can('Usuario Editar')) {
+            if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
+                User::select('id', 'name', 'cpf', 'email', 'deleted_at')
+                    ->withTrashed()
+                    ->find($request->id)
+                    ->fill([
+                        'email_verified_at' => now()
+                    ])->update();
+                return redirect()->back()->with('success', 'Email verificardo com sucesso');
+            } else {
+                return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+            }
+        }
+        return Inertia::render('Admin/403')->with('error', 'Você não possui permissão para usar este recurso');
+    }
+
+    /**
+     * envia link de verificação de e-mail para o endereço cadastrado
+     */
+    public function requireEmailVerification(Request $request)
+    {
+        if ($this->can('Usuario Editar')) {
+            if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
+                User::find($request->id)
+                    ->fill([
+                        'email_verified_at' => null
+                    ])->update();
+                return redirect()->back()->with('success', 'Usuário deverá fazer login e solicitar link de verificação de e-mail');
+            } else {
+                return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
+            }
+        }
+        return Inertia::render('Admin/403')->with('error', 'Você não possui permissão para usar este recurso');
+    }
+    /**
+     * página da conta do usuário
+     */
+    public function account(): Response
+    {
+        return Inertia::render('Admin/Account');
+    }
+
+    /**
+     * atualiza os dados do usuário
+     */
+    public function updateAccount(Request $request): Response
+    {
+        $request->validate(
+            [
+                'name' => 'string|required|min:3|max:255',
+                'email' => 'email|required|unique:users,id'
+            ]
+        );
+
+        $request->user()->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'email_verified_at' => $request->user()->email === $request->email ? $request->user()->email_verified_at : null
+        ]);
+
+        return Inertia::render('Admin/Account', [
+            'message' => 'Sua conta foi atualizada!'
+        ]);
+    }
+
+    /**
+     * atualiza senha
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|confirmed',
+        ]);
+        if (Hash::check($request->current_password, auth()->user()->password)) {
+            $request->user()->forceFill([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60),
+            ])->save();
+
+            return redirect()->back()->with([
+                'success' => 'Sua senha foi alterada com sucesso!'
+            ]);
+        } else {
+            return redirect()->back()->with([
+                'error' => 'Ops! Senha incorreta.'
+            ]);
+        }
     }
 }
