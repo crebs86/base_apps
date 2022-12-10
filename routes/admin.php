@@ -8,9 +8,9 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\PermissionController;
 
 Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function () {
-    Route::get('/account/users/account', [UserController::class, 'account'])->name('user.account');
-    Route::post('/account/users/account', [UserController::class, 'updateAccount'])->name('user.account.update');
-    Route::post('/account/users/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
+    Route::get('/account', [UserController::class, 'account'])->name('user.account');
+    Route::post('/account', [UserController::class, 'updateAccount'])->name('user.account.update');
+    Route::post('/account/update-password', [UserController::class, 'updatePassword'])->name('user.account.update.password');
 
     Route::resource('/branches', BranchController::class)->withTrashed();
     Route::put('/branches/{branch}/restore', [BranchController::class, 'restore'])->name('branches.restore')->withTrashed();
