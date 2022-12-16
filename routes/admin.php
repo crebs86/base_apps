@@ -16,10 +16,10 @@ Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('/dashboard')
     Route::resource('/unidades', BranchController::class, ['names' => 'branches'])->parameter('unidades', 'branch')->withTrashed(['show', 'edit', 'update', 'restore']);
     Route::put('/unidades/{branch}/restore', [BranchController::class, 'restore'])->name('branches.restore')->withTrashed();
 
-    Route::resource('/clientes', ClientController::class, ['names' => 'clients'])->parameters(['clientes' => 'client'])->withTrashed(['show', 'edit', 'update', 'restore']);
+    Route::resource('/clientes', ClientController::class, ['names' => 'clients'])->parameter('clientes', 'client')->withTrashed(['show', 'edit', 'update', 'restore']);
     Route::put('/clientes/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 
-    Route::resource('/configuracoes', SettingController::class)->parameters(['configuracoes' => 'setting'])->parameter('settings', 'configuracoes')->except(['destroy', 'create', 'store']);
+    Route::resource('/configuracoes', SettingController::class, ['names' => 'settings'])->parameter('configuracoes', 'setting')->except(['destroy', 'create', 'store']);
 });
 
 Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('admin/controle-de-acessos')->name('admin.acl.')->group(function () {
