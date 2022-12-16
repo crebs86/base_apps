@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admin\Redirector;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__.'/admin.php';
-require __DIR__.'/auth.php';
+Route::any('redirector', [Redirector::class, 'redirect'])->name('redirect');
+
+require __DIR__ . '/admin.php';
+require __DIR__ . '/auth.php';

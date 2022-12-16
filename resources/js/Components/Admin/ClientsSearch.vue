@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
-import { Link, useForm } from '@inertiajs/inertia-vue3';
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
@@ -44,6 +44,13 @@ function search() {
         <mdicon name="account-plus" title="Criar Cliente" class="justify-center" />
         </Link>
     </h1>
+    <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+        <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+            <div class="p-3 text-center">
+                {{ usePage().props.value.flash.info }}
+            </div>
+        </div>
+    </div>
     <form class="flex items-center h-5/6 px-1 mx-1" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
@@ -145,7 +152,8 @@ function search() {
                                                     title="Detalhar Cliente" />
                                                 </Link>
                                                 <Link :href="route('clients.edit', v.id)">
-                                                <mdicon name="account-edit" class="text-yellow-400 hover:text-yellow-200"
+                                                <mdicon name="account-edit"
+                                                    class="text-yellow-400 hover:text-yellow-200"
                                                     title="Editar Cliente" />
                                                 </Link>
                                             </div>

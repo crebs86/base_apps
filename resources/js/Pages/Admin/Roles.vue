@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useToast } from "vue-toastification";
-import { Link, Head } from '@inertiajs/inertia-vue3';
+import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
@@ -140,6 +140,13 @@ function getPermissionsListForm() {
                 </template>
             </SimpleModal>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
+                <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                    <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+                        <div class="p-3 text-center">
+                            {{ usePage().props.value.flash.info }}
+                        </div>
+                    </div>
+                </div>
                 <div class="mx-auto dark:bg-gray-800 p-0.5 md:p-3 rounded-lg">
                     <div class="py-2 overflow-x-auto mt-2 bg-transparent">
                         <div
@@ -180,8 +187,7 @@ function getPermissionsListForm() {
                                             <div class="grid grid-cols-2 gap-1">
                                                 <Link :href="route('admin.acl.roles.show', v.id)">
                                                 <mdicon name="playlist-edit"
-                                                    class="text-yellow-400 hover:text-yellow-200"
-                                                    title="Editar" />
+                                                    class="text-yellow-400 hover:text-yellow-200" title="Editar" />
                                                 </Link>
                                                 <Link :href="route('admin.acl.roles.list.users', v.id)">
                                                 <mdicon name="text-account"

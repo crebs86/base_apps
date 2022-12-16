@@ -26,7 +26,7 @@ class ClientRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:255|string',
-            'email' => ['required', 'string', 'email', 'max:155', Rule::unique('clients')->ignore($this->id)],
+            'email' => 'required|string|email|max:155',
             'cpf' => 'nullable|cpf|unique:clients,cpf,' . $this->id,
             'cep' => 'nullable|size:8',
             'address' => 'string|nullable|max:510',
@@ -40,7 +40,7 @@ class ClientRequest extends FormRequest
     {
         return [
             'branch_id.exists' => 'Selecione uma unidade válida',
-            'cpf.unique'=> 'CPF já está em uso'
+            'cpf.unique' => 'CPF já está em uso'
         ];
     }
 }

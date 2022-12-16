@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
@@ -39,6 +39,13 @@ function search() {
         <mdicon name="account-plus" title="Criar Cliente" class="justify-center" />
         </Link>
     </h1>
+    <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+        <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+            <div class="p-3 text-center">
+                {{ usePage().props.value.flash.info }}
+            </div>
+        </div>
+    </div>
     <form class="flex items-center h-5/6 p-1 m-1" @submit.prevent="search()">
         <label for="voice-search" class="sr-only">Buscar</label>
         <div class="relative w-full">
@@ -140,12 +147,12 @@ function search() {
                                         <td
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
                                             <div class="flex justify-center gap-1">
-                                                <Link :href="route('admin.acl.users.roles.list', v.id)">
+                                                <Link :href="route('admin.acl.users.papeis.list', v.id)">
                                                 <mdicon name="shield-account"
                                                     class="text-green-600 hover:text-green-400"
                                                     title="Detalhar Papéis" />
                                                 </Link>
-                                                <Link :href="route('admin.acl.users.roles.show', v.id)">
+                                                <Link :href="route('admin.acl.users.papeis.show', v.id)">
                                                 <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
                                                     title="Editar Papéis" />
                                                 </Link>

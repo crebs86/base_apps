@@ -46,6 +46,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('admin.acl.users.edit', $user->id);
+        return redirect()->route('admin.acl.usuarios.edit', $user->id);
     }
 }

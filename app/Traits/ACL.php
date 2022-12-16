@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait ACL
 {
-    public function can()
+    function can()
     {
         foreach (func_get_args() as $v) {
             if (auth()->user()->can($v)) {

@@ -1,5 +1,5 @@
 <script setup>
-import { Link, Head } from '@inertiajs/inertia-vue3';
+import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -18,6 +18,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 Lista de usuários com o papél: {{ $page.props.role.name }}</h1>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
                 <div class="mx-auto dark:bg-gray-800 p-3 rounded-lg">
+                    <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                        <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+                            <div class="p-3 text-center">
+                                {{ usePage().props.value.flash.info }}
+                            </div>
+                        </div>
+                    </div>
                     <div class="py-2 overflow-x-auto mt-2 bg-transparent">
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">

@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -46,5 +48,29 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Prepare exception for rendering.
+     *
+     * @param  \Throwable  $e
+     * @return \Throwable
+     */
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+
+        // $route = app('router')
+        //     ->getRoutes()
+        //     ->match(app('request')
+        //         ->create(url()->previous()));
+        // //         $route->getName(),
+        // //         $route->parameters()
+
+        if ($response->status() === 419) {
+            return back()->with('info', 'Página expirada, por favor refaça sua solicitação.');
+        }
+
+        return $response;
     }
 }

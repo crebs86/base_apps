@@ -1,50 +1,7 @@
 <script setup>
 
-import { useToast } from "vue-toastification";
 import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import axios from 'axios';
-
-const toast = useToast();
-
-function saveNewRole() {
-    if (newRole.value === '') {
-        message.value = {
-            message: 'Informe um nome para o novo papél!',
-            code: 500
-        };
-    } else {
-
-        let form = document.querySelector('#new_permissions_role');
-        let values = serialize(form, { hash: true });
-        axios.post(route('admin.acl.roles.new'),
-            {
-                name: newRole.value,
-                permissions: values
-            }
-        ).then(r => {
-            message.value = {
-                message: r.data.message,
-                code: r.status
-            };
-
-            rolesWithPermissions.value = r.data.rolesWithPermissions;
-
-            form.reset();
-
-        }).catch(e => {
-            if (e.response.status === 403) {
-                toast.error(e.response.data.message)
-            } else {
-                message.value = e.response;
-                message.value = {
-                    message: e.response.data.message,
-                    code: e.response.status
-                }
-            }
-        })
-    }
-}
 
 </script>
 <template>
@@ -54,6 +11,12 @@ function saveNewRole() {
     <AuthenticatedLayout>
         <div
             class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
+            <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
+                Unidades
+                <Link :href="route('branches.create')" class="pl-1 ml-1">
+                <mdicon name="source-branch-plus" title="Criar Unidade" class="justify-center" />
+                </Link>
+            </h1>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
                 <div class="mx-auto dark:bg-gray-800 p-0.5 md:p-3 rounded-lg">
                     <div class="py-2 overflow-x-auto mt-2 bg-transparent">

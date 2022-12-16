@@ -23,7 +23,7 @@ import { Link } from '@inertiajs/inertia-vue3';
         <div class="col-span-1 flex flex-col items-center">
             <Link :href="route('admin.acl.permissions.index')"
                 :class="route().current('admin.acl.permissions.*') ? 'text-emerald-500 dark:text-lime-300' : 'text-gray-600 hover:text-emerald-600 dark:hover:text-lime-300'">
-                <mdicon name="key-arrow-right" title="Permissões do Sistema" />
+            <mdicon name="key-arrow-right" title="Permissões do Sistema" />
             </Link>
             <span class="text-[10.5px] font-bold text-center"
                 :class="route().current('admin.acl.permissions.*') ? 'text-emerald-500 dark:text-lime-300' : 'text-gray-600'">Permissões</span>

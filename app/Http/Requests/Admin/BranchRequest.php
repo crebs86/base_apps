@@ -26,12 +26,12 @@ class BranchRequest extends FormRequest
     {
         return [
             'name' => 'string|min:3|max:255',
-            'cnpj' => ['string', 'cnpj', Rule::unique('branches')->ignore($this->id)],
+            'cnpj' => ['string', 'cnpj', Rule::unique('branches')->ignore($this->id), 'nullable'],
             'email' => 'string|email|max:155',
-            'cep' => 'string|size:8',
+            'cep' => 'string|size:8|nullable',
             'address' => 'string|max:510',
-            'phones' => 'string|max:255',
-            'notes' => 'string|max:255'
+            'phones' => 'string|max:255|nullable',
+            'notes' => 'string|max:255|nullable'
         ];
     }
 

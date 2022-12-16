@@ -7,15 +7,17 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Branch;
 use App\Models\Client;
+use App\Models\ClientUpdate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ClientRequest;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Admin\ClientRequest;
+use App\Traits\Helpers;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ClientController extends Controller
 {
-    use ACL;
+    use ACL, Helpers;
     /**
      * Display a listing of the resource.
      *
@@ -84,7 +86,6 @@ class ClientController extends Controller
     public function show(Client $client): Response
     {
         if ($this->can('Cliente Ver', 'Cliente Editar', 'Cliente Apagar')) {
-
             return Inertia::render('Admin/Client', [
                 'client' => $client,
                 'edit' => false,
@@ -126,7 +127,9 @@ class ClientController extends Controller
     {
         if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
             if ($this->can('Cliente Editar')) {
+                $c = collect($client)->all();
                 if ($client->update($request->validated())) {
+                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
                     return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
@@ -147,7 +150,9 @@ class ClientController extends Controller
     {
         if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
             if ($this->can('Cliente Apagar')) {
+                $c = collect($client)->all();
                 if ($client->delete()) {
+                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
                     return redirect()->route('clients.index')->with('success', 'Conta do cliente foi enviada para lixeira com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao apagar conta do cliente');
@@ -167,7 +172,9 @@ class ClientController extends Controller
     {
         if ((int) getKeyValue($request->_checker, 'edit_client_account') === (int) $request->id) {
             if ($this->can('Cliente Apagar', 'Cliente Editar')) {
-                if ($client->restore()) {
+                $c = collect($client)->all();
+                if ($client->deleted_at && $client->restore()) {
+                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
                     return redirect()->back()->with('success', 'Cadastro do cliente foi restaurado com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao restaurar cadastro do cliente');

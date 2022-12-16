@@ -9,7 +9,6 @@ use Inertia\Response;
 use App\Models\Branch;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -17,12 +16,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Admin\UserRequest;
 use App\Mail\WelcomeUser;
+use App\Models\UserUpdate;
+use App\Traits\Helpers;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
-    use ACL;
+    use ACL, Helpers;
     /**
      * página inicial de controle de acesso de usuários
      */
@@ -257,7 +258,7 @@ class UserController extends Controller
             Mail::to($user)->send(new WelcomeUser($user, $pass));
 
             if ($user) {
-                return redirect(route('admin.acl.users.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
+                return redirect(route('admin.acl.usuarios.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
             }
             return redirect()->back()->with('error', 'Ocorreu um erro ao criar usuário');
         }
@@ -297,7 +298,7 @@ class UserController extends Controller
 
                 $user = User::withTrashed()
                     ->find($request->user);
-
+                $u = collect($user)->all();
                 $updated = $user->update(
                     [
                         'email' => $request->email,
@@ -309,6 +310,7 @@ class UserController extends Controller
                     ]
                 );
                 if ($updated) {
+                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
                     return redirect()->back()->with('success', 'O usuário foi atuzalizado');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao atualizar conta do usuário');
@@ -331,13 +333,19 @@ class UserController extends Controller
     {
         if ($this->can('Usuario Editar')) {
             if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
-                User::select('id', 'name', 'cpf', 'email', 'deleted_at')
-                    ->withTrashed()
-                    ->find($request->id)
-                    ->fill([
+                $user = User::withTrashed()
+                    ->find($request->id);
+                $u = collect($user)->all();
+                if ($user->update(
+                    [
                         'email_verified_at' => now()
-                    ])->update();
-                return redirect()->back()->with('success', 'Email verificardo com sucesso');
+                    ]
+                )) {
+                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+                    return redirect()->back()->with('success', 'Email verificardo com sucesso');
+                } else {
+                    return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
+                }
             } else {
                 return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
             }
@@ -352,11 +360,19 @@ class UserController extends Controller
     {
         if ($this->can('Usuario Editar')) {
             if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
-                User::find($request->id)
-                    ->fill([
+                $user = User::withTrashed()
+                    ->find($request->id);
+                $u = collect($user)->all();
+                if ($user->update(
+                    [
                         'email_verified_at' => null
-                    ])->update();
-                return redirect()->back()->with('success', 'Usuário deverá fazer login e solicitar link de verificação de e-mail');
+                    ]
+                )) {
+                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+                    return redirect()->back()->with('success', 'Usuário deverá fazer login e solicitar link de verificação de e-mail');
+                } else {
+                    return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
+                }
             } else {
                 return redirect()->back()->with('error', 'Payload: erro ao acessar aplicação');
             }
@@ -383,11 +399,13 @@ class UserController extends Controller
             ]
         );
 
+        $account = User::find(auth()->id());
         $request->user()->update([
             'name' => $request->name,
             'email' => $request->email,
             'email_verified_at' => $request->user()->email === $request->email ? $request->user()->email_verified_at : null
         ]);
+        $this->saveUpdates($account, $request->user(), UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
 
         return Inertia::render('Admin/Account', [
             'message' => 'Sua conta foi atualizada!'

@@ -28,6 +28,10 @@ onMounted: {
     ) {
         numberMenuItems.value++
     }
+    if (hasPermission(usePage().props.value.auth.roles, ['Super Admin'])
+    ) {
+        numberMenuItems.value++
+    }
 }
 const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
 
@@ -59,7 +63,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
             || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
                 class="col-span-1 flex flex-col items-center"
-                :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+                :class="route().current('client8s.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('clients.index')" :active="route().current('clients.index')">
                 <mdicon name="account-heart" title="Clientes" class="h-6 w-6" />
                 </Link>
@@ -75,6 +79,15 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 </Link>
                 <span class="text-[10.5px] font-medium text-center"
                     :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100'">Unidades</span>
+            </div>
+            <div v-if="hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                class="col-span-1 flex flex-col items-center"
+                :class="route().current('configuracoes.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+                <Link :href="route('configuracoes.index')" :active="route().current('configuracoes.*')">
+                <mdicon name="cog" title="Sistema" class="h-6 w-6" />
+                </Link>
+                <span class="text-[10.5px] font-medium text-center"
+                    :class="route().current('configuracoes.*') ? 'text-lime-300' : 'text-teal-100'">Configurar</span>
             </div>
             <div class="col-span-1 flex flex-col items-center"
                 :class="route().current('user.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
