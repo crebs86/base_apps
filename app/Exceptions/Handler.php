@@ -60,15 +60,11 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
-        // $route = app('router')
-        //     ->getRoutes()
-        //     ->match(app('request')
-        //         ->create(url()->previous()));
-        // //         $route->getName(),
-        // //         $route->parameters()
-
         if ($response->status() === 419) {
-            return back()->with('info', 'Página expirada, por favor refaça sua solicitação.');
+            return redirect(route('redirect'));
+        }
+        if ($response->status() === 404) {
+            return Inertia::render('Admin/404');
         }
 
         return $response;
