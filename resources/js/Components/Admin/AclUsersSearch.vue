@@ -147,12 +147,12 @@ function search() {
                                         <td
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 dark:border-gray-600">
                                             <div class="flex justify-center gap-1">
-                                                <Link :href="route('admin.acl.users.papeis.list', v.id)">
+                                                <Link :href="route('admin.acl.users.roles.list', v.id)">
                                                 <mdicon name="shield-account"
                                                     class="text-green-600 hover:text-green-400"
                                                     title="Detalhar Papéis" />
                                                 </Link>
-                                                <Link :href="route('admin.acl.users.papeis.show', v.id)">
+                                                <Link :href="route('admin.acl.users.roles.show', v.id)">
                                                 <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
                                                     title="Editar Papéis" />
                                                 </Link>

@@ -310,7 +310,7 @@ class UserController extends Controller
                     ]
                 );
                 if ($updated) {
-                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']) : null;
                     return redirect()->back()->with('success', 'O usuário foi atuzalizado');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao atualizar conta do usuário');
@@ -341,7 +341,7 @@ class UserController extends Controller
                         'email_verified_at' => now()
                     ]
                 )) {
-                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']) : null;
                     return redirect()->back()->with('success', 'Email verificardo com sucesso');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
@@ -368,7 +368,7 @@ class UserController extends Controller
                         'email_verified_at' => null
                     ]
                 )) {
-                    $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']) : null;
                     return redirect()->back()->with('success', 'Usuário deverá fazer login e solicitar link de verificação de e-mail');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
@@ -405,7 +405,7 @@ class UserController extends Controller
             'email' => $request->email,
             'email_verified_at' => $request->user()->email === $request->email ? $request->user()->email_verified_at : null
         ]);
-        $this->saveUpdates($account, $request->user(), UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']);
+        $this->auditable('users') ? $this->saveUpdates($account, $request->user(), UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'deleted_at', 'branch_id', 'updated_at']) : null;
 
         return Inertia::render('Admin/Account', [
             'message' => 'Sua conta foi atualizada!'

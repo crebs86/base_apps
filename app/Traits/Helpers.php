@@ -2,12 +2,20 @@
 
 namespace App\Traits;
 
+use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 
 trait Helpers
 {
     function resetCache()
     {
+    }
+
+    function auditable($key)
+    {
+        return json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+            return Setting::where('name', 'general')->first();
+        })->settings)->saveUpdates->$key[1];
     }
 
     function saveUpdates(object|array $before, object $after, string $classModel, array $columns): void

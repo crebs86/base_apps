@@ -47,7 +47,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                     :class="route().current('dashboard') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <mdicon name="view-dashboard" title="Dashboard" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('dashboard') ? 'text-lime-300' : 'text-teal-100'">Painel</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
@@ -57,7 +57,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')">
                 <mdicon name="shield-lock-outline" title="Controle de Acesso" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('admin.acl.*') ? 'text-lime-300' : 'text-teal-100'">Acesso</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
@@ -67,7 +67,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 <Link :href="route('clients.index')" :active="route().current('clients.index')">
                 <mdicon name="account-heart" title="Clientes" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100'">Clientes</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
@@ -77,24 +77,24 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 <Link :href="route('branches.index')" :active="route().current('branches.*')">
                 <mdicon name="source-branch" title="Unidades" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100'">Unidades</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
                 class="col-span-1 flex flex-col items-center"
-                :class="route().current('configuracoes.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
-                <Link :href="route('configuracoes.index')" :active="route().current('configuracoes.*')">
+                :class="route().current('settings.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+                <Link :href="route('settings.index')" :active="route().current('settings.*')">
                 <mdicon name="cog" title="Sistema" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
-                    :class="route().current('configuracoes.*') ? 'text-lime-300' : 'text-teal-100'">Configurar</span>
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
+                    :class="route().current('settings.*') ? 'text-lime-300' : 'text-teal-100'">Configurar</span>
             </div>
             <div class="col-span-1 flex flex-col items-center"
                 :class="route().current('user.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('user.account')" :active="route().current('admin.*')">
                 <mdicon name="account" title="Minha Conta" class="h-6 w-6" />
                 </Link>
-                <span class="text-[10.5px] font-medium text-center"
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('user.*') ? 'text-lime-300' : 'text-teal-100'">Conta</span>
             </div>
         </div>

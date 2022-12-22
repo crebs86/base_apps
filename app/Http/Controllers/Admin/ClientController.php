@@ -129,7 +129,7 @@ class ClientController extends Controller
             if ($this->can('Cliente Editar')) {
                 $c = collect($client)->all();
                 if ($client->update($request->validated())) {
-                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
+                    $this->auditable('clients') ? $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']) : null;
                     return redirect()->back()->with('success', 'Cliente alterado com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao salvar os dados do cliente');
@@ -152,7 +152,7 @@ class ClientController extends Controller
             if ($this->can('Cliente Apagar')) {
                 $c = collect($client)->all();
                 if ($client->delete()) {
-                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
+                    $this->auditable('clients') ? $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']) : null;
                     return redirect()->route('clients.index')->with('success', 'Conta do cliente foi enviada para lixeira com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao apagar conta do cliente');
@@ -174,7 +174,7 @@ class ClientController extends Controller
             if ($this->can('Cliente Apagar', 'Cliente Editar')) {
                 $c = collect($client)->all();
                 if ($client->deleted_at && $client->restore()) {
-                    $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
+                    $this->auditable('clients') ? $this->saveUpdates($c, $client, ClientUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']) : null;
                     return redirect()->back()->with('success', 'Cadastro do cliente foi restaurado com sucesso!');
                 }
                 return redirect()->back()->with('error', 'Ocorreu um erro ao restaurar cadastro do cliente');
