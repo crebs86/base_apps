@@ -14,6 +14,11 @@ trait ACL
         return false;
     }
 
+    function isSuperAdmin()
+    {
+        return $this->hasRole('Super Admin');
+    }
+
     function hasRole($roles)
     {
         return auth()->user()->hasRole($roles);
