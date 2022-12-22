@@ -1,9 +1,7 @@
 <?php
 
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
-use App\Http\Controllers\Admin\Redirector;
+use App\Http\Controllers\Admin\MiscController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,20 +14,11 @@ use App\Http\Controllers\Admin\Redirector;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [MiscController::class, 'home']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/painel', [MiscController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::any('redirector', [Redirector::class, 'redirect'])->name('redirect');
+Route::any('pagina-expirada/', [MiscController::class, 'redirect'])->name('redirect');
 
 require __DIR__ . '/admin.php';
 require __DIR__ . '/auth.php';
