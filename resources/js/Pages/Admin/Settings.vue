@@ -13,7 +13,8 @@ const settings = useForm({
     saveUpdates_branches: usePage().props.value.settings.saveUpdates.branches[1],
     saveUpdates_clients: usePage().props.value.settings.saveUpdates.clients[1],
     saveUpdates_permissions: usePage().props.value.settings.saveUpdates.permissions[1],
-    saveUpdates_settings: usePage().props.value.settings.saveUpdates.settings[1],
+    saveUpdates_roles: usePage().props.value.settings.saveUpdates.roles[1],
+    saveUpdates_userRolesPermissions: usePage().props.value.settings.saveUpdates.userRolesPermissions[1],
     saveUpdates_users: usePage().props.value.settings.saveUpdates.users[1],
 })
 
@@ -52,7 +53,40 @@ function saveSettings() {
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                             <div class="grid cols-1">
-
+                                <div v-if="usePage().props.value.errors.canRegister" class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.canRegister }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.logoutAfterChangeEmail"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.logoutAfterChangeEmail }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.mustVerifyEmail" class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.mustVerifyEmail }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_branches"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_branches }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_clients"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_clients }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_permissions"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_permissions }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_roles"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_roles }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_userRolesPermissions"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_userRolesPermissions }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.saveUpdates_users"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.saveUpdates_users }}
+                                </div>
                                 <div class="flex w-full mb-5">
                                     <label for="canRegister" class="flex items-center cursor-pointer">
                                         <div class="relative">
@@ -195,11 +229,11 @@ function saveSettings() {
                                 </div>
 
                                 <div class="flex w-full mb-5 ml-5">
-                                    <label for="saveUpdates_settings" class="flex items-center cursor-pointer">
+                                    <label for="saveUpdates_roles" class="flex items-center cursor-pointer">
                                         <div class="relative">
-                                            <input type="checkbox" id="saveUpdates_settings" class="sr-only"
-                                                :checked="usePage().props.value.settings.saveUpdates.settings[1]"
-                                                v-model="settings.saveUpdates_settings">
+                                            <input type="checkbox" id="saveUpdates_roles" class="sr-only"
+                                                :checked="usePage().props.value.settings.saveUpdates.roles[1]"
+                                                v-model="settings.saveUpdates_roles">
                                             <div
                                                 class="bg-teal-200 dark:bg-gray-500 w-10 h-4 rounded-full shadow-inner">
                                             </div>
@@ -208,7 +242,27 @@ function saveSettings() {
                                             </div>
                                         </div>
                                         <div class="ml-3 dark:text-gray-300 font-medium">
-                                            {{ usePage().props.value.settings.saveUpdates.settings[0] }}
+                                            {{ usePage().props.value.settings.saveUpdates.roles[0] }}
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="flex w-full mb-5 ml-5">
+                                    <label for="saveUpdates_userRolesPermissions"
+                                        class="flex items-center cursor-pointer">
+                                        <div class="relative">
+                                            <input type="checkbox" id="saveUpdates_userRolesPermissions" class="sr-only"
+                                                :checked="usePage().props.value.settings.saveUpdates.userRolesPermissions[1]"
+                                                v-model="settings.saveUpdates_userRolesPermissions">
+                                            <div
+                                                class="bg-teal-200 dark:bg-gray-500 w-10 h-4 rounded-full shadow-inner">
+                                            </div>
+                                            <div
+                                                class="dot absolute w-6 h-4 bg-white rounded-full shadow -left-1 -top-0 transition">
+                                            </div>
+                                        </div>
+                                        <div class="ml-3 dark:text-gray-300 font-medium">
+                                            {{ usePage().props.value.settings.saveUpdates.userRolesPermissions[0] }}
                                         </div>
                                     </label>
                                 </div>

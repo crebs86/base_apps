@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class SettingUpdate extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    protected $fillable = ['id', 'updates', 'updated_at'];
 }

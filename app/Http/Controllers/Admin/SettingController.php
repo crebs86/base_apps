@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Setting;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Traits\ACL;
-use App\Traits\Helpers;
 use Inertia\Inertia;
+use App\Models\Setting;
+use App\Traits\Helpers;
+use Illuminate\Http\Request;
+use App\Models\SettingUpdate;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\SettingRequest;
 
 class SettingController extends Controller
 {
@@ -37,11 +39,11 @@ class SettingController extends Controller
      * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Setting $setting)
+    public function update(SettingRequest $request, Setting $setting)
     {
         if ($this->isSuperAdmin()) {
-            $s = $setting->first();
-            $a = json_decode($s->settings);
+            $s = collect($setting)->all();
+            $a = json_decode($setting->settings);
             $u = [
                 'canRegister' => [
                     $a->canRegister[0],
@@ -69,9 +71,13 @@ class SettingController extends Controller
                         $a->saveUpdates->permissions[0],
                         $request->saveUpdates_permissions
                     ],
-                    'settings' => [
-                        $a->saveUpdates->settings[0],
-                        $request->saveUpdates_settings
+                    'roles' => [
+                        $a->saveUpdates->roles[0],
+                        $request->saveUpdates_roles
+                    ],
+                    'userRolesPermissions' => [
+                        $a->saveUpdates->userRolesPermissions[0],
+                        $request->saveUpdates_userRolesPermissions
                     ],
                     'users' => [
                         $a->saveUpdates->users[0],
@@ -80,6 +86,10 @@ class SettingController extends Controller
                 ]
             ];
 
+            if (!$this->validateRequestSetting($u)) {
+                return redirect()->back()->with('error', 'Erro crítico ao salvar configurações!');
+            }
+
             if (
                 $setting->update(
                     [
@@ -87,13 +97,18 @@ class SettingController extends Controller
                         'settings' => json_encode($u)
                     ]
                 )
-                && cache()->forget('settings')
             ) {
-                //$this->saveUpdates($c, $setting, SettingUpdate::class, ['name', 'email', 'cpf', 'address', 'deleted_at', 'branch_id', 'updated_at', 'cep', 'phones', ' notes']);
                 cache()->forget('settings');
+                $this->saveUpdates($s, $setting, SettingUpdate::class, ['name', 'settings', 'updated_at']);
                 return redirect()->back()->with('success', 'Configurações alteradas com sucesso!');
             }
         }
         return Inertia::render('Admin/403');
+    }
+
+    private function validateRequestSetting(array $data)
+    {
+        return count(array_diff_key(['canRegister' => 0, 'mustVerifyEmail' => 0, 'logoutAfterChangeEmail' => 0, 'saveUpdates' => 0], $data)) === 0 &&
+            count(array_diff_key(['title' => 0, 'branches' => 0, 'clients' => 0, 'permissions' => 0, 'roles' => 0, 'userRolesPermissions' => 0, 'users' => 0], $data['saveUpdates'])) === 0;
     }
 }
