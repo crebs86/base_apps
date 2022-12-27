@@ -9,10 +9,13 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Client extends Model
 {
+    use HasFactory, HasRoles, SoftDeletes;
 
     protected $fillable = ['name', 'email', 'cpf', 'cep', 'address', 'phones', 'branch_id', 'notes', 'updated_at', 'created_at'];
 
-    use HasFactory, HasRoles, SoftDeletes;
+    protected $casts = [
+        'updated_at' => 'datetime:Y-m-d H:i:s'
+    ];
 
     public function branch()
     {

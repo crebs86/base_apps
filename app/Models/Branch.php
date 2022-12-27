@@ -12,4 +12,8 @@ class Branch extends Model
     use HasFactory, HasRoles, SoftDeletes;
 
     protected $fillable = ['name', 'cnpj', 'email', 'address', 'cep', 'phones', 'notes', 'updated_at', 'created_at'];
+
+    protected $casts = [
+        'updated_at' => 'datetime:Y-m-d H:i:s'
+    ];
 }
