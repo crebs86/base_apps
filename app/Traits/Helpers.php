@@ -28,13 +28,13 @@ trait Helpers
                 $m->update(
                     [
                         'updates' => array_merge_recursive(
-                            [
-                                'user_id' => auth()->id(),
-                            ],
                             json_decode(
                                 $m->updates,
                                 true
                             ),
+                            [
+                                'user_id' => auth()->id(),
+                            ],
                             collect($after->toArray())->only($columns)->all()
                         ),
                         'updated_at' => now()
@@ -46,10 +46,10 @@ trait Helpers
                     'updates' => json_encode(
                         array_merge_recursive(
                             [
-                                'user_id' => auth()->id(),
+                                'user_id' => 0,
                             ],
                             [
-                                'user_id' => 0,
+                                'user_id' => auth()->id(),
                             ],
                             !is_array($before) ? collect($before->toArray())->only($columns)->all() : collect($before)->only($columns)->all(),
                             collect($after->toArray())->only($columns)->all()
