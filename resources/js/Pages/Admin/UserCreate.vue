@@ -137,7 +137,7 @@ function createUser() {
                                 </button>
                                 <button type="button" @click.prevent="createUser"
                                     v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
-                                    class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
+                                    class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Criar Usuário
                                 </button>
                             </div>
