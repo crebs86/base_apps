@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AuditController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\PermissionController;
 
 Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('/dashboard')->group(function () {
     Route::get('/conta', [UserController::class, 'account'])->name('user.account');
@@ -20,6 +21,17 @@ Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('/dashboard')
     Route::put('/clientes/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 
     Route::resource('/configuracoes', SettingController::class, ['names' => 'settings'])->parameter('configuracoes', 'setting')->except(['destroy', 'create', 'store', 'show', 'edit']);
+
+    Route::get('/auditar', [AuditController::class, 'index'])->name('audit.index');
+
+    Route::get('/auditar/clientes', [AuditController::class, 'client'])->name('audit.clients.index');
+    Route::get('/auditar/clientes/{client}', [AuditController::class, 'clientShow'])->name('audit.clients.show');
+
+    Route::get('/auditar/unidades', [AuditController::class, 'branch'])->name('audit.branches.index');
+    Route::get('/auditar/unidades/{branch}', [AuditController::class, 'branchShow'])->name('audit.branches.show');
+
+    Route::get('/auditar/usuarios', [AuditController::class, 'user'])->name('audit.users.index');
+    Route::get('/auditar/usuarios/{user}', [AuditController::class, 'userShow'])->name('audit.users.show');
 });
 
 Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('admin/controle-de-acessos')->name('admin.acl.')->group(function () {

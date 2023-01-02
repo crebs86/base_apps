@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 import hasPermission from '@/permissions'
 
 const numberMenuItems = ref(2);
-
+const classNumberMenuItems = ref('7');
 onMounted: {
     if (hasPermission(
         usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']
@@ -31,9 +31,11 @@ onMounted: {
     if (hasPermission(usePage().props.value.auth.roles, ['Super Admin'])
     ) {
         numberMenuItems.value++
+        numberMenuItems.value++
     }
+    classNumberMenuItems.value = numberMenuItems.value > 7 ? parseInt(numberMenuItems.value / 2) : numberMenuItems.value;
 }
-const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
+const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
 
 </script>
 <template>
@@ -51,8 +53,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                     :class="route().current('dashboard') ? 'text-lime-300' : 'text-teal-100'">Painel</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
-            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
-                class="col-span-1 flex flex-col items-center"
+    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="col-span-1 flex flex-col items-center"
                 :class="route().current('admin.acl.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')">
                 <mdicon name="shield-lock-outline" title="Controle de Acesso" class="h-6 w-6" />
@@ -61,9 +62,8 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                     :class="route().current('admin.acl.*') ? 'text-lime-300' : 'text-teal-100'">Acesso</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
-            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
-                class="col-span-1 flex flex-col items-center"
-                :class="route().current('client8s.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="col-span-1 flex flex-col items-center"
+                :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('clients.index')" :active="route().current('clients.index')">
                 <mdicon name="account-heart" title="Clientes" class="h-6 w-6" />
                 </Link>
@@ -71,8 +71,7 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                     :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100'">Clientes</span>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
-            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
-                class="col-span-1 flex flex-col items-center"
+    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="col-span-1 flex flex-col items-center"
                 :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('branches.index')" :active="route().current('branches.*')">
                 <mdicon name="source-branch" title="Unidades" class="h-6 w-6" />
@@ -84,10 +83,19 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
                 class="col-span-1 flex flex-col items-center"
                 :class="route().current('settings.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
                 <Link :href="route('settings.index')" :active="route().current('settings.*')">
-                <mdicon name="cog" title="Sistema" class="h-6 w-6" />
+                <mdicon name="cog" title="Configurações" class="h-6 w-6" />
                 </Link>
                 <span class="text-[9px] md:text-[14px] font-medium text-center"
                     :class="route().current('settings.*') ? 'text-lime-300' : 'text-teal-100'">Configurar</span>
+            </div>
+            <div v-if="hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                class="col-span-1 flex flex-col items-center"
+                :class="route().current('audit.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
+                <Link :href="route('audit.index')" :active="route().current('audit.*')">
+                <mdicon name="lightbulb-on-outline" title="Auditar" class="h-6 w-6" />
+                </Link>
+                <span class="text-[9px] md:text-[14px] font-medium text-center"
+                    :class="route().current('audit.*') ? 'text-lime-300' : 'text-teal-100'">Auditar</span>
             </div>
             <div class="col-span-1 flex flex-col items-center"
                 :class="route().current('user.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
@@ -100,32 +108,3 @@ const showMenuItems = 'grid grid-cols-' + numberMenuItems.value;
         </div>
     </div>
 </template>
-<style scoped>
-.grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.grid-cols-6 {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.grid-cols-7 {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-</style>

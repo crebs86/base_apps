@@ -6,7 +6,6 @@ use App\Traits\ACL;
 use Inertia\Inertia;
 use App\Models\Setting;
 use App\Traits\Helpers;
-use Illuminate\Http\Request;
 use App\Models\SettingUpdate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SettingRequest;
