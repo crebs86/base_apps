@@ -7,15 +7,17 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use App\Models\PermissionUpdate;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Requests\Admin\PermissionRequest;
 use Spatie\Permission\Models\Permission;
+use App\Http\Requests\Admin\PermissionRequest;
+use App\Traits\Helpers;
 
 class PermissionController extends Controller
 {
-    use ACL;
+    use ACL, Helpers;
     /**
      * página inicial do controle de acesso
      */
@@ -116,16 +118,18 @@ class PermissionController extends Controller
             && !in_array($request->name, config('crebs86.protected_permissions')) //é uma permissão protegida?...
         ) {
             if ((int) getKeyValue($request->_checker, 'edit_permission') === (int) $request->id) {
-                $permission = Permission::select('id', 'name', 'guard_name')
+                $permission = Permission::select('id', 'name', 'guard_name', 'updated_at')
                     ->where('id', $request->id)
                     ->first();
+                $p = collect($permission)->all();
                 if ($permission->name === $request->input('name') || in_array($permission->name, config('crebs86.protected_permissions'))) {
                     return response()->json([
                         'message' => 'Permissões: Nenhuma alteração foi feita',
                         'reload' => in_array($permission->name, config('crebs86.protected_permissions'))
                     ], 418);
                 }
-                $permission->update(['name' => $request->input('name')]);
+                $updated = $permission->update(['name' => $request->input('name')]);
+                $this->auditable('permissions') ? $this->saveUpdates($p, $permission, PermissionUpdate::class, ['name', 'guard_name', 'updated_at']) : null;
                 return null;
             }
             return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);

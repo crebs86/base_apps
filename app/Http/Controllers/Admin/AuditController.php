@@ -13,7 +13,9 @@ use App\Models\UserUpdate;
 use App\Models\BranchUpdate;
 use App\Models\ClientUpdate;
 use Illuminate\Http\Request;
+use App\Models\PermissionUpdate;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Permission;
 
 class AuditController extends Controller
 {
@@ -118,6 +120,37 @@ class AuditController extends Controller
                     'userData' => $updates,
                     'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all(),
                     'branches' => collect($branches)->keyBy('id')->all()
+                ],
+                $updates ? 200 : 404
+            );
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function permission(Request $request): Response
+    {
+        if ($this->isSuperAdmin()) {
+            if ($request->permission) {
+                $permission = Permission::select('id', 'name', 'guard_name', 'updated_at')->find($request->permission);
+            }
+            return Inertia::render('Admin/AuditPermissions', [
+                'permission' => isset($permission) ? $permission : null,
+                'keyword' => $request->permission
+            ]);
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function permissionShow(Request $request, PermissionUpdate $permissionUpdate)
+    {
+        $permission = $permissionUpdate->where('id', $request->permission)->first();
+        $users = User::select('id', 'name')->withTrashed()->find(json_decode($permission?->updates)?->user_id)?->toArray();
+        $updates = json_decode($permission?->updates);
+        if ($this->isSuperAdmin()) {
+            return response()->json(
+                [
+                    'permissionData' => $updates,
+                    'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
                 ],
                 $updates ? 200 : 404
             );

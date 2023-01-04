@@ -52,7 +52,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </div>
 
                                 <div class="flex flex-col items-center pt-12 pb-24">
-                                    <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                    <Link :href="route('audit.permissions.index')" :active="route().current('audit.permissions.index')"
                                         class="text-teal-100 hover:text-emerald-400 flex flex-col items-center max-w-max">
                                     <mdicon name="key-arrow-right" title="Auditar Permissões" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">

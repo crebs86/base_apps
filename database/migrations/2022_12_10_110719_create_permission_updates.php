@@ -14,8 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('permission_updates', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('id')->unique();
+            $table->foreign('id')
+                ->references('id')
+                ->on('permissions');
+
+            $table->text('updates');
+            $table->timestamp('updated_at');
         });
     }
 
