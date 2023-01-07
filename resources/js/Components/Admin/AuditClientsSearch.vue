@@ -31,7 +31,7 @@ const labels = ref({
     'phones': 'Contatos',
     'notes': 'Observações',
     'updated_at': 'Atualização',
-    'deleted_at': 'Conta Desativada',
+    'deleted_at': 'Cadastro Desativado',
 });
 
 const getClient = useForm({
@@ -66,9 +66,6 @@ function loadData() {
 </script>
 <template>
 
-    <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
-        Auditar Cadastros de Clientes
-    </h1>
     <div class="pt-0.5" v-if="usePage().props.value.flash.info">
         <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
             <div class="p-3 text-center">cd cd
@@ -158,7 +155,7 @@ function loadData() {
                         class="inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                         <h1
                             class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
-                            Dados de Atualizações do Cadastro {{ props.client?.id }}
+                            Dados de Atualizações do Cadastro {{ props.client?.id }} - {{ props.client?.name }}
                         </h1>
                         <div
                             class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">

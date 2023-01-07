@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps(
     {

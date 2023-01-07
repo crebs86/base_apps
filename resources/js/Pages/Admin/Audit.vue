@@ -12,7 +12,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     <AuthenticatedLayout>
         <div
             class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
-            <h1 class="text-lg font-bold text-center mb-2 text-gray-300 bg-gray-800 mx-1.5 rounded flex justify-center">
+            <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
                 Auditoria
             </h1>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
