@@ -26,7 +26,7 @@ import AuditBreadcrumbs from '@/Components/Admin/AuditBreadcrumbs.vue';
                 </template>
             </AuditBreadcrumbs>
 
-            <AuditRolesSearch :permission="$page.props.permission" :keyword="$page.props.keyword" />
+            <AuditRolesSearch :role="$page.props.role" :keyword="$page.props.keyword" />
         </div>
     </AuthenticatedLayout>
 </template>

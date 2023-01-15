@@ -8,7 +8,6 @@ import moment from 'moment';
 const props = defineProps(
     {
         'role': Object,
-        'permissions': Object,
         'keyword': String
     }
 )
