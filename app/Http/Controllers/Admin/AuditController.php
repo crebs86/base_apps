@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Models\Branch;
 use App\Models\Client;
 use App\Traits\Helpers;
+use App\Models\AclUpdate;
 use App\Models\RoleUpdate;
 use App\Models\UserUpdate;
 use App\Models\BranchUpdate;
@@ -194,6 +195,64 @@ class AuditController extends Controller
                 [
                     'roleData' => $updates,
                     'permissions' => collect(Permission::select('id', 'name')->find($a))->keyBy('id')->all(),
+                    'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
+                ],
+                $updates ? 200 : 404
+            );
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function acl(Request $request): Response
+    {
+        if ($this->isSuperAdmin()) {
+            if ($request->user) {
+                $user = User::select('id', 'name', 'updated_at')
+                    ->with(
+                        [
+                            'roles' => function ($q) {
+                                $q->select('id', 'name')->orderBy('id');
+                            }
+                        ]
+                    )
+                    ->find($request->user);
+            }
+            return Inertia::render('Admin/AuditAcl', [
+                'user' => isset($user) ? $user : null,
+                'keyword' => $request->user
+            ]);
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function aclShow(Request $request, AclUpdate $aclUpdate)
+    {
+        $role = $aclUpdate->where('id', $request->user)->first();
+        $users = User::select('id', 'name')->withTrashed()->find(json_decode($role?->updates)?->user_id)?->toArray();
+        $updates = json_decode($role?->updates);
+        $a = [];
+
+        if ($updates) {
+            foreach ($updates->roles as $i) {
+                foreach ($i as $v) {
+                    $a[$v] = $v;
+                }
+            }
+        }
+
+        if ($this->isSuperAdmin()) {
+            return response()->json(
+                [
+                    'aclData' => collect($updates)
+                        ->prepend(
+                            array_merge(
+                                ['0000-00-00'],
+                                is_array($updates->updated_at) ? $updates->updated_at : [$updates->updated_at]
+                            ),
+                            'updated_at'
+                        )
+                        ->all(),
+                    'roles' => collect(Role::select('id', 'name')->find($a))->keyBy('id')->all(),
                     'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
                 ],
                 $updates ? 200 : 404

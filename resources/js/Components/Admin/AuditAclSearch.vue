@@ -7,47 +7,48 @@ import moment from 'moment';
 
 const props = defineProps(
     {
-        'role': Object,
+        'user': Object,
         'keyword': String
     }
 )
 
 const toast = useToast();
 
-const roleData = ref([]);
+const aclData = ref([]);
 
-const getRole = useForm({
-    role: props.keyword
+const getUser = useForm({
+    user: props.keyword
 });
 
 const users = ref({});
-const permissions = ref({});
+const user = ref({});
+
+const roles = ref({});
 
 const labels = ref({
     'user_id': 'Usuário',
     'name': 'Nome',
-    'guard_name': 'Guard',
-    'permissions': 'Permissões',
-    'updated_at': 'Atualização'
+    'roles': 'Papéis',
+    'updated_at': 'Atribuição'
 });
 
 function search() {
-    if (!(getRole.role === undefined || getRole.role === '' || getRole.role === null)) {
-        getRole.get(route('audit.roles.index'));
-        if (isNaN(parseInt(getRole.role))) {
+    if (!(getUser.user === undefined || getUser.user === '' || getUser.user === null)) {
+        getUser.get(route('audit.acl.index'));
+        if (isNaN(parseInt(getUser.user))) {
             toast.error("Insira um número válido");
         }
     } else {
-        toast.error("Informe o ID do papél");
+        toast.error("Informe o ID do usuário");
     }
 }
 
 function loadData() {
-    axios.get(route('audit.roles.show', usePage().props.value.role?.id))
+    axios.get(route('audit.acl.show', usePage().props.value.user?.id))
         .then(r => {
-            roleData.value = r.data.roleData;
+            aclData.value = r.data.aclData;
             users.value = r.data.users;
-            permissions.value = r.data.permissions;
+            roles.value = r.data.roles;
         })
         .catch(e => {
             if (e.response.status === 404) {
@@ -79,11 +80,11 @@ function loadData() {
                     </path>
                 </svg>
             </div>
-            <input type="text" v-model="getRole.role" @keypress.prevent.enter="search" required
+            <input type="text" v-model="getUser.user" @keypress.prevent.enter="search" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 rounded-md dark:bg-gray-600 dark:text-gray-300"
-                placeholder="Informe o código do papél">
+                placeholder="Informe o código do usuário">
         </div>
-        <button type="submit" :disabled="getRole.processing"
+        <button type="submit" :disabled="getUser.processing"
             class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
             <!-- search icon -->
             <svg aria-hidden="true" class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -95,49 +96,50 @@ function loadData() {
         </button>
     </form>
 
-    <div v-if="usePage().props.value.role" class="px-2 md:px-8 pt-1">
-        <h3 class="text-xl font-bold">Dados gerais</h3>
+    <div v-if="usePage().props.value.user" class="px-2 md:px-8 pt-1">
+        <h3 class="text-xl font-bold">Identificação do Usuário</h3>
+
         <p class="pt-4 pb-2">
             <strong>
                 Código:
-            </strong> {{ usePage().props.value.role?.id }}
+            </strong> {{ usePage().props.value.user?.id }}
         </p>
 
         <p class="py-2">
             <strong>
                 Nome:
-            </strong> {{ usePage().props.value.role?.name }}
+            </strong> {{ usePage().props.value.user?.name }}
         </p>
-
-        <p class="py-2">
-            <strong>
-                Guard:
-            </strong> {{ usePage().props.value.role?.guard_name }}
+        <hr>
+        <p>
+            Papéis Atribuídos:
         </p>
-
-        <p class="pt-2 pb-4">
-            <strong>
-                Última alteração:
-            </strong>
-            {{ moment(usePage().props.value.role?.updated_at).format('DD/MM/YYYY HH:mm:ss') }}
-        </p>
-
+        <span v-for="(roles, i) in usePage().props.value.user?.roles"
+            class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5 mb-1.5">
+            <span aria-hidden class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
+            </span>
+            <span class="relative text-xs">
+                {{ roles.name }}
+            </span>
+        </span>
+        <hr>
         <button type="button" @click="loadData"
             class="border border-teal-500 bg-teal-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-teal-600 focus:outline-none focus:shadow-outline">
             Carregar Dados de Auditoria
         </button>
+
     </div>
     <div class="py-0 px-0">
         <div class="mx-auto dark:bg-gray-800 rounded-xl">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
                 <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
-                    <div v-if="Object.entries(roleData).length > 0"
+                    <div v-if="Object.entries(aclData).length > 0"
                         class="inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                         <h1
                             class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
-                            Dados de Atualizações do Papél ID: {{ usePage().props.value.role?.id }} - {{
-                                usePage().props.value.role?.name
-                            }}
+                            Dados de Atualizações do Controle de Acessso do Usuário:
+                            {{ usePage().props.value.user?.id }} -
+                            {{ usePage().props.value.user?.name }}
                         </h1>
                         <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <table class="min-w-full mb-2 px-1">
@@ -147,14 +149,16 @@ function loadData() {
                                             class="px-3 py-1.5 md:px-6 md:py-3 bg-red-100 text-center border-b-2 border-gray-300 text-left leading-4 tracking-wider dark:bg-red-300 text-gray-800">
                                             Coluna
                                         </th>
-                                        <th v-for="(value, index) in roleData?.updated_at" :key="index"
+                                        <th v-for="(value, index) in aclData?.updated_at" :key="index"
                                             class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
-                                            {{ moment(value).format('DD/MM/YYYY HH:mm:ss') }}
+                                            {{ value !== '0000-00-00'
+                                            ? moment(value).format('DD/MM/YYYY HH:mm:ss')
+                                            : '-' }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white text-center dark:bg-gray-600">
-                                    <tr v-for="(v, i) in roleData" :key="i">
+                                    <tr v-for="(v, i) in aclData" :key="i">
                                         <th
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center text-gray-800 bg-red-100 dark:bg-red-300">
                                             {{ labels[i] }}
@@ -164,19 +168,20 @@ function loadData() {
                                             <template v-if="i === 'user_id'">
                                                 {{ users[value]['name'] }}
                                             </template>
-                                            <template v-else-if="i === 'permissions'">
+                                            <template v-else-if="i === 'roles'">
                                                 <span v-for="(p, pi) in value"
                                                     class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
                                                     <span aria-hidden
                                                         class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
                                                     </span>
                                                     <span class="relative text-xs">
-                                                        {{ permissions[p]['name'] }}
+                                                        {{ roles[p]['name'] }}
                                                     </span>
                                                 </span>
                                             </template>
                                             <template v-else-if="i === 'updated_at' || i === 'deleted_at'">
-                                                {{ value? moment(value).format('DD/MM/YYYY HH:mm:ss') : '' }}
+                                                {{ value && value !== '0000-00-00'
+                                                ? moment(value).format('DD/MM/YYYY HH:mm:ss') : '-' }}
                                             </template>
                                             <template v-else>{{ value }}</template>
                                         </td>

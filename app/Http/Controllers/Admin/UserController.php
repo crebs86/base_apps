@@ -16,10 +16,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Admin\UserRequest;
 use App\Mail\WelcomeUser;
+use App\Models\AclUpdate;
 use App\Models\UserUpdate;
 use App\Traits\Helpers;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
+
+use function GuzzleHttp\Promise\all;
 
 class UserController extends Controller
 {
@@ -199,12 +202,30 @@ class UserController extends Controller
         }
         if ($this->can('ACL Editar')) {
             if (getKeyValue($r['_checker'], 'edit_user_role') === $request->id) {
-                $user = User::where('id', $request->id)->first();
+
+                $user = User::where('id', $request->id)
+                    ->select('id')
+                    ->with(
+                        [
+                            'roles' => function ($q) {
+                                $q->select('id', 'name', 'updated_at')->orderBy('id');
+                            }
+                        ]
+                    )
+                    ->first();
+                $before = array_merge(collect($user)->all(), ['roles' => [$user->roles->pluck('id', 'name')->all()]]);
+
                 if ($user->hasRole(config('crebs86.admin_roles')) && $hasNoPrivileges) {
                     return response()->json('Papéis de usuário: você não possui permissão para editar usuário administrador', 403);
                 }
-                return
-                    $user->syncRoles($r['roles']);
+
+                $return = $user->syncRoles($r['roles']);
+
+                $after = array_merge(collect($user)->all(), ['roles' => [$user->roles->pluck('id', 'name')->all()], 'updated_at' => now()]);
+
+                $this->auditable('userRolesPermissions') ? $this->saveUpdates(collect($before)->all(), json_decode(json_encode($after)), AclUpdate::class, ['roles', 'updated_at']) : null;
+
+                return $return;
             }
             return response()->json('Payload: erro ao acessar aplicação', 403);
         }

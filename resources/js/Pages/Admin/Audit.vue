@@ -24,7 +24,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                                 <div class="flex flex-col items-center py-12 hover:text-emerald-400">
                                     <Link :href="route('audit.clients.index')"
-                                        :active="route().current('audit.clients.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-fill">
                                     <mdicon name="account-heart" title="Auditar Clientes" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -34,7 +33,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </div>
                                 <div class="flex flex-col items-center py-12">
                                     <Link :href="route('audit.branches.index')"
-                                        :active="route().current('audit.branches.index')"
                                         class="text-teal-600 hover:text-emerald-400 col-span-1 flex flex-col items-center max-w-max">
                                     <mdicon name="source-branch" title="Auditar Unidades" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -44,7 +42,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </div>
                                 <div class="flex flex-col items-center py-12">
                                     <Link :href="route('audit.users.index')"
-                                        :active="route().current('audit.users.index')"
                                         class="text-teal-600 hover:text-emerald-400 col-span-1 flex flex-col items-center max-w-max">
                                     <mdicon name="account-group" title="Auditar Usuários" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -55,7 +52,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                                 <div class="flex flex-col items-center pt-12 pb-24">
                                     <Link :href="route('audit.permissions.index')"
-                                        :active="route().current('audit.permissions.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
                                     <mdicon name="key-arrow-right" title="Auditar Permissões" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -66,7 +62,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
                                 <div class="flex flex-col items-center pt-12 pb-24">
                                     <Link :href="route('audit.roles.index')"
-                                        :active="route().current('audit.roles.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
                                     <mdicon name="key-chain" title="Auditar Papéis" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -76,7 +71,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </div>
 
                                 <div class="flex flex-col items-center pt-12 pb-24">
-                                    <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                    <Link :href="route('audit.acl.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
                                     <mdicon name="shield-lock-outline" title="Auditar Controle de Acessos" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
