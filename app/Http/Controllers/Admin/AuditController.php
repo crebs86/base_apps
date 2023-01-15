@@ -9,11 +9,13 @@ use Inertia\Response;
 use App\Models\Branch;
 use App\Models\Client;
 use App\Traits\Helpers;
+use App\Models\RoleUpdate;
 use App\Models\UserUpdate;
 use App\Models\BranchUpdate;
 use App\Models\ClientUpdate;
 use Illuminate\Http\Request;
 use App\Models\PermissionUpdate;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 
@@ -150,6 +152,48 @@ class AuditController extends Controller
             return response()->json(
                 [
                     'permissionData' => $updates,
+                    'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
+                ],
+                $updates ? 200 : 404
+            );
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function role(Request $request): Response
+    {
+        if ($this->isSuperAdmin()) {
+            if ($request->role) {
+                $role = Role::select('id', 'name', 'guard_name', 'updated_at')->find($request->role);
+            }
+            return Inertia::render('Admin/AuditRoles', [
+                'role' => isset($role) ? $role : null,
+                'keyword' => $request->role
+            ]);
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function roleShow(Request $request, RoleUpdate $roleUpdate)
+    {
+        $role = $roleUpdate->where('id', $request->role)->first();
+        $users = User::select('id', 'name')->withTrashed()->find(json_decode($role?->updates)?->user_id)?->toArray();
+        $updates = json_decode($role?->updates);
+
+        $a = [];
+        if ($updates) {
+            foreach ($updates->permissions as $i) {
+                foreach ($i as $v) {
+                    $a[$v] = $v;
+                }
+            }
+        }
+
+        if ($this->isSuperAdmin()) {
+            return response()->json(
+                [
+                    'roleData' => $updates,
+                    'permissions' => collect(Permission::select('id', 'name')->find($a))->keyBy('id')->all(),
                     'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
                 ],
                 $updates ? 200 : 404

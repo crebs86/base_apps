@@ -35,6 +35,9 @@ Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('/dashboard')
 
     Route::get('/auditar/permissoes', [AuditController::class, 'permission'])->name('audit.permissions.index');
     Route::get('/auditar/permissoes/{permission}', [AuditController::class, 'permissionShow'])->name('audit.permissions.show');
+
+    Route::get('/auditar/papeis', [AuditController::class, 'role'])->name('audit.roles.index');
+    Route::get('/auditar/papeis/{role}', [AuditController::class, 'roleShow'])->name('audit.roles.show');
 });
 
 Route::middleware(!true ? ['auth', 'verified'] : ['auth'])->prefix('admin/controle-de-acessos')->name('admin.acl.')->group(function () {

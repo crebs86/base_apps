@@ -6,17 +6,19 @@ use App\Traits\ACL;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Traits\Helpers;
+use App\Models\RoleUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\Admin\RoleRequest;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RoleRequest;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
 
-    use ACL;
+    use ACL, Helpers;
     /**
      * Exibe todas os Papéis com todas as permissões
      */
@@ -123,10 +125,20 @@ class RoleController extends Controller
                 $role = Role::where('id', $request->id)
                     ->select('id', 'name', 'guard_name')
                     ->first();
+                $r = collect($role)->all();
+
+                $before = array_merge($r, ['permissions' => [$role->permissions->pluck('id')->all()]]);
+
                 if (!in_array($role->name, config('crebs86.protected_roles'))) {
                     $role->update(['name' => $request->input('name')]);
                 }
+
                 $role->syncPermissions($request->input('permissions'));
+
+                $after = array_merge(collect($role)->all(), ['permissions' => [$role->permissions->pluck('id')->all()]]);
+
+                $this->auditable('roles') ? $this->saveUpdates(collect($before)->all(), json_decode(json_encode($after)), RoleUpdate::class, ['name', 'guard_name', 'permissions']) : null;
+
                 return null;
             }
             return response()->json(['message' => 'Payload: erro ao acessar aplicação'], 403);

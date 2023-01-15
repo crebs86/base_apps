@@ -65,7 +65,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </div>
 
                                 <div class="flex flex-col items-center pt-12 pb-24">
-                                    <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                    <Link :href="route('audit.roles.index')"
+                                        :active="route().current('audit.roles.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
                                     <mdicon name="key-chain" title="Auditar Papéis" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">

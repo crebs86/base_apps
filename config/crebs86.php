@@ -24,7 +24,7 @@ return [
      */
     'protected_roles' => [
         'Super Admin', 'Admin', 'Usuario Administrar',
-        'ACL Administrar', 'Cliente Administrar', 'Unidade Administrar', 'Viewer'
+        'ACL Administrar', 'Cliente Administrar', 'Unidade Administrar'
     ],
 
     /**

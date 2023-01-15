@@ -18,7 +18,7 @@ trait Helpers
         })->settings)->saveUpdates->$key[1];
     }
 
-    function saveUpdates(object|array $before, object $after, string $classModel, array $columns): void
+    function saveUpdates(object|array $before, object|array $after, string $classModel, array $columns): void
     {
         $model = new $classModel;
         $b = is_array($before) ? $before['id'] : $before->id;
@@ -35,7 +35,7 @@ trait Helpers
                             [
                                 'user_id' => auth()->id(),
                             ],
-                            collect($after->toArray())->only($columns)->all()
+                            collect($after)->only($columns)->all()
                         ),
                         'updated_at' => now()
                     ]
@@ -52,7 +52,7 @@ trait Helpers
                                 'user_id' => auth()->id(),
                             ],
                             !is_array($before) ? collect($before->toArray())->only($columns)->all() : collect($before)->only($columns)->all(),
-                            collect($after->toArray())->only($columns)->all()
+                            collect($after)->only($columns)->all()
                         )
                     ),
                     'updated_at' => now()
