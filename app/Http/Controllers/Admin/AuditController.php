@@ -243,7 +243,7 @@ class AuditController extends Controller
         if ($this->isSuperAdmin()) {
             return response()->json(
                 [
-                    'aclData' => collect($updates)
+                    'aclData' => $updates ? collect($updates)
                         ->prepend(
                             array_merge(
                                 ['0000-00-00'],
@@ -251,7 +251,8 @@ class AuditController extends Controller
                             ),
                             'updated_at'
                         )
-                        ->all(),
+                        ->all()
+                        : null,
                     'roles' => collect(Role::select('id', 'name')->find($a))->keyBy('id')->all(),
                     'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
                 ],
