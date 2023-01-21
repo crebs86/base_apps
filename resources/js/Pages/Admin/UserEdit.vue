@@ -221,7 +221,7 @@ function userEmail(withoutCheck = false) {
                             <div class="grid xl:grid-cols-1 xl:gap-6">
                                 <div class="relative z-0 mb-1 w-full group text-center">
                                     {{ $page.props.user.email_verified_at ? 'Verificado em ' +
-                                            moment($page.props.user.email_verified_at).format('DD/MM/YYYY HH: mm: ss')
+                                            moment($page.props.user.email_verified_at).format('DD/MM/YYYY HH:mm:ss')
                                             : ''
                                     }}
                                 </div>
