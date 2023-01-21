@@ -25,7 +25,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 <div class="flex flex-col items-center py-12 hover:text-emerald-400">
                                     <Link :href="route('audit.clients.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-fill">
-                                    <mdicon name="account-heart" title="Auditar Clientes" size="36" />
+                                    <mdicon name="account-heart-outline" title="Auditar Clientes" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
                                         Clientes
                                     </span>
@@ -43,7 +43,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 <div class="flex flex-col items-center py-12">
                                     <Link :href="route('audit.users.index')"
                                         class="text-teal-600 hover:text-emerald-400 col-span-1 flex flex-col items-center max-w-max">
-                                    <mdicon name="account-group" title="Auditar Usuários" size="36" />
+                                    <mdicon name="account-group-outline" title="Auditar Usuários" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
                                         Usuários
                                     </span>
@@ -73,9 +73,19 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 <div class="flex flex-col items-center pt-12 pb-24">
                                     <Link :href="route('audit.acl.index')"
                                         class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
-                                    <mdicon name="shield-lock-outline" title="Auditar Controle de Acessos" size="36" />
+                                    <mdicon name="shield-lock" title="Auditar Controle de Acessos" size="36" />
                                     <span class="text-[9px] md:text-[14px] font-medium text-center">
                                         Controle de Acessos
+                                    </span>
+                                    </Link>
+                                </div>
+
+                                <div class="flex flex-col items-center pt-12 pb-24">
+                                    <Link :href="route('audit.setting.index')"
+                                        class="text-teal-600 hover:text-emerald-400 flex flex-col items-center max-w-max">
+                                    <mdicon name="cog-outline" title="Auditar Controle de Acessos" size="36" />
+                                    <span class="text-[9px] md:text-[14px] font-medium text-center">
+                                        Configurações
                                     </span>
                                     </Link>
                                 </div>

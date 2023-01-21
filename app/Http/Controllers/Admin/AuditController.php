@@ -15,9 +15,11 @@ use App\Models\UserUpdate;
 use App\Models\BranchUpdate;
 use App\Models\ClientUpdate;
 use Illuminate\Http\Request;
+use App\Models\SettingUpdate;
 use App\Models\PermissionUpdate;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Spatie\Permission\Models\Permission;
 
 class AuditController extends Controller
@@ -254,6 +256,45 @@ class AuditController extends Controller
                         ->all()
                         : null,
                     'roles' => collect(Role::select('id', 'name')->find($a))->keyBy('id')->all(),
+                    'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
+                ],
+                $updates ? 200 : 404
+            );
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function setting(Request $request): Response
+    {
+        if ($this->isSuperAdmin()) {
+
+            $setting = Setting::select('id', 'name', 'updated_at')->get();
+
+            return Inertia::render('Admin/AuditSettings', [
+                'setting' => isset($setting) ? $setting : null
+            ]);
+        }
+        return Inertia::render('Admin/403');
+    }
+
+    public function settingShow(Request $request, SettingUpdate $settingUpdate)
+    {
+        $setting = $settingUpdate->where('id', $request->setting)->first();
+        $users = User::select('id', 'name')->withTrashed()->find(json_decode($setting?->updates)?->user_id)?->toArray();
+        $updates = json_decode($setting?->updates);
+        $a = [];
+
+        if ($updates?->settings) {
+            foreach ($updates?->settings as $s) {
+                $a[] = json_decode($s, true);
+            }
+
+            $updates->settings = $a;
+        }
+        if ($this->isSuperAdmin()) {
+            return response()->json(
+                [
+                    'settingData' => $updates,
                     'users' => collect($users)->merge([0 => ['id' => 0, 'name' => 'Cadastro Original']])->keyBy('id')->all()
                 ],
                 $updates ? 200 : 404

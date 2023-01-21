@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { useToast } from "vue-toastification";
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import axios from 'axios';
@@ -7,47 +7,41 @@ import moment from 'moment';
 
 const props = defineProps(
     {
-        'permission': Object,
-        'keyword': String
+        'setting': Object
     }
 )
 
 const toast = useToast();
 
-const permissionData = ref([]);
+const selected = ref(null);
 
-const getPermission = useForm({
-    permission: props.keyword
+const setting = ref(props.setting);
+
+const getSetting = computed(() => {
+    settingData.value = [];
+    return setting.value.filter((n) => n.id === selected.value)
 });
+
+const settingData = ref([]);
 
 const users = ref({});
 
 const labels = ref({
     'user_id': 'Usuário',
     'name': 'Nome',
-    'guard_name': 'Guard',
+    'settings': 'Configurações',
     'updated_at': 'Atualização'
 });
 
-function search() {
-    if (!(getPermission.permission === undefined || getPermission.permission === '' || getPermission.permission === null)) {
-        getPermission.get(route('audit.permissions.index'));
-        if (isNaN(parseInt(getPermission.permission))) {
-            toast.error("Insira um número válido");
-        }
-    } else {
-        toast.error("Informe o ID da permissão");
-    }
-}
-
 function loadData() {
-    axios.get(route('audit.permissions.show', props.permission?.id))
+    axios.get(route('audit.setting.show', selected.value))
         .then(r => {
-            permissionData.value = r.data.permissionData;
+            settingData.value = r.data.settingData;
             users.value = r.data.users;
+            keys.value = r.data.keys;
         })
-        .catch(e => {
-            if (e.response.status === 404) {
+        .catch((e) => {
+            if (e?.response?.status === 404) {
                 toast.info("Não há dados para exibir.");
             }
         })
@@ -63,60 +57,35 @@ function loadData() {
             </div>
         </div>
     </div>
-    <form class="flex items-center h-5/6 px-1 mx-1" @submit.prevent="search()">
-        <label for="voice-search" class="sr-only">Buscar</label>
+    <form class="flex items-center h-5/6 px-1 mx-1" @submit.prevent="">
+        <label for="select" class="pr-1.5">Configuração </label>
         <div class="relative w-full">
-            <div class="flex absolute inset-y-0 left-0 items-center pl-1 pointer-events-none">
-                <!-- search icon -->
-                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                        clip-rule="evenodd">
-                    </path>
-                </svg>
-            </div>
-            <input type="text" v-model="getPermission.permission" @keypress.prevent.enter="search" required
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 rounded-md dark:bg-gray-600 dark:text-gray-300"
-                placeholder="Informe o código da permissão">
+            <select id="select" v-model="selected" @keypress.prevent.enter="search" required
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 p-2.5 rounded-md dark:bg-gray-600 dark:text-gray-300">
+                <option v-for="(s, i) in props.setting" :value="s.id" :key="s + i">{{ s.name }}</option>
+            </select>
         </div>
-        <button type="submit" :disabled="getPermission.processing"
-            class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-            <!-- search icon -->
-            <svg aria-hidden="true" class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            Buscar
-        </button>
     </form>
 
-    <div v-if="props.permission" class="px-2 md:px-8 pt-1">
-        <h3 class="text-xl font-bold">Dados gerais</h3>
+    <div v-if="selected" class="px-2 md:px-8 pt-2.5">
+        <h3 class="text-xl font-bold">Dados da Configuração</h3>
         <p class="pt-4 pb-2">
             <strong>
                 Código:
-            </strong> {{ props.permission?.id }}
+            </strong> {{ getSetting[0]?.id }}
         </p>
 
         <p class="py-2">
             <strong>
                 Nome:
-            </strong> {{ props.permission?.name }}
-        </p>
-
-        <p class="py-2">
-            <strong>
-                Guard:
-            </strong> {{ props.permission?.guard_name }}
+            </strong> {{ getSetting[0]?.name }}
         </p>
 
         <p class="pt-2 pb-4">
             <strong>
                 Última alteração:
             </strong>
-            {{ moment(props.permission?.updated_at).format('DD/MM/YYYY HH:mm:ss') }}
+            {{ moment(getSetting[0]?.updated_at).format('DD/MM/YYYY HH:mm:ss') }}
         </p>
 
         <button type="button" @click="loadData"
@@ -128,11 +97,12 @@ function loadData() {
         <div class="mx-auto dark:bg-gray-800 rounded-xl">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-gray-800">
                 <div class="relative flex items-top justify-center sm:items-center sm:pt-0 dark:bg-gray-800">
-                    <div v-if="Object.entries(permissionData).length > 0"
+                    <div v-if="Object.entries(settingData).length > 0"
                         class="inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
                         <h1
                             class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
-                            Dados de Atualizações da Permissão ID: {{ props.permission?.id }} - {{ props.permission?.name }}
+                            Dados de Atualizações da Configuração ID: {{ getSetting[0]?.id }} -
+                            {{ getSetting[0]?.name }}
                         </h1>
                         <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <table class="min-w-full mb-2 px-1">
@@ -142,27 +112,56 @@ function loadData() {
                                             class="px-3 py-1.5 md:px-6 md:py-3 bg-red-100 text-center border-b-2 border-gray-300 text-left leading-4 tracking-wider dark:bg-red-300 text-gray-800">
                                             Coluna
                                         </th>
-                                        <th v-for="(value, index) in permissionData?.updated_at" :key="index"
+                                        <th v-for="(value, index) in settingData?.updated_at" :key="index"
                                             class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
                                             {{ moment(value).format('DD/MM/YYYY HH:mm:ss') }}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white text-center dark:bg-gray-600">
-                                    <tr v-for="(v, i) in permissionData" :key="i">
+                                    <tr v-for="(v, i) in settingData" :key="i">
                                         <th
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center text-gray-800 bg-red-100 dark:bg-red-300">
                                             {{ labels[i] }}
                                         </th>
                                         <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
                                             v-for="(value, index) in v" :key="i + '' + index">
-                                            <template v-if="i === 'user_id'">
+                                            <template v-if="i === 'settings'">
+                                                <template v-for="(s, i) in value">
+
+                                                    <div
+                                                        v-if="Object.prototype.toString.call(s).indexOf('Object') > -1">
+                                                        <template v-for="(k, ki) in Object.keys(s)">
+                                                            <div v-if="typeof s[k] === 'string'">
+                                                                {{ s[k] }}
+                                                            </div>
+                                                            <div v-if="typeof s[k] === 'object'" class="my-1.5">
+                                                                {{ s[k][0] }}:
+
+                                                                <span class="p-0.5 bg-green-200 text-black rounded-md">
+                                                                    {{ s[k][1] }}
+                                                                </span>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                    <div v-if="Object.prototype.toString.call(s).indexOf('Array') > -1">
+                                                        {{ s[0] }}:
+                                                        <span class="p-0.5 bg-green-200 text-black rounded-md">
+                                                            {{ s[1] }}
+                                                        </span>
+                                                    </div>
+                                                    <hr class="my-1">
+                                                </template>
+                                            </template>
+                                            <template v-else-if="i === 'user_id'">
                                                 {{ users[value]['name'] }}
                                             </template>
                                             <template v-else-if="i === 'updated_at' || i === 'deleted_at'">
-                                                {{ value ? moment(value).format('DD/MM/YYYY HH:mm:ss') : '' }}
+                                                {{ value? moment(value).format('DD/MM/YYYY HH:mm:ss') : '' }}
                                             </template>
-                                            <template v-else>{{ value }}</template>
+                                            <template v-else>
+                                                {{ value }}
+                                            </template>
                                         </td>
                                     </tr>
                                 </tbody>
