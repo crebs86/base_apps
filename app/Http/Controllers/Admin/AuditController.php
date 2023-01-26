@@ -117,7 +117,7 @@ class AuditController extends Controller
     {
         $user = $userUpdate->where('id', $request->user)->first();
         $users = User::select('id', 'name')->withTrashed()->find(json_decode($user?->updates)?->user_id)?->toArray();
-        $branches = Branch::select('id', 'name')->withTrashed()->find(json_decode($user?->updates)?->branch_id)?->toArray();
+        $branches = Branch::select('id', 'name')->withTrashed()->find(collect(json_decode($user?->updates)?->branch_id)->collapse()->unique()->all())?->toArray();
         $updates = json_decode($user?->updates);
         if ($this->isSuperAdmin()) {
             return response()->json(

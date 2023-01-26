@@ -27,7 +27,7 @@ class UserRequest extends FormRequest
             'name' => 'required|min:3|max:255|string',
             'email' => 'email|required|max:255|unique:users,email,' . $this->user,
             'cpf' => 'nullable|cpf|unique:users,cpf,' . $this->user,
-            'branch_id' => 'nullable|exists:branches,id',
+            'branch_id' => 'array|nullable|exists:branches,id',
             'notes' => 'nullable|min:3|max:510'
         ];
     }
@@ -35,7 +35,8 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'cpf.unique' => 'Este CPF já se encontra em uso'
+            'cpf.unique' => 'Este CPF já se encontra em uso',
+            'branch_id.exists' => 'Uma ou mais unidades informadas não existem. Favor selecionar um item da lista.'
         ];
     }
 }

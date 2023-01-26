@@ -22,13 +22,15 @@ use App\Traits\Helpers;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 
-use function GuzzleHttp\Promise\all;
-
 class UserController extends Controller
 {
     use ACL, Helpers;
     /**
      * página inicial de controle de acesso de usuários
+     *
+     * @param Request $request
+     * 
+     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -54,6 +56,10 @@ class UserController extends Controller
      * Pesquisa por usuários na base de dados;
      * termos aproximados: name e email;
      * termos exatos: id e CPF.
+     *
+     * @param string $keyword
+     * 
+     * @return LengthAwarePaginator
      */
     private function findUsers(string $keyword): LengthAwarePaginator
     {
@@ -100,8 +106,12 @@ class UserController extends Controller
     }
     /**
      * lança dados da pesquisa do usuário em um array
+     *
+     * @param User $user
+     * 
+     * @return array
      */
-    private function setUser($user): array
+    private function setUser(User $user): array
     {
         return [
             'id' => $user->id,
@@ -118,6 +128,10 @@ class UserController extends Controller
     }
     /**
      * página exibe dados básicos do usuário e papéis vinculados a este
+     *
+     * @param Request $request
+     * 
+     * @return Response
      */
     public function showUserAndRoles(Request $request): Response
     {
@@ -159,6 +173,11 @@ class UserController extends Controller
     }
     /**
      * define a situação de cada papél em relaçao ao usuário
+     *
+     * @param mixed $allRoles
+     * @param mixed $r
+     * 
+     * @return array
      */
     private function setCurrentRoles($allRoles, $r): array
     {
@@ -177,6 +196,10 @@ class UserController extends Controller
     }
     /**
      * busca papeis de usuários
+     *
+     * @param mixed $id
+     * 
+     * @return User
      */
     private function getUserRoles($id): User
     {
@@ -192,6 +215,10 @@ class UserController extends Controller
     }
     /**
      * Sincroniza papéis dos usuários
+     *
+     * @param Request $request
+     * 
+     * @return JsonResponse
      */
     public function editUserRole(Request $request): JsonResponse|User
     {
@@ -292,15 +319,32 @@ class UserController extends Controller
     {
         return $this->edit($request);
     }
+
+    /**
+     * @param Request $request
+     * 
+     * @return Response
+     */
     public function edit(Request $request): Response
     {
         if ($this->can('Usuario Ver', 'Usuario Editar', 'Usuario Apagar')) {
             if ($user = User::select('id', 'name', 'cpf', 'email', 'notes', 'branch_id', 'deleted_at', 'email_verified_at')->withTrashed()->find($request->user) ?? []) {
+
+                $branches = Branch::orderBy('name')->select(['id', 'name'])->get();
+
+                $user->branch_id = json_decode($user->branch_id);
+
+                $user->branch_id = array_values(
+                    array_filter($branches->toArray(), function ($k) use ($user) {
+                        return in_array($k['id'], $user->branch_id);
+                    })
+                );
+
                 return Inertia::render(
                     'Admin/UserEdit',
                     [
                         'user' => $user,
-                        'branches' => Branch::orderBy('name')->select(['id', 'name'])->get(),
+                        'branches' => $branches,
                         '_checker' => setGetKey($request->user, 'edit_user_account')
                     ]
                 );
@@ -310,6 +354,10 @@ class UserController extends Controller
     }
     /**
      * atualiza usuário com dados recebidos do formulário
+     *
+     * @param UserRequest $request
+     * 
+     * @return Response
      */
     public function update(UserRequest $request): Response|RedirectResponse
     {
@@ -319,6 +367,7 @@ class UserController extends Controller
 
                 $user = User::withTrashed()
                     ->find($request->user);
+                $user->branch_id = json_decode($user->branch_id);
                 $u = collect($user)->all();
                 $updated = $user->update(
                     [
@@ -331,7 +380,7 @@ class UserController extends Controller
                     ]
                 );
                 if ($updated) {
-                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at']) : null;
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at'], ['branch_id']) : null;
                     return redirect()->back()->with('success', 'O usuário foi atuzalizado');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao atualizar conta do usuário');
@@ -349,6 +398,10 @@ class UserController extends Controller
     }
     /**
      * marca e-mail como verificado
+     *
+     * @param Request $request
+     * 
+     * @return Response
      */
     public function userVerifyEmail(Request $request): Response|RedirectResponse
     {
@@ -376,6 +429,10 @@ class UserController extends Controller
 
     /**
      * envia link de verificação de e-mail para o endereço cadastrado
+     *
+     * @param Request $request
+     * 
+     * @return [type]
      */
     public function requireEmailVerification(Request $request)
     {
@@ -402,6 +459,8 @@ class UserController extends Controller
     }
     /**
      * página da conta do usuário
+     *
+     * @return Response
      */
     public function account(): Response
     {
@@ -410,6 +469,10 @@ class UserController extends Controller
 
     /**
      * atualiza os dados do usuário
+     *
+     * @param Request $request
+     * 
+     * @return Response
      */
     public function updateAccount(Request $request): Response
     {
@@ -435,6 +498,10 @@ class UserController extends Controller
 
     /**
      * atualiza senha
+     *
+     * @param Request $request
+     * 
+     * @return [type]
      */
     public function updatePassword(Request $request)
     {

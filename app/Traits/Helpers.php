@@ -5,12 +5,16 @@ namespace App\Traits;
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 
+use function Symfony\Component\String\b;
+
 trait Helpers
 {
-    function resetCache()
-    {
-    }
 
+    /**
+     * @param mixed $key
+     * 
+     * @return bool
+     */
     function auditable($key)
     {
         return json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
@@ -18,7 +22,16 @@ trait Helpers
         })->settings)->saveUpdates->$key[1];
     }
 
-    function saveUpdates(object|array $before, object|array $after, string $classModel, array $columns): void
+    /**
+     * @param object|array $before
+     * @param object|array $after
+     * @param string $classModel
+     * @param array $columns
+     * @param array $arraySave
+     * 
+     * @return void
+     */
+    function saveUpdates(object|array $before, object|array $after, string $classModel, array $columns, array $arraySave = []): void
     {
         $model = new $classModel;
         $b = is_array($before) ? $before['id'] : $before->id;
@@ -35,7 +48,7 @@ trait Helpers
                             [
                                 'user_id' => auth()->id(),
                             ],
-                            collect($after)->only($columns)->all()
+                            $this->resetValue(collect($after)->only($columns)->all(), $arraySave)
                         ),
                         'updated_at' => now()
                     ]
@@ -43,21 +56,52 @@ trait Helpers
             } else {
                 $model->create([
                     'id' => $after->id,
-                    'updates' => json_encode(
-                        array_merge_recursive(
-                            [
-                                'user_id' => 0,
-                            ],
-                            [
-                                'user_id' => auth()->id(),
-                            ],
-                            !is_array($before) ? collect($before->toArray())->only($columns)->all() : collect($before)->only($columns)->all(),
-                            collect($after)->only($columns)->all()
-                        )
-                    ),
+                    'updates' => $this->checkIfHasArray($before, collect($after)->only($columns)->all(), $columns, $arraySave),
                     'updated_at' => now()
                 ]);
             }
         }
+    }
+    /**
+     * @param mixed $before
+     * @param mixed $after
+     * @param mixed $columns
+     * @param mixed $arraySave
+     * 
+     * @return [type]
+     */
+    function checkIfHasArray($before, $after, $columns, $arraySave)
+    {
+
+        $before = $this->resetValue($before, $arraySave);
+        $after = $this->resetValue($after, $arraySave);
+        return json_encode(
+            array_merge_recursive(
+                [
+                    'user_id' => 0,
+                ],
+                [
+                    'user_id' => auth()->id(),
+                ],
+                !is_array($before) ? collect($before->toArray())->only($columns)->all() : collect($before)->only($columns)->all(),
+                $after
+            )
+        );
+    }
+
+    /**
+     * @param mixed $array
+     * @param mixed $arraySave
+     * 
+     * @return [type]
+     */
+    function resetValue($array, $arraySave)
+    {
+        foreach ($array as $k => $b) {
+            if (in_array($k, $arraySave) && is_array($b)) {
+                $array[$k] = [$array[$k]];
+            }
+        }
+        return $array;
     }
 }

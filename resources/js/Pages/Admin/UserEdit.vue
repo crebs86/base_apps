@@ -1,11 +1,13 @@
 <script setup>
 import { Head, usePage, useForm } from '@inertiajs/inertia-vue3';
+import { ref } from 'vue';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import moment from 'moment';
 import swal from 'sweetalert';
 import { useToast } from "vue-toastification";
 import { Inertia } from '@inertiajs/inertia';
+import VueMultiselect from 'vue-multiselect';
 
 const props = defineProps({
     user: Object,
@@ -14,6 +16,8 @@ const props = defineProps({
 });
 
 const toast = useToast();
+
+const options = props.branches;
 
 const user = useForm({
     name: props.user.name,
@@ -25,7 +29,11 @@ const user = useForm({
     notes: props.user.notes
 })
 
+const _branches = ref(props.user.branch_id);
+
 function saveUser() {
+    const pluck = (arr, key) => arr.map(i => i[key]);
+    user.branch_id = pluck(_branches.value, 'id');
     user.put(route('admin.acl.users.update', props.user.id), {
         onSuccess: () => {
             if (usePage().props.value.flash.success) {
@@ -106,8 +114,7 @@ function userEmail(withoutCheck = false) {
             </h1>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
                 <div class="pt-0.5" v-if="usePage().props.value.flash.info">
-                    <div
-                        class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+                    <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                         <div class="p-3 text-center">
                             {{ usePage().props.value.flash.info }}
                         </div>
@@ -118,7 +125,21 @@ function userEmail(withoutCheck = false) {
                         <div
                             class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-2.5 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
 
-                            <div class="grid xl:grid-cols-3 xl:gap-6">
+                            <div class="grid xl:grid-cols-1 xl:gap-1">
+                                <div class="relative z-1 mb-6 w-full group">
+                                    <label class="text-sm text-gray-500 dark:text-gray-400">
+                                        Unidades Vinculadas
+                                    </label>
+                                    <VueMultiselect v-model="_branches" :options="options" :multiple="true"
+                                        :close-on-select="true" placeholder="Unidades Com Vínculo" label="name"
+                                        track-by="name" selectLabel="Selecionar" deselectLabel="Remover" />
+
+                                    <div v-if="usePage().props.value.errors.branch_id" class="text-sm text-red-500">
+                                        {{ usePage().props.value.errors.branch_id }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid xl:grid-cols-2 xl:gap-6">
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" name="name" id="name" v-model="user.name"
                                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -158,20 +179,15 @@ function userEmail(withoutCheck = false) {
                             </div>
                             <div class="grid xl:grid-cols-2 xl:gap-6">
                                 <div class="relative z-0 mb-6 w-full group">
-                                    <select name="branch_id" id="branch_id" v-model="user.branch_id"
-                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                                        <option value="" selected>selecione</option>
-                                        <option v-for="branch in usePage().props.value.branches" :value="branch.id"
-                                            :key="('branch' + branch.id)">
-                                            {{ branch.name }}
-                                        </option>
-                                    </select>
-                                    <label for="branch_id"
+                                    <textarea type="text" name="notes" id="notes" v-model="user.notes"
+                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" " required />
+                                    <label for="notes"
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
-                                        Unidade
+                                        Observações
                                     </label>
-                                    <div v-if="usePage().props.value.errors.branch_id" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.branch_id }}
+                                    <div v-if="usePage().props.value.errors.notes" class="text-sm text-red-500">
+                                        {{ usePage().props.value.errors.notes }}
                                     </div>
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
@@ -183,20 +199,6 @@ function userEmail(withoutCheck = false) {
                                             Ativo?
                                         </span>
                                     </label>
-                                </div>
-                            </div>
-                            <div class="grid xl:grid-cols-1 xl:gap-6">
-                                <div class="relative z-0 mb-6 w-full group">
-                                    <textarea type="text" name="notes" id="notes" v-model="user.notes"
-                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=" " required />
-                                    <label for="notes"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
-                                        Observações
-                                    </label>
-                                    <div v-if="usePage().props.value.errors.notes" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.notes }}
-                                    </div>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -220,7 +222,8 @@ function userEmail(withoutCheck = false) {
 
                             <div class="grid xl:grid-cols-1 xl:gap-6">
                                 <div class="relative z-0 mb-1 w-full group text-center">
-                                    {{ $page.props.user.email_verified_at ? 'Verificado em ' +
+                                    {{
+                                        $page.props.user.email_verified_at ? 'Verificado em ' +
                                             moment($page.props.user.email_verified_at).format('DD/MM/YYYY HH:mm:ss')
                                             : ''
                                     }}
@@ -246,3 +249,6 @@ function userEmail(withoutCheck = false) {
         </div>
     </AuthenticatedLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+
+</style>

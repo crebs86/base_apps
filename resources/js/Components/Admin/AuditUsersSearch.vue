@@ -158,8 +158,7 @@ function loadData() {
                             class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
                             Dados de Atualizações da Conta {{ props.user?.id }} - {{ props.user?.name }}
                         </h1>
-                        <div
-                            class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
+                        <div class="py-2 overflow-x-auto mt-2 dark:bg-gray-800">
                             <table class="min-w-full mb-2 px-1">
                                 <thead>
                                     <tr>
@@ -185,10 +184,19 @@ function loadData() {
                                                 {{ users[value]['name'] }}
                                             </template>
                                             <template v-else-if="i === 'branch_id'">
-                                                {{ branches[value] ? branches[value]['name'] : '' }}
+                                                <span v-for="(p, pi) in value"
+                                                    class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
+                                                    <span aria-hidden
+                                                        class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
+                                                    </span>
+                                                    <span class="relative text-xs">
+                                                        {{ branches[p]['name'] }}
+                                                    </span>
+                                                </span>
                                             </template>
-                                            <template v-else-if="i === 'updated_at' || i === 'deleted_at' || i === 'email_verified_at'">
-                                                {{ value ? moment(value).format('DD/MM/YYYY HH:mm:ss') : '' }}
+                                            <template
+                                                v-else-if="i === 'updated_at' || i === 'deleted_at' || i === 'email_verified_at'">
+                                                {{ value? moment(value).format('DD/MM/YYYY HH:mm:ss') : '' }}
                                             </template>
                                             <template v-else>{{ value }}</template>
                                         </td>

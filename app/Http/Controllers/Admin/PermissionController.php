@@ -128,7 +128,7 @@ class PermissionController extends Controller
                         'reload' => in_array($permission->name, config('crebs86.protected_permissions'))
                     ], 418);
                 }
-                $updated = $permission->update(['name' => $request->input('name')]);
+                $permission->update(['name' => $request->input('name')]);
                 $this->auditable('permissions') ? $this->saveUpdates($p, $permission, PermissionUpdate::class, ['name', 'guard_name', 'updated_at']) : null;
                 return null;
             }

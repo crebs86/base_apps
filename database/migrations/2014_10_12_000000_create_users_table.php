@@ -17,11 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->unsignedBigInteger('branch_id')->nullable();
-            $table->foreign('branch_id')
-                ->references('id')
-                ->on('branches');
             $table->string('cpf', 11)->nullable()->unique();
+            $table->text('branch_id')->nullable();
             $table->string('notes')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
