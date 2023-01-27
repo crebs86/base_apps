@@ -5,8 +5,6 @@ namespace App\Traits;
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 
-use function Symfony\Component\String\b;
-
 trait Helpers
 {
 
