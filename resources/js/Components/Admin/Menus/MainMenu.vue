@@ -44,8 +44,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             Olá, {{ usePage().props.value.auth.user.name }}!
         </div>
         <div class="px-2 py-1 items-center justify-around " :class="showMenuItems">
-            <div v-if="hasPermission(usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
-    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <Link :href="route('dashboard')" :active="route().current('dashboard')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('dashboard') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
@@ -56,7 +55,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
-    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('admin.acl.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
@@ -67,7 +66,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
-    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('clients.index')" :active="route().current('clients.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('clients.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">
@@ -78,7 +77,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="hasPermission(usePage().props.value.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
-    || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('branches.index')" :active="route().current('branches.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('branches.*') ? 'text-lime-300' : 'text-teal-100 hover:text-emerald-400'">

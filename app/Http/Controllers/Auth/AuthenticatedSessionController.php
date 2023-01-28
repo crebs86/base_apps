@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
+use Inertia\Inertia;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Providers\RouteServiceProvider;
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -21,6 +22,9 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
+            'canRegister' => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                return Setting::where('name', 'general')->first();
+            })->settings)->canRegister[1],
             'status' => session('status'),
         ]);
     }

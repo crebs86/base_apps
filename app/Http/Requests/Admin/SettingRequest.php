@@ -26,6 +26,7 @@ class SettingRequest extends FormRequest
         return [
             'canRegister' => 'required|boolean',
             'logoutAfterChangeEmail' => 'required|boolean',
+            'requireCpf' => 'required|boolean',
             'mustVerifyEmail' => 'required|boolean',
             'saveUpdates_branches' => 'required|boolean',
             'saveUpdates_clients' => 'required|boolean',
@@ -43,6 +44,9 @@ class SettingRequest extends FormRequest
 
             'logoutAfterChangeEmail.required' => 'Informe sobre `Alteração de e-mail`',
             'logoutAfterChangeEmail.boolean' => 'Erro no tipo de dado enviado',
+
+            'requireCpf.required' => 'Informe se cadastro deve informar o CPF',
+            'requireCpf.boolean' => 'Erro no tipo de dado enviado',
 
             'mustVerifyEmail.required' => 'Informe sobre `Validação de e-mail`',
             'mustVerifyEmail.boolean' => 'Erro no tipo de dado enviado',

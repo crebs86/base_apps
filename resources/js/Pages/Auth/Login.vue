@@ -9,6 +9,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
 
 defineProps({
     canResetPassword: Boolean,
+    canRegister: Boolean,
     status: String,
 });
 
@@ -54,6 +55,9 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
+                <Link v-if="canRegister" :href="route('register')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-500 pr-5">
+                    Novo cadastro?
+                </Link>
                 <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-500">
                     Esqueceu sua senha?
                 </Link>

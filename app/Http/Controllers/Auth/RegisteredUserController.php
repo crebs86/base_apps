@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use App\Models\Setting;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
 {
@@ -19,7 +22,16 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Auth/Register');
+        if (json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+            return Setting::where('name', 'general')->first();
+        })->settings)->canRegister[1]) {
+            return Inertia::render('Auth/Register', [
+                'requireCpf' => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                    return Setting::where('name', 'general')->first();
+                })->settings)->requireCpf[1]
+            ]);
+        }
+        return Inertia::render('Admin/404');
     }
 
     /**
@@ -35,17 +47,36 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'cpf' => [
+                'cpf',
+                Rule::unique('users'),
+                Rule::requiredIf(fn () => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                    return Setting::where('name', 'general')->first();
+                })->settings)->requireCpf[1])
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'cpf.unique' => 'Este CPF já se encontra em uso',
+            'cpf.required' => 'Informe seu CPF'
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'cpf' => $request->cpf,
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
 
-        return redirect()->route('admin.acl.usuarios.edit', $user->id);
+        Auth::login($user);
+
+        if (json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+            return Setting::where('name', 'general')->first();
+        })->settings)->mustVerifyEmail[1]) {
+            return redirect()->route('verification.notice');
+        }
+
+        return redirect()->route('admin.acl.users.edit', $user->id);
     }
 }

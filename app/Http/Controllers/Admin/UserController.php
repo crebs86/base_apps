@@ -336,7 +336,7 @@ class UserController extends Controller
 
                 $user->branch_id = array_values(
                     array_filter($branches->toArray(), function ($k) use ($user) {
-                        return in_array($k['id'], $user->branch_id);
+                        return in_array($k['id'], $user->branch_id ?? []);
                     })
                 );
 
@@ -464,6 +464,7 @@ class UserController extends Controller
      */
     public function account(): Response
     {
+        //dd($this);
         return Inertia::render('Admin/Account');
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Setting;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -26,7 +28,12 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|min:3|max:255|string',
             'email' => 'email|required|max:255|unique:users,email,' . $this->user,
-            'cpf' => 'nullable|cpf|unique:users,cpf,' . $this->user,
+            'cpf' => [
+                'cpf', Rule::unique('users')->ignore($this->user),
+                Rule::requiredIf(fn () => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                    return Setting::where('name', 'general')->first();
+                })->settings)->requireCpf[1])
+            ],
             'branch_id' => 'array|nullable|exists:branches,id',
             'notes' => 'nullable|min:3|max:510'
         ];
@@ -36,6 +43,7 @@ class UserRequest extends FormRequest
     {
         return [
             'cpf.unique' => 'Este CPF já se encontra em uso',
+            'cpf.required' => 'Informe seu CPF',
             'branch_id.exists' => 'Uma ou mais unidades informadas não existem. Favor selecionar um item da lista.'
         ];
     }

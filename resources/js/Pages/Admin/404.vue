@@ -21,6 +21,9 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
                             </div>
                         </div>
                     </div>
+                    <Link class="container mx-auto text-center" :href="route('home')">
+                        <div class="text-gray-900 hover:text-blue-600 w-full">Início</div>
+                    </Link>
                 </div>
             </div>
         </div>

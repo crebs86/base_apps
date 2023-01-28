@@ -10,6 +10,7 @@ const settings = useForm({
     canRegister: usePage().props.value.settings.canRegister[1],
     mustVerifyEmail: usePage().props.value.settings.mustVerifyEmail[1],
     logoutAfterChangeEmail: usePage().props.value.settings.logoutAfterChangeEmail[1],
+    requireCpf: usePage().props.value.settings.requireCpf[1],
     saveUpdates_branches: usePage().props.value.settings.saveUpdates.branches[1],
     saveUpdates_clients: usePage().props.value.settings.saveUpdates.clients[1],
     saveUpdates_permissions: usePage().props.value.settings.saveUpdates.permissions[1],
@@ -59,6 +60,10 @@ function saveSettings() {
                                 <div v-if="usePage().props.value.errors.logoutAfterChangeEmail"
                                     class="text-sm text-red-500">
                                     {{ usePage().props.value.errors.logoutAfterChangeEmail }}
+                                </div>
+                                <div v-if="usePage().props.value.errors.requireCpf"
+                                    class="text-sm text-red-500">
+                                    {{ usePage().props.value.errors.requireCpf }}
                                 </div>
                                 <div v-if="usePage().props.value.errors.mustVerifyEmail" class="text-sm text-red-500">
                                     {{ usePage().props.value.errors.mustVerifyEmail }}
@@ -140,6 +145,25 @@ function saveSettings() {
                                         </div>
                                         <div class="ml-3 dark:text-gray-300 font-medium">
                                             {{ usePage().props.value.settings.logoutAfterChangeEmail[0] }}
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="flex w-full mb-5">
+                                    <label for="requireCpf" class="flex items-center cursor-pointer">
+                                        <div class="relative">
+                                            <input type="checkbox" id="requireCpf" class="sr-only"
+                                                :checked="usePage().props.value.settings.requireCpf[1]"
+                                                v-model="settings.requireCpf">
+                                            <div
+                                                class="bg-teal-200 dark:bg-gray-500 w-10 h-4 rounded-full shadow-inner">
+                                            </div>
+                                            <div
+                                                class="dot absolute w-6 h-4 bg-white rounded-full shadow -left-1 -top-0 transition">
+                                            </div>
+                                        </div>
+                                        <div class="ml-3 dark:text-gray-300 font-medium">
+                                            {{ usePage().props.value.settings.requireCpf[0] }}
                                         </div>
                                     </label>
                                 </div>

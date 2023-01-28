@@ -1,13 +1,18 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { Head, useForm, Link } from '@inertiajs/inertia-vue3';
+
+defineProps({
+    requireCpf: Boolean
+});
 
 const form = useForm({
     name: '',
     email: '',
+    cpf: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -21,7 +26,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthenticatedLayout>
+    <GuestLayout>
 
         <Head title="Novo Usuário" />
 
@@ -38,21 +43,28 @@ const submit = () => {
 
                             <form @submit.prevent="submit">
                                 <div>
-                                    <InputLabel for="name" value="Nome" class="dark:text-gray-300" />
+                                    <InputLabel for="name" value="Nome *" class="dark:text-gray-300" />
                                     <TextInput id="name" type="text" class="mt-1 block w-full dark:text-gray-600"
                                         v-model="form.name" required autofocus autocomplete="name" />
                                     <InputError class="mt-2" :message="form.errors.name" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <InputLabel for="email" value="E-mail" class="dark:text-gray-300" />
+                                    <InputLabel for="email" value="E-mail *" class="dark:text-gray-300" />
                                     <TextInput id="email" type="email" class="mt-1 block w-full dark:text-gray-600"
-                                        v-model="form.email" required autocomplete="username" />
+                                        v-model="form.email" required autocomplete="email" />
                                     <InputError class="mt-2" :message="form.errors.email" />
                                 </div>
 
                                 <div class="mt-4">
-                                    <InputLabel for="password" value="Senha" class="dark:text-gray-300" />
+                                    <InputLabel for="cpf" :value="requireCpf ? 'CPF *' : 'CPF'" class="dark:text-gray-300" />
+                                    <TextInput id="cpf" type="text" class="mt-1 block w-full dark:text-gray-600"
+                                        v-model="form.cpf" :required="requireCpf" autocomplete="cpf" />
+                                    <InputError class="mt-2" :message="form.errors.cpf" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <InputLabel for="password" value="Senha *" class="dark:text-gray-300" />
                                     <TextInput id="password" type="password"
                                         class="mt-1 block w-full dark:text-gray-600" v-model="form.password" required
                                         autocomplete="new-password" />
@@ -60,7 +72,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="mt-4">
-                                    <InputLabel for="password_confirmation" value="Confirmar Senha"
+                                    <InputLabel for="password_confirmation" value="Confirmar Senha *"
                                         class="dark:text-gray-300" />
                                     <TextInput id="password_confirmation" type="password"
                                         class="mt-1 block w-full dark:text-gray-600"
@@ -68,10 +80,11 @@ const submit = () => {
                                     <InputError class="mt-2" :message="form.errors.password_confirmation" />
                                 </div>
 
+                                <Link :href="route('login')"
+                                    class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-600">
+                                Já é registrado?
+                                </Link>
                                 <div class="flex items-center justify-end mt-4">
-                                    <!-- <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                                        Já é registrado?
-                                    </Link> -->
                                     <button type="submit" :class="{ 'opacity-25': form.processing }"
                                         :disabled="form.processing"
                                         class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
@@ -84,5 +97,5 @@ const submit = () => {
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </GuestLayout>
 </template>

@@ -56,6 +56,10 @@ class SettingController extends Controller
                     $a->logoutAfterChangeEmail[0],
                     $request->logoutAfterChangeEmail
                 ],
+                'requireCpf' => [
+                    $a->requireCpf[0],
+                    $request->requireCpf
+                ],
                 'saveUpdates' => [
                     'title' => $a->saveUpdates->title,
                     'branches' => [
@@ -107,7 +111,7 @@ class SettingController extends Controller
 
     private function validateRequestSetting(array $data)
     {
-        return count(array_diff_key(['canRegister' => 0, 'mustVerifyEmail' => 0, 'logoutAfterChangeEmail' => 0, 'saveUpdates' => 0], $data)) === 0 &&
+        return count(array_diff_key(['canRegister' => 0, 'mustVerifyEmail' => 0, 'logoutAfterChangeEmail' => 0, 'requireCpf' => 0, 'saveUpdates' => 0], $data)) === 0 &&
             count(array_diff_key(['title' => 0, 'branches' => 0, 'clients' => 0, 'permissions' => 0, 'roles' => 0, 'userRolesPermissions' => 0, 'users' => 0], $data['saveUpdates'])) === 0;
     }
 }
