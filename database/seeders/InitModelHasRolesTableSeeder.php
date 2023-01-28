@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders\cs\laravel9_base\base_apps\database\seeders;
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

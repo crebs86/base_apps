@@ -16,7 +16,7 @@ class UsersSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create('pt_BR');
-        for ($i = 1; $i < 2; $i++) {
+        for ($i = 1; $i <= 9; $i++) {
             $a = rand(0, 200);
             $b = rand(0, 4);
             $c = rand(0, 201);
