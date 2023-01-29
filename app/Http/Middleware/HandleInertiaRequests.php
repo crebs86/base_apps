@@ -62,7 +62,7 @@ class HandleInertiaRequests extends Middleware
             },
             'app' => function () {
                 return [
-                    'version' => '1.0.0',
+                    'version' => config('crebs86.version'),
                     'year' => config('crebs86.year_date'),
                     'released' => config('crebs86.release_date'),
                     'app_version' => 'x.x.x'
