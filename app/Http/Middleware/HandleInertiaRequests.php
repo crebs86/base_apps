@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 use Illuminate\Http\Request;
@@ -63,9 +62,10 @@ class HandleInertiaRequests extends Middleware
             },
             'app' => function () {
                 return [
-                    'version' => '0.0.1',
-                    'year' => 2022,
-                    'released' => '2022-11-25'
+                    'version' => '1.0.0',
+                    'year' => config('crebs86.year_date'),
+                    'released' => config('crebs86.release_date'),
+                    'app_version' => 'x.x.x'
                 ];
             },
         ]);

@@ -7,7 +7,6 @@ use App\Models\Setting;
 use App\Traits\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 
 class MiscController extends Controller
 {
@@ -20,9 +19,7 @@ class MiscController extends Controller
                 return json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
                     return Setting::where('name', 'general')->first();
                 })->settings)->canRegister[1];
-            },
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
+            }
         ]);
     }
 

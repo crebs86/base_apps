@@ -47,5 +47,11 @@ return [
      */
     'admin_roles_edit' => [
         'Super Admin'
-    ]
+    ],
+    /**
+     * dados do aplicativo base
+     */
+    'version' => '1.0.0',
+    'year_date' => '2023',
+    'release_date' => '2023-01-27'
 ];
