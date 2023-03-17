@@ -1,5 +1,5 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import CustomBackgroundLayout from '@/Layouts/CustomBackgroundLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -20,11 +20,12 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <CustomBackgroundLayout :main_class="'background-image'" :slot_class="'slot_class text-white'"
+        :logo_class="'text-gray-300 dark:text-red-300'">
 
         <Head title="Esqueci a senha" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-300">
+        <div class="mb-4 text-sm text-gray-100">
             Esqueseu sua senha? Só informar seu endereço de e-mail e você recebrá um link para definir uma nova senha de
             acesso.
         </div>
@@ -35,19 +36,18 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="E-mail" class="dark:text-gray-300" />
-                <TextInput id="email" type="email" class="mt-1 block w-full dark:text-gray-600" v-model="form.email"
+                <InputLabel for="email" value="E-mail" class="text-gray-300" />
+                <TextInput id="email" type="email" class="mt-1 block w-full text-gray-300 bg-transparent" v-model="form.email"
                     required autofocus autocomplete="username" />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton
-                    class="dark:bg-gray-300 hover:dark:bg-gray-500 dark:text-gray-600 hover:dark:text-gray-300"
+                <PrimaryButton class="border border-emerald-600 bg-emerald-500 text-white rounded-md px-4 py-3 m-2 transition duration-500 ease select-none hover:bg-emerald-800 focus:outline-none focus:shadow-outline"
                     :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Enviar link de redefinição de senha
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
+    </CustomBackgroundLayout>
 </template>

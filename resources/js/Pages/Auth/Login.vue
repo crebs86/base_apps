@@ -1,6 +1,6 @@
 <script setup>
 import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import CustomBackgroundLayout from '@/Layouts/CustomBackgroundLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -27,7 +27,9 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <CustomBackgroundLayout :main_class="'background-image'" :slot_class="'slot_class text-white'"
+        :logo_class="'text-gray-300 dark:text-red-300'">
+
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -36,36 +38,42 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="E-mail" class="dark:text-gray-300"/>
-                <TextInput id="email" type="email" class="mt-1 block w-full dark:bg-gray-500" v-model="form.email" required autofocus autocomplete="username" />
+                <InputLabel for="email" value="E-mail" class="text-gray-300" />
+                <TextInput id="email" type="email" class="mt-1 block w-full bg-transparent" v-model="form.email" required
+                    autofocus autocomplete="username" />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Senha" class="dark:text-gray-300"/>
-                <TextInput id="password" type="password" class="mt-1 block w-full dark:bg-gray-500" v-model="form.password" required autocomplete="current-password" />
+                <InputLabel for="password" value="Senha" class="text-gray-300" />
+                <TextInput id="password" type="password" class="mt-1 block w-full bg-transparent" v-model="form.password"
+                    required autocomplete="current-password" />
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="block mt-4">
-                <label class="flex items-center dark:text-gray-300">
+                <label class="flex items-center text-gray-300">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Lembrar de mim</span>
+                    <span class="ml-2 text-sm text-gray-300">Lembrar de mim</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link v-if="canRegister" :href="route('register')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-500 pr-5">
-                    Novo cadastro?
+                <Link v-if="canRegister" :href="route('register')"
+                    class="underline text-sm hover:text-gray-900 text-gray-300 dark:hover:text-gray-500 pr-5">
+                Novo cadastro?
                 </Link>
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-500">
-                    Esqueceu sua senha?
+                <Link v-if="canResetPassword" :href="route('password.request')"
+                    class="underline text-sm hover:text-gray-900 text-gray-300 dark:hover:text-gray-500">
+                Esqueceu sua senha?
                 </Link>
 
-                <PrimaryButton class="ml-4 dark:bg-gray-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton
+                    class="border border-emerald-600 bg-emerald-500 text-white rounded-md px-4 py-3 m-2 transition duration-500 ease select-none hover:bg-emerald-800 focus:outline-none focus:shadow-outline"
+                    :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Entrar
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
+    </CustomBackgroundLayout>
 </template>
