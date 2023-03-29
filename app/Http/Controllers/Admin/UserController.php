@@ -203,7 +203,7 @@ class UserController extends Controller
      */
     private function getUserRoles($id): User
     {
-        return User::select('id', 'name', 'cpf', 'email')->where('id', $id)
+        return User::select('id', 'name', 'cpf', 'email')->withTrashed()->where('id', $id)
             ->with(
                 [
                     'roles' => function ($q) {
@@ -232,6 +232,7 @@ class UserController extends Controller
 
                 $user = User::where('id', $request->id)
                     ->select('id')
+                    ->withTrashed()
                     ->with(
                         [
                             'roles' => function ($q) {
