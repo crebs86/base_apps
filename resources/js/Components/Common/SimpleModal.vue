@@ -1,16 +1,17 @@
 <template>
     <div>
-        <h2 class="flex justify-center text-blue-500 text-lg dark:text-gray-300">
+        <h2 class="flex justify-center text-lg dark:text-gray-300">
             <slot name="button_title"></slot>
-            <mdicon v-if="showOpenModalButton" name="plus" @click="openModal(true)" style="cursor: pointer;" :title="buttonTitle">
+            <mdicon v-if="showOpenModalButton" name="plus" @click="openModal(true)" style="cursor: pointer;"
+                :title="buttonTitle">
             </mdicon>
         </h2>
         <div v-if="showModal"
             class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex pt-52 md:pt-0 ">
             <div class="relative my-6 mx-auto w-11/12 md:w-9/12 max-w-6xl h-5/6">
                 <!--content-->
-                <div
-                    class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:bg-gray-800">
+                <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none"
+                    :class="$page.props.app.settingsStyles.main.innerSection">
                     <!--header-->
                     <div class="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                         <h3 class="text-3xl font-semibold">

@@ -1,18 +1,15 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import { useToast } from "vue-toastification";
-import { Head, usePage } from '@inertiajs/inertia-vue3';
+import { toast } from '../../toast'
+import { Head, usePage, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Inertia } from '@inertiajs/inertia';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 
 const props = defineProps({
     permission: Object,
     _checker: String
 })
-
-const toast = useToast();
 
 const permissionEdit = ref(props.permission);
 
@@ -29,7 +26,7 @@ function editPermission() {
             if (res.status === 418) {
                 toast.warning(res.data.message)
                 if (res.data.reload) {
-                    Inertia.reload();
+                    router.reload();
                 }
             } else {
                 toast.error(res.data.message)
@@ -56,10 +53,10 @@ function editPermission() {
                 </strong>
             </h1>
             <div class="py-0 px-0">
-                <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                <div class="pt-0.5" v-if="usePage().props.flash.info">
                     <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                         <div class="p-3 text-center">
-                            {{ usePage().props.value.flash.info }}
+                            {{ usePage().props.flash.info }}
                         </div>
                     </div>
                 </div>
@@ -72,12 +69,12 @@ function editPermission() {
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
                                     required />
                                 <label for="full_name"
-                                    class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
+                                    class="absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
                                     Nome da Permissão
                                 </label>
                             </div>
                             <button @click="editPermission"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-2 hover:bg-blue-200 hover:text-blue-700">
+                                class="text-white bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-2 hover:bg-blue-200 hover:text-blue-700">
                                 Atualizar
                             </button>
 

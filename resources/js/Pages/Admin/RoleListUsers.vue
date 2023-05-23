@@ -1,46 +1,46 @@
 <script setup>
-import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
+import { Link, Head, usePage } from '@inertiajs/vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import SubSection from '@/Components/Admin/SubSection.vue';
+import InnerSection from '@/Components/Admin/InnerSection.vue';
 
 </script>
 <template>
-
-    <Head title="Usuários com" />
+    <Head title="Usuários com Papél " + {{ $page.props.role.name }} />
 
     <AuthenticatedLayout>
         <template #inner_menu>
             <AclMenu />
         </template>
-        <div
-            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
-            <h1 class="text-lg text-center mb-2 dark:text-gray-300">
-                Lista de usuários com o papél: {{ $page.props.role.name }}</h1>
-            <div class="p-0 dark:bg-gray-800 rounded-lg">
-                <div class="mx-auto dark:bg-gray-800 p-3 rounded-lg">
-                    <div class="pt-0.5" v-if="usePage().props.value.flash.info">
-                        <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
-                            <div class="p-3 text-center">
-                                {{ usePage().props.value.flash.info }}
+        <SubSection>
+            <template #header>
+                Lista de usuários com o papél: {{ $page.props.role.name }}
+            </template>
+            <template #content>
+                <InnerSection>
+                    <template #content>
+                        <div class="pt-0.5" v-if="usePage().props.flash.info">
+                            <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+                                <div class="p-3 text-center">
+                                    {{ usePage().props.flash.info }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="py-2 overflow-x-auto mt-2 bg-transparent">
-                        <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
+                        <div class="py-2 overflow-x-auto mt-2 bg-transparent">
                             <table class="min-w-full mb-2 px-1">
                                 <thead>
                                     <tr>
                                         <th v-for="(value, index) in ['ID', 'Nome', 'CPF', 'Ações']"
                                             :key="index + '' + value"
-                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white text-center dark:bg-gray-600">
+                                <tbody class="bg-white dark:bg-gray-600">
                                     <tr v-for="(v, i) in $page.props.users" :key="i">
-                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
                                             v-for="(value, index) in v" :key="i.id + '' + index">
                                             <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
                                                 {{ value }}
@@ -48,7 +48,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                         </td>
                                         <td
                                             class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center">
-                                            <div class="flex justify-center">
+                                            <div class="flex">
                                                 <Link :href="route('admin.acl.users.roles.list', v.id)">
                                                 <mdicon name="text-account" class="text-blue-600 hover:text-blue-300"
                                                     :title="'Editar papéis de ' + v.name" />
@@ -59,10 +59,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </template>
+                </InnerSection>
+            </template>
+        </SubSection>
     </AuthenticatedLayout>
 </template>
 <style scoped>

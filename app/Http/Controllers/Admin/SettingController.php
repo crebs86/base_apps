@@ -9,6 +9,7 @@ use App\Traits\Helpers;
 use App\Models\SettingUpdate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SettingRequest;
+use App\Http\Requests\Admin\SettingStylesRequest;
 
 class SettingController extends Controller
 {
@@ -22,13 +23,44 @@ class SettingController extends Controller
     {
         if ($this->isSuperAdmin()) {
             $s = Setting::where('name', 'general')->first();
+            $st = Setting::where('name', 'styles')->first();
             return Inertia::render('Admin/Settings', [
-                'settings' => json_decode($s?->settings),
-                'updated_at' => $s?->updated_at,
-                'id' => $s?->id
+                [
+                    'settings' => json_decode($s?->settings),
+                    'updated_at' => $s?->updated_at,
+                    'id' => $s?->id
+                ],
+                [
+                    'stylesSettings' => $this->buildItemsFormStylesSettings(json_decode($st?->settings)),
+                    'updated_at' => $st?->updated_at,
+                    'id' => $st?->id
+                ]
             ]);
         }
-        return Inertia::render('Admin/403');
+        return Inertia::render(
+            'Admin/403',
+            [
+                'flash.error' => 'Você não possui permissão para usar este recurso'
+            ]
+        );
+    }
+
+    /**
+     * @param mixed $stylesSettings
+     * 
+     * @return array
+     */
+    private function buildItemsFormStylesSettings($stylesSettings)
+    {
+        $a = [];
+        foreach ($stylesSettings as $key => $values) {
+            if (gettype($values) === 'object') {
+                foreach ($values as $k => $v) {
+                    $a[$key][$k] = explode(" ", str_replace(['dark:hover:', 'hover:', 'dark:text-', 'dark:bg-', 'text-',  'bg-'], '', $v));
+                }
+            }
+        }
+        return json_decode(json_encode((object)$a), false);
     }
 
     /**
@@ -106,12 +138,65 @@ class SettingController extends Controller
                 return redirect()->back()->with('success', 'Configurações alteradas com sucesso!');
             }
         }
-        return Inertia::render('Admin/403');
+        return Inertia::render(
+            'Admin/403',
+            [
+                'flash.error' => 'Você não possui permissão para usar este recurso'
+            ]
+        );
     }
 
+    /**
+     * @param array $data
+     * 
+     * @return bool
+     */
     private function validateRequestSetting(array $data)
     {
         return count(array_diff_key(['canRegister' => 0, 'mustVerifyEmail' => 0, 'logoutAfterChangeEmail' => 0, 'requireCpf' => 0, 'saveUpdates' => 0], $data)) === 0 &&
             count(array_diff_key(['title' => 0, 'branches' => 0, 'clients' => 0, 'permissions' => 0, 'roles' => 0, 'userRolesPermissions' => 0, 'users' => 0], $data['saveUpdates'])) === 0;
+    }
+
+    public function updateStyles(SettingStylesRequest $settingStyles)
+    {
+        if ($this->isSuperAdmin()) {
+            cache()->forget('stylesSettings');
+            $a = Setting::where('name', 'styles')->first();
+            $s = json_decode($a?->settings);
+            $st = json_decode($a?->settings, true);
+            if ($settingStyles->section === 'body') {
+                $st['main']['body'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+            }
+            if ($settingStyles->section === 'container') {
+                $st['main']['container'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+            }
+            if ($settingStyles->section === 'subSection') {
+                $st['main']['subSection'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+            }
+            if ($settingStyles->section === 'innerSection') {
+                $st['main']['innerSection'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+            }
+            if ($settingStyles->section === 'innerSectionIcons') {
+                $st['main']['innerSectionIcons'] = 'text-' . $settingStyles->link_light . ' dark:text-' . $settingStyles->link_dark . ' hover:text-' . $settingStyles->linkHover_light . ' dark:hover:text-' . $settingStyles->linkHover_dark;
+            }
+            if ($settingStyles->section === 'footer') {
+                $st['main']['footer'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+                $st['main']['footerLinks'] = 'text-' . $settingStyles->link_light . ' dark:text-' . $settingStyles->link_dark . ' hover:text-' . $settingStyles->linkHover_light . ' dark:hover:text-' . $settingStyles->linkHover_dark;
+            }
+            $t = json_encode($st);
+            //dd($settingStyles->all(), $s, $st, $t);
+            $a->update(['settings' => $t]);
+            if ($a) {
+                return redirect()->back()->with('success', 'Estilos da classe ' . $settingStyles->section . ' atualizada com sucesso.');
+            } else {
+                return redirect()->back()->with('error', 'Erro ao atualizar configurações de classes.');
+            }
+        }
+        return Inertia::render(
+            'Admin/403',
+            [
+                'flash.error' => 'Você não possui permissão para usar este recurso.'
+            ]
+        );
     }
 }

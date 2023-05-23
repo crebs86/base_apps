@@ -65,7 +65,8 @@ class HandleInertiaRequests extends Middleware
                     'version' => config('crebs86.version'),
                     'year' => config('crebs86.year_date'),
                     'released' => config('crebs86.release_date'),
-                    'app_version' => 'x.x.x'
+                    'app_version' => 'x.x.x',
+                    'settingsStyles' => stylesSettings()
                 ];
             },
         ]);

@@ -4,24 +4,28 @@ import MainMenu from '@/Components/Admin/Menus/MainMenu.vue';
 </script>
 
 <template>
-    <div class="h-full flex flex-col bg-gray-100 dark:bg-gray-700 shadow-xl overflow-y-scroll mb-0.5 pb-4">
+    <div class="h-full flex flex-col shadow-xl overflow-y-scroll mb-0.5 pb-4"
+        :class="$page.props.app.settingsStyles.main.layout">
         <MainMenu />
         <!-- Page Content -->
         <slot name="inner_menu" />
-
-        <slot />
-
+        <div
+            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg" :class="$page.props.app.settingsStyles.main.container">
+            <div class="p-2 md:p-4">
+                <slot />
+            </div>
+        </div>
     </div>
-    <footer class="p-4 bg-transparent rounded-lg shadow md:px-6 md:py-8 dark:bg-gray-700">
+    <footer class="p-4 rounded-lg shadow md:px-6 md:py-8" :class="$page.props.app.settingsStyles.main.footer">
         <div class="sm:flex sm:items-center sm:justify-between">
         </div>
         <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-800 lg:my-8">
-        <span class="block text-sm sm:text-center dark:text-gray-300">
+        <span class="block text-sm sm:text-center">
             © 2022-{{ $page.props.app.year }} Rodando com <a href="https://crebs.dev"
-                class="text-blue-500 hover:text-blue-900 dark:hover:text-white">
+                :class="$page.props.app.settingsStyles.main.footerLinks">
                 BaseApp v{{ $page.props.app.version }}
             </a>, desenvolvido por
-            <a class="text-blue-500 hover:text-blue-900 dark:hover:text-white" href="https://crebs.dev" target="_blank">
+            <a :class="$page.props.app.settingsStyles.main.footerLinks" href="https://crebs.dev" target="_blank">
                 CrebsDev
             </a>. Todos os direitos reservados.
         </span>

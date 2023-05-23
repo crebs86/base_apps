@@ -1,10 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
-import { useToast } from "vue-toastification";
+import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { toast } from '../../toast'
 import hasPermission from '@/permissions'
-
-const toast = useToast();
 
 const user = useForm({
     name: '',
@@ -17,15 +15,15 @@ const user = useForm({
 function createUser() {
     user.post(route('admin.acl.usuarios.store'), {
         onSuccess: () => {
-            if (usePage().props.value.flash.success) {
-                toast.success(usePage().props.value.flash.success);
-            } else if (usePage().props.value.flash.error) {
-                toast.error(usePage().props.value.flash.error);
+            if (usePage().props.flash.success) {
+                toast.success(usePage().props.flash.success);
+            } else if (usePage().props.flash.error) {
+                toast.error(usePage().props.flash.error);
             }
 
         },
         onError: () => {
-            if (usePage().props.value.errors) {
+            if (usePage().props.errors) {
                 toast.error('Foram encontrado erros ao processar sua solicitação');
             }
         },
@@ -46,10 +44,10 @@ function createUser() {
                 Novo Usuário
             </h1>
             <div class="p-0 dark:bg-gray-800 rounded-lg">
-                <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                <div class="pt-0.5" v-if="usePage().props.flash.info">
                     <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                         <div class="p-3 text-center">
-                            {{ usePage().props.value.flash.info }}
+                            {{ usePage().props.flash.info }}
                         </div>
                     </div>
                 </div>
@@ -67,8 +65,8 @@ function createUser() {
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         Nome
                                     </label>
-                                    <div v-if="usePage().props.value.errors.name" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.name }}
+                                    <div v-if="usePage().props.errors.name" class="text-sm text-red-500">
+                                        {{ usePage().props.errors.name }}
                                     </div>
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
@@ -79,8 +77,8 @@ function createUser() {
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         E-mail
                                     </label>
-                                    <div v-if="usePage().props.value.errors.email" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.email }}
+                                    <div v-if="usePage().props.errors.email" class="text-sm text-red-500">
+                                        {{ usePage().props.errors.email }}
                                     </div>
                                 </div>
                             </div>
@@ -94,15 +92,15 @@ function createUser() {
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         CPF
                                     </label>
-                                    <div v-if="usePage().props.value.errors.cpf" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.cpf }}
+                                    <div v-if="usePage().props.errors.cpf" class="text-sm text-red-500">
+                                        {{ usePage().props.errors.cpf }}
                                     </div>
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
                                     <select name="branch_id" id="branch_id" v-model="user.branch_id"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                         <option value="" selected>selecione</option>
-                                        <option v-for="branch in usePage().props.value.branches" :value="branch.id"
+                                        <option v-for="branch in usePage().props.branches" :value="branch.id"
                                             :key="('branch' + branch.id)">
                                             {{ branch.name }}
                                         </option>
@@ -111,8 +109,8 @@ function createUser() {
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         Unidade
                                     </label>
-                                    <div v-if="usePage().props.value.errors.branch_id" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.branch_id }}
+                                    <div v-if="usePage().props.errors.branch_id" class="text-sm text-red-500">
+                                        {{ usePage().props.errors.branch_id }}
                                     </div>
                                 </div>
                             </div>
@@ -125,8 +123,8 @@ function createUser() {
                                         class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
                                         Observações
                                     </label>
-                                    <div v-if="usePage().props.value.errors.notes" class="text-sm text-red-500">
-                                        {{ usePage().props.value.errors.notes }}
+                                    <div v-if="usePage().props.errors.notes" class="text-sm text-red-500">
+                                        {{ usePage().props.errors.notes }}
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +134,7 @@ function createUser() {
                                     Limpar
                                 </button>
                                 <button type="button" @click.prevent="createUser"
-                                    v-if="hasPermission(usePage().props.value.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.value.auth.roles, ['Super Admin'])"
+                                    v-if="hasPermission(usePage().props.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin'])"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Criar Usuário
                                 </button>

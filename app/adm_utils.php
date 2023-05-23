@@ -1,11 +1,18 @@
 <?php
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Crypt;
 
 /**
  * setGetKey($request->user_id)
  */
 if (!function_exists('setGetKey')) {
+    /**
+     * @param string $key
+     * @param string|null $sufix
+     * 
+     * @return string
+     */
     function setGetKey($key, $sufix = null)
     {
         return Crypt::encryptString(($sufix ? $sufix . '::' : '') . ($key . '::' . auth()->id()));;
@@ -16,6 +23,12 @@ if (!function_exists('setGetKey')) {
  * User::find(getKeyValue($request->id))
  */
 if (!function_exists('getKeyValue')) {
+    /**
+     * @param string $key
+     * @param string|null $sufix
+     * 
+     * @return mixed
+     */
     function getKeyValue($key, $sufix = null)
     {
         $exp = explode('::', Crypt::decryptString($key));
@@ -27,12 +40,14 @@ if (!function_exists('getKeyValue')) {
     }
 }
 
-// /**
-//  * checkKey($request->id, $request->_key)
-//  */
-// if (!function_exists('checkKey')) {
-//     function checkKey($requestKey, $key)
-//     {
-//         return getKeyValue($requestKey) === $key;
-//     }
-// }
+if (!function_exists('stylesSettings')) {
+    /**
+     * @return Setting
+     */
+    function stylesSettings()
+    {
+        return json_decode(cache()->remember('stylesSettings', 60 * 60 * 2, function () {
+            return Setting::where('name', 'styles')->first();
+        })->settings);
+    }
+}

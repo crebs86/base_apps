@@ -26,6 +26,7 @@ Route::prefix('/dashboard')->middleware(
     Route::put('/clientes/{client}/restore', [ClientController::class, 'restore'])->name('clients.restore')->withTrashed();
 
     Route::resource('/configuracoes', SettingController::class, ['names' => 'settings'])->parameter('configuracoes', 'setting')->except(['destroy', 'create', 'store', 'show', 'edit']);
+    Route::put('/configuracoes/{section}/update-styles', [SettingController::class, 'updateStyles'])->name('settings.update.styles');
 
     Route::get('/auditar', [AuditController::class, 'index'])->name('audit.index');
 

@@ -1,18 +1,18 @@
 <script setup>
 import { ref } from 'vue';
-import { useToast } from "vue-toastification";
-import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
+import { toast } from '../../toast'
+import { Link, Head, usePage } from '@inertiajs/vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
 import axios from 'axios';
+import SubSection from '@/Components/Admin/SubSection.vue';
+import InnerSection from '@/Components/Admin/InnerSection.vue';
 
 const props = defineProps({
     permissions: Object,
     new: Boolean
 })
-
-const toast = useToast();
 
 const permissions = ref(props.permissions);
 
@@ -59,106 +59,101 @@ function saveNewPermission() {
 
 </script>
 <template>
-
     <Head title="Permissões" />
 
     <AuthenticatedLayout>
         <template #inner_menu>
             <AclMenu />
         </template>
-        <div
-            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
-
-            <SimpleModal buttonTitle="Nova Permissão" :showOpenModalButton="$page.props.new">
-                <template #button_title>Permissões</template>
-                <template #title>Nova Permissão</template>
-                <template #body>
-                    <div class="grid gap-1">
-                        <form id="new_permission">
-                            <div>
-                                <div class="relative z-0 mb-6 w-full group">
-                                    <input type="text" id="full_name" v-model="newPermission"
-                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
-                                        required />
-                                    <label for="full_name"
-                                        class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
-                                        Nome da Permissão
-                                    </label>
+        <SubSection>
+            <template #header>
+                <SimpleModal buttonTitle="Nova Permissão" :showOpenModalButton="$page.props.new">
+                    <template #button_title>Permissões</template>
+                    <template #title>Nova Permissão</template>
+                    <template #body>
+                        <div class="grid gap-1">
+                            <form id="new_permission">
+                                <div>
+                                    <div class="relative z-0 mb-6 w-full group">
+                                        <input type="text" id="full_name" name="full_name" v-model="newPermission"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" " />
+                                        <label for="full_name"
+                                            class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Nome da Permissão
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                        <div v-if="message?.message">
-                            <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
-                                class="text-sm text-white rounded-md shadow-lg mx-auto py-2 px-1" role="alert">
-                                <div class="flex p-3">
-                                    {{ message?.message }}
+                            </form>
+                            <div v-if="message?.message">
+                                <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
+                                    class="text-sm text-white rounded-md shadow-lg mx-auto py-2 px-1" role="alert">
+                                    <div class="flex p-3">
+                                        {{ message?.message }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </template>
-                <template #button>
-                    <button type="button" @click.prevent="saveNewPermission"
-                        class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 hover:bg-green-100 focus:outline-none focus:shadow-outline">
-                        Salvar
-                    </button>
-                </template>
-            </SimpleModal>
-            <div class="p-0 dark:bg-gray-800 rounded-lg">
-                <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                    </template>
+                    <template #button>
+                        <button type="button" @click.prevent="saveNewPermission"
+                            class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-100 focus:outline-none focus:shadow-outline">
+                            Salvar
+                        </button>
+                    </template>
+                </SimpleModal>
+            </template>
+            <template #content>
+                <div class="pt-0.5" v-if="usePage().props.flash.info">
                     <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                         <div class="p-3 text-center">
-                            {{ usePage().props.value.flash.info }}
+                            {{ usePage().props.flash.info }}
                         </div>
                     </div>
                 </div>
-                <div class="mx-auto dark:bg-gray-800 p-3 rounded-lg">
-                    <div class="py-2 overflow-x-auto mt-2 bg-transparent">
-                        <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
-                            <table class="min-w-full mb-2 px-1">
-                                <thead>
-                                    <tr>
-                                        <th v-for="(value, index) in ['ID', 'Nome', 'Ações']" :key="index + '' + value"
-                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
-                                            {{ value }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white text-center dark:bg-gray-600">
-                                    <tr v-for="(v, i) in permissions" :key="i">
-                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
-                                            v-for="(value, index) in v" :key="i.id + '' + index">
-                                            <template v-if="index === 'can'">
-                                                <div
-                                                    class="flex text-sm leading-5 text-blue-900 dark:text-gray-300 justify-center">
-                                                    <Link v-if="value" class="text-center"
-                                                        :href="route('admin.acl.permissions.edit', v.id)">
-                                                    <mdicon name="playlist-edit" class="justify-center"
-                                                        :class="value ? 'text-yellow-400 hover:text-yellow-200' : ''"
-                                                        title="Editar" />
-                                                    </Link>
-                                                    <Link :href="route('admin.acl.permissions.list.users', v.id)">
-                                                    <mdicon name="account-lock-open"
-                                                        class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
-                                                        :title="'Usuários com a permissão: ' + v.name" />
-                                                    </Link>
-                                                </div>
-                                            </template>
-                                            <template v-else>
-                                                <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
-                                                    {{ value }}
-                                                </div>
-                                            </template>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <InnerSection>
+                    <template #content>
+                        <table class="min-w-full mb-2 px-1">
+                            <thead>
+                                <tr>
+                                    <th v-for="(value, index) in ['ID', 'Nome', 'Ações']" :key="index + '' + value"
+                                        class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                        {{ value }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-600">
+                                <tr v-for="(v, i) in permissions" :key="i">
+                                    <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
+                                        v-for="(value, index) in v" :key="i.id + '' + index">
+                                        <template v-if="index === 'can'">
+                                            <div class="flex text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                                <Link v-if="value" class="text-center"
+                                                    :href="route('admin.acl.permissions.edit', v.id)">
+                                                <mdicon name="playlist-edit" class="justify-center"
+                                                    :class="value ? 'text-yellow-400 hover:text-yellow-200' : ''"
+                                                    title="Editar" />
+                                                </Link>
+                                                <Link :href="route('admin.acl.permissions.list.users', v.id)">
+                                                <mdicon name="account-lock-open"
+                                                    class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                    :title="'Usuários com a permissão: ' + v.name" />
+                                                </Link>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                                {{ value }}
+                                            </div>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                </InnerSection>
+            </template>
+        </SubSection>
     </AuthenticatedLayout>
 </template>
 <style scoped>

@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import { useToast } from "vue-toastification";
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AclUsersSearch from '@/Components/Admin/AclUsersSearch.vue';
+import SubSection from '@/Components/Admin/SubSection.vue';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 
 const props = defineProps({
@@ -12,22 +12,26 @@ const props = defineProps({
     keyword: String
 })
 
-const toast = useToast();
-
 const rolesWithPermissions = ref(props.rolesWithPermissions);
 
 </script>
 <template>
-
     <Head title="ACL Usuários" />
 
     <AuthenticatedLayout>
         <template #inner_menu>
             <AclMenu />
         </template>
-        <div
-            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
-            <AclUsersSearch :users="$page.props.users" :keyword="$page.props.keyword" />
-        </div>
+        <SubSection>
+            <template #header>
+                Usuários do Sistema
+                <Link :href="route('admin.acl.users.create')" class="pl-1 ml-1">
+                    <mdicon name="account-plus" title="Criar Cliente" class="justify-center" />
+                </Link>
+            </template>
+            <template #content>
+                <AclUsersSearch :users="$page.props.users" :keyword="$page.props.keyword" />
+            </template>
+        </SubSection>
     </AuthenticatedLayout>
 </template>

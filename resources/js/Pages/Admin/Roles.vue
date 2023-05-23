@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useToast } from "vue-toastification";
-import { Link, Head, usePage } from '@inertiajs/inertia-vue3';
+import { toast } from '../../toast'
+import { Link, Head, usePage } from '@inertiajs/vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import SubSection from '@/Components/Admin/SubSection.vue';
+import InnerSection from '@/Components/Admin/InnerSection.vue';
 import SimpleModal from '@/Components/Common/SimpleModal.vue';
 import axios from 'axios';
 import { emittery } from '../../events';
@@ -19,8 +21,6 @@ const props = defineProps({
     rolesWithPermissions: Object,
     new: Boolean
 })
-
-const toast = useToast();
 
 const rolesWithPermissions = ref(props.rolesWithPermissions);
 
@@ -79,131 +79,126 @@ function getPermissionsListForm() {
 
 </script>
 <template>
-
     <Head title="Papéis" />
 
     <AuthenticatedLayout>
         <template #inner_menu>
             <AclMenu />
         </template>
-        <div
-            class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-50 dark:bg-gray-600 dark:text-gray-400 py-3">
-
-            <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
-                :showOpenModalButton="$page.props.new">
-                <template #button_title>Papéis</template>
-                <template #title>Novo Papél</template>
-                <template #body>
-                    <div class="grid gap-1">
-                        <form>
-                            <div>
-                                <div class="relative z-0 mb-6 w-full group">
-                                    <input type="text" id="full_name" v-model="newRole"
-                                        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-grenn-400 appearance-none dark:border-gray-600 dark:focus:border-green-400 focus:outline-none focus:ring-0 focus:border-yellow-600 peer"
-                                        required />
-                                    <label for="full_name"
-                                        class="absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-green-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 dark:text-gray-300">
-                                        Nome do Papél
-                                    </label>
+        <SubSection>
+            <template #header>
+                <SimpleModal :loadData="'getPermissionsListForm'" buttonTitle="Novo Papél"
+                    :showOpenModalButton="$page.props.new">
+                    <template #button_title>Papéis</template>
+                    <template #title>Novo Papél</template>
+                    <template #body>
+                        <div class="grid gap-1">
+                            <form>
+                                <div>
+                                    <div class="relative z-0 mb-6 w-full group">
+                                        <input type="text" name="full_name" id="full_name" v-model="newRole"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" " />
+                                        <label for="full_name"
+                                            class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Nome do Papél
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                        <div v-if="message?.message">
-                            <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
-                                class="text-sm text-white rounded-md shadow-lg mx-auto py-2 px-1" role="alert">
-                                <div class="flex p-3">
-                                    {{ message?.message }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="permissions_content grid justify-items-center">
-                            Permissões do papel
-                            <form id="new_permissions_role">
-                                <tr v-for="(v, i) in permissionsList" :key="i">
-                                    <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                        {{ v.name }}
-                                    </td>
-                                    <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                        <input type="checkbox" :name="v.name" :value="v.name"
-                                            class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
-                                    </td>
-                                </tr>
                             </form>
+                            <div v-if="message?.message">
+                                <div :class="message?.code === 200 && message?.code !== 0 ? 'bg-green-500' : 'bg-red-500'"
+                                    class="text-sm text-white rounded-md shadow-lg mx-auto py-2 px-1" role="alert">
+                                    <div class="flex p-3">
+                                        {{ message?.message }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="permissions_content grid justify-items-center">
+                                Permissões do Novo Papel
+                                <form id="new_permissions_role">
+                                    <tr v-for="(v, i) in permissionsList" :key="i">
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
+                                            {{ v.name }}
+                                        </td>
+                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
+                                            <input type="checkbox" :name="v.name" :value="v.name"
+                                                class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
+                                        </td>
+                                    </tr>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </template>
-                <template #button>
-                    <button type="button" @click.prevent="saveNewRole"
-                        class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-600 hover:bg-green-100 focus:outline-none focus:shadow-outline">
-                        Salvar
-                    </button>
-                </template>
-            </SimpleModal>
-            <div class="p-0 dark:bg-gray-800 rounded-lg">
-                <div class="pt-0.5" v-if="usePage().props.value.flash.info">
+                    </template>
+                    <template #button>
+                        <button type="button" @click.prevent="saveNewRole"
+                            class="border border-green-600 bg-green-600 text-white hover:text-green-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-100 focus:outline-none focus:shadow-outline">
+                            Salvar
+                        </button>
+                    </template>
+                </SimpleModal>
+            </template>
+            <template #content>
+                <div class="pt-0.5" v-if="usePage().props.flash.info">
                     <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                         <div class="p-3 text-center">
-                            {{ usePage().props.value.flash.info }}
+                            {{ usePage().props.flash.info }}
                         </div>
                     </div>
                 </div>
-                <div class="mx-auto dark:bg-gray-800 p-0.5 md:p-3 rounded-lg">
-                    <div class="py-2 overflow-x-auto mt-2 bg-transparent">
-                        <div
-                            class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
-                            <table class="min-w-full mb-2 px-1">
-                                <thead>
-                                    <tr>
-                                        <th v-for="(value, index) in ['ID', 'Nome', 'Permissões', 'Ações']"
-                                            :key="index + '' + value"
-                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
-                                            {{ value }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white dark:bg-gray-600">
-                                    <tr v-for="(v, i) in rolesWithPermissions" :key="i">
-                                        <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
-                                            v-for="(value, index) in v" :key="i.id + '' + index">
-                                            <template v-if="index === 'permissions'">
-                                                <span v-for="(p, i) in v.permissions"
-                                                    class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
-                                                    <span aria-hidden
-                                                        class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
-                                                    </span>
-                                                    <span class="relative text-xs">
-                                                        {{ p.name }}
-                                                    </span>
+                <InnerSection>
+                    <template #content>
+                        <table class="min-w-full mb-2 px-1">
+                            <thead>
+                                <tr>
+                                    <th v-for="(value, index) in ['ID', 'Nome', 'Permissões', 'Ações']"
+                                        :key="index + '' + value"
+                                        class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                        {{ value }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-600">
+                                <tr v-for="(v, i) in rolesWithPermissions" :key="i">
+                                    <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
+                                        v-for="(value, index) in v" :key="i.id + '' + index">
+                                        <template v-if="index === 'permissions'">
+                                            <span v-for="(p, i) in v.permissions"
+                                                class="relative inline-block px-2 py-0 font-semibold text-green-900 leading-tight m-0.5">
+                                                <span aria-hidden
+                                                    class="absolute inset-0 opacity-50 rounded-full bg-green-200 border border-green-600">
                                                 </span>
-                                            </template>
-                                            <template v-else>
-                                                <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
-                                                    {{ value }}
-                                                </div>
-                                            </template>
-                                        </td>
-                                        <td
-                                            class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                            <div class="grid grid-cols-2 gap-1">
-                                                <Link :href="route('admin.acl.roles.show', v.id)">
-                                                <mdicon name="playlist-edit"
-                                                    class="text-yellow-400 hover:text-yellow-200" title="Editar" />
-                                                </Link>
-                                                <Link :href="route('admin.acl.roles.list.users', v.id)">
-                                                <mdicon name="text-account"
-                                                    class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
-                                                    :title="'Usuários com o papél: ' + v.name" />
-                                                </Link>
+                                                <span class="relative text-xs">
+                                                    {{ p.name }}
+                                                </span>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                                {{ value }}
                                             </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                        </template>
+                                    </td>
+                                    <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
+                                        <div class="grid grid-cols-2 gap-1">
+                                            <Link :href="route('admin.acl.roles.show', v.id)">
+                                            <mdicon name="playlist-edit" class="text-yellow-400 hover:text-yellow-200"
+                                                title="Editar" />
+                                            </Link>
+                                            <Link :href="route('admin.acl.roles.list.users', v.id)">
+                                            <mdicon name="text-account"
+                                                class="text-blue-600 hover:text-blue-300 dark:text-blue-400"
+                                                :title="'Usuários com o papél: ' + v.name" />
+                                            </Link>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                </InnerSection>
+            </template>
+        </SubSection>
     </AuthenticatedLayout>
 </template>
 <style scoped>

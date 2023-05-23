@@ -3,7 +3,7 @@ import CustomBackgroundLayout from '@/Layouts/CustomBackgroundLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm, Link } from '@inertiajs/inertia-vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
 
 defineProps({
     requireCpf: Boolean

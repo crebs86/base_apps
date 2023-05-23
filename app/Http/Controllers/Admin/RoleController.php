@@ -123,7 +123,7 @@ class RoleController extends Controller
                 $request->validated();
 
                 $role = Role::where('id', $request->id)
-                    ->select('id', 'name', 'guard_name')
+                    ->select('id', 'name', 'guard_name', 'updated_at')
                     ->first();
                 $r = collect($role)->all();
 
@@ -137,7 +137,7 @@ class RoleController extends Controller
 
                 $after = array_merge(collect($role)->all(), ['permissions' => [$role->permissions->pluck('id')->all()]]);
 
-                $this->auditable('roles') ? $this->saveUpdates(collect($before)->all(), json_decode(json_encode($after)), RoleUpdate::class, ['name', 'guard_name', 'permissions']) : null;
+                $this->auditable('roles') ? $this->saveUpdates(collect($before)->all(), json_decode(json_encode($after)), RoleUpdate::class, ['name', 'guard_name', 'permissions', 'updated_at']) : null;
 
                 return null;
             }

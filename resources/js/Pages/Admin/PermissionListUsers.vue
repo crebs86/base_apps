@@ -1,5 +1,5 @@
 <script setup>
-import { Link, Head } from '@inertiajs/inertia-vue3';
+import { Link, Head } from '@inertiajs/vue3';
 import AclMenu from '@/Components/Admin/Menus/AclMenu.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
@@ -26,7 +26,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                                     <tr>
                                         <th v-for="(value, index) in ['ID', 'Nome', 'CPF', 'Ações']"
                                             :key="index + '' + value"
-                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 text-center border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                            class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
                                             {{ value }}
                                         </th>
                                     </tr>
