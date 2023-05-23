@@ -51,7 +51,7 @@ return [
     /**
      * dados do aplicativo base
      */
-    'version' => '1.1.0',
+    'version' => '2.0.0',
     'year_date' => '2023',
-    'release_date' => '2023-03-17'
+    'release_date' => '2023-05-22'
 ];
