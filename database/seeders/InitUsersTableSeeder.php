@@ -15,6 +15,16 @@ class InitUsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $email = 'super_admin@your.app';
+        $senha = bcrypt('baseapps');
+        $cpf = '00000000000';
+
+        if (file_exists(app_path() . '/instalar/instalacao.php')) {
+            include(app_path() . '/instalar/instalacao.php');
+            $email = $emailAdministrador !== '' ? $emailAdministrador : $email;
+            $senha = $senhaAdministrador !== '' ? bcrypt($senhaAdministrador) : $senha;
+            $cpf = $cpfAdministrador !== '' ? $cpfAdministrador :  $cpf;
+        }
 
 
         DB::table('users')->delete();
@@ -23,15 +33,15 @@ class InitUsersTableSeeder extends Seeder
             0 =>
             array(
                 'branch_id' => NULL,
-                'cpf' => '11736707779',
+                'cpf' => $cpf,
                 'created_at' => now(),
                 'deleted_at' => NULL,
-                'email' => 'super_admin@crebs.dev',
+                'email' => $email,
                 'email_verified_at' => now(),
                 'id' => 1,
                 'name' => 'Super Admin',
                 'notes' => 'Default User',
-                'password' => '$2y$10$s2Hogvn1G3ZC/3SGG9we/exaibaCHDjZPIfNODSpjDVZLdv99sMBy', //12345678
+                'password' => $senha,
                 'remember_token' => NULL,
                 'updated_at' => now(),
             ),

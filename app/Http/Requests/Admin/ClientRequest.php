@@ -26,10 +26,10 @@ class ClientRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:255|string',
-            'email' => 'required|string|email|max:155',
+            'email' => 'nullable|string|email|max:155',
             'cpf' => 'nullable|cpf|unique:clients,cpf,' . $this->id,
             'cep' => 'nullable|size:8',
-            'address' => 'string|nullable|max:510',
+            'address' => 'nullable|string|max:510',
             'branch_id' => 'nullable|exists:branches,id',
             'phones' => 'max:105',
             'notes' => 'max:255'

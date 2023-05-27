@@ -8,12 +8,9 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Models\Setting;
 
 Route::prefix('/dashboard')->middleware(
-    json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
-        return Setting::where('name', 'general')->first();
-    })->settings)->mustVerifyEmail[1] ? ['auth', 'verified'] : ['auth']
+    getSettingMustVerifyEmail() ? ['auth', 'verified'] : ['auth']
 )->group(function () {
     Route::get('/conta', [UserController::class, 'account'])->name('user.account');
     Route::post('/conta', [UserController::class, 'updateAccount'])->name('user.account.update');
@@ -53,9 +50,7 @@ Route::prefix('/dashboard')->middleware(
 });
 
 Route::prefix('admin/controle-de-acessos')->middleware(
-    json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
-        return Setting::where('name', 'general')->first();
-    })->settings)->mustVerifyEmail[1] ? ['auth', 'verified'] : ['auth']
+    getSettingMustVerifyEmail() ? ['auth', 'verified'] : ['auth']
 )->name('admin.acl.')->group(function () {
     Route::get('/', [PermissionController::class, 'acl'])->name('acl');
 

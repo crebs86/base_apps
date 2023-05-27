@@ -30,13 +30,13 @@ const submit = () => {
             acesso.
         </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-gray-300">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-red-400">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="E-mail" class="text-gray-300" />
+                <InputLabel for="email" value="E-mail" class="text-gray-200 dark:text-white" />
                 <TextInput id="email" type="email" class="mt-1 block w-full text-gray-300 bg-transparent" v-model="form.email"
                     required autofocus autocomplete="username" />
                 <InputError class="mt-2" :message="form.errors.email" />

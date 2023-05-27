@@ -13,7 +13,7 @@ const user = useForm({
 })
 
 function createUser() {
-    user.post(route('admin.acl.usuarios.store'), {
+    user.post(route('admin.acl.users.store'), {
         onSuccess: () => {
             if (usePage().props.flash.success) {
                 toast.success(usePage().props.flash.success);

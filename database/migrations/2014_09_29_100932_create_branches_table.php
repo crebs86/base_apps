@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('cnpj', 14)->unique()->nullable();
             $table->string('email', 155);
-            $table->string('phones')->nullable();
+            $table->string('phones', 255)->nullable();
             $table->string('cep', 8)->nullable();
-            $table->string('notes')->nullable();
+            $table->string('notes', 255)->nullable();
             $table->string('address', 510);
             $table->softDeletes();
             $table->timestamps();

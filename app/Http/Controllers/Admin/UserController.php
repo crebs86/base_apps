@@ -304,11 +304,16 @@ class UserController extends Controller
                 'password' => Hash::make($pass),
             ]);
 
-            Mail::to($user)->send(new WelcomeUser($user, $pass));
+            if (config('queue.default') === 'redis') {
+                Mail::to($user)->queue(new WelcomeUser($user, $pass));
+            } else {
+                Mail::to($user)->send(new WelcomeUser($user, $pass));
+            }
 
             if ($user) {
-                return redirect(route('admin.acl.usuarios.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
+                return redirect(route('admin.acl.users.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
             }
+
             return redirect()->back()->with('error', 'Ocorreu um erro ao criar usuário');
         }
         return Inertia::render('Admin/403');
@@ -465,7 +470,6 @@ class UserController extends Controller
      */
     public function account(): Response
     {
-        //dd($this);
         return Inertia::render('Admin/Account');
     }
 

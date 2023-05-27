@@ -51,3 +51,15 @@ if (!function_exists('stylesSettings')) {
         })->settings);
     }
 }
+
+if (!function_exists('getSettingMustVerifyEmail')) {
+    /**
+     * @return Setting
+     */
+    function getSettingMustVerifyEmail()
+    {
+        return json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+            return Setting::where('name', 'general')->first();
+        })->settings)->mustVerifyEmail[1];
+    }
+}

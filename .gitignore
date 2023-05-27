@@ -1,3 +1,4 @@
+.gitignore
 /.vagrant
 /node_modules
 /public/build
@@ -5,7 +6,8 @@
 /public/storage
 /storage/*.key
 /vendor
-.env*
+env*
+.env.example
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -17,6 +19,4 @@ yarn-error.log
 /bootstrap/ssr
 /bootstrap/public
 Testes.vue
-/database/migrations/2022_11_30_144843_*
-database/migrations/2022_11_30_144843_change_field_in_clients_table.php
-database/migrations/2022_11_30_144843_change_field_in_clients_table.php
+worker.log
