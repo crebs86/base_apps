@@ -8,6 +8,7 @@
 /vendor
 .env*
 /app/instalar
+/app/_instalar
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
