@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => Schema::hasTable('users') ? $request->user() : null,
+                'user' => $this->isInstalled() ? $request->user() : null,
                 'roles' => function () use ($request) {
                     if ($request->user()) {
                         return $request->user()->roles->sortBy('name')->pluck('name');
@@ -71,5 +71,13 @@ class HandleInertiaRequests extends Middleware
                 ];
             },
         ]);
+    }
+
+    private function isInstalled()
+    {
+        if (!file_exists(!app_path('/instalar'))) {
+          return true;
+        }
+        return false;
     }
 }
