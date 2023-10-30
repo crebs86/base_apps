@@ -183,6 +183,11 @@ class SettingController extends Controller
                 $st['main']['footer'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
                 $st['main']['footerLinks'] = 'text-' . $settingStyles->link_light . ' dark:text-' . $settingStyles->link_dark . ' hover:text-' . $settingStyles->linkHover_light . ' dark:hover:text-' . $settingStyles->linkHover_dark;
             }
+            if ($settingStyles->section === 'mainMenu') {
+                $st['mainMenu']['body'] = 'bg-' . $settingStyles->bg_light . ' dark:bg-' . $settingStyles->bg_dark;
+                $st['mainMenu']['icons'] = 'text-' . $settingStyles->text_light . ' dark:text-' . $settingStyles->text_dark . ' hover:text-' . $settingStyles->hover_light . ' dark:hover:text-' . $settingStyles->hover_dark;
+                $st['mainMenu']['iconsActive'] = 'text-' . $settingStyles->textActive_light . ' dark:text-' . $settingStyles->textActive_dark . ' hover:text-' . $settingStyles->textActive_hover_light . ' dark:hover:text-' . $settingStyles->textActive_hover_dark;
+            }
             $t = json_encode($st);
             //dd($settingStyles->all(), $s, $st, $t);
             $a->update(['settings' => $t]);

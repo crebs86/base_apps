@@ -7,6 +7,7 @@ import ContainerStyles from './Settings/Styles/Container.vue';
 import SubSectionStyles from './Settings/Styles/SubSection.vue';
 import InnerSectionStyles from './Settings/Styles/InnerSection.vue';
 import InnerSectionIconsStyles from './Settings/Styles/InnerSectionIcons.vue';
+import MainMenuStyles from './Settings/Styles/MainMenuStyles.vue';
 import { toast } from '@/toast'
 import moment from 'moment';
 import { computed } from 'vue';
@@ -587,6 +588,8 @@ if (section === 'footer') {
         <InnerSectionStyles :options="textOptions"/>
 
         <InnerSectionIconsStyles :options="textOptions"/>
+
+        <MainMenuStyles :options="textOptions"/>
 
 
         <!-- Footer >> Rodapé -->
