@@ -23,7 +23,7 @@ class PermissionController extends Controller
      */
     public function acl(): Response
     {
-        if ($this->can('ACL Ver', 'ACL Criar', 'ACL Editar', 'ACL Apagar')) {
+        if ($this->can('ACL Ver', 'ACL Criar', 'ACL Editar', 'ACL Apagar', 'Usuario Ver', 'Usuario Criar', 'Usuario Editar', 'Usuario Apagar')) {
             return Inertia::render('Admin/Acl', [
                 'back' => ['url' => url()->previous() ?? '', 'method' => Route::current()->methods()[0]],
                 'forward' => url()->previous() ?? '',

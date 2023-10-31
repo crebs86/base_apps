@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { toast } from '../../toast'
 import { ref } from 'vue';
-import hasPermission from '@/permissions';
+import has from '@/arrayHelpers';
 import moment from 'moment';
 import swal from 'sweetalert';
 import SubSection from '@/Components/Admin/SubSection.vue';
@@ -281,28 +281,28 @@ function restoreClient() {
                             </div>
                             <div class="text-center">
                                 <button type="button" @click.prevent="edit = true"
-                                    v-if="!edit && (hasPermission(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                    v-if="!edit && (has(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Habilitar Edição
                                 </button>
                                 <template
-                                    v-else-if="edit && (hasPermission(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))">
+                                    v-else-if="edit && (has(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))">
                                     <button type="button" @click.prevent="edit = false"
                                         class="border border-yellow-500 bg-yellow-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-yellow-800 focus:outline-none focus:shadow-outline">
                                         Cancelar
                                     </button>
                                     <button type="button" @click.prevent="saveClient"
-                                        v-if="hasPermission(usePage().props.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+                                        v-if="has(usePage().props.auth.permissions, ['Cliente Editar']) || has(usePage().props.auth.roles, ['Super Admin'])"
                                         class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
                                         Atualizar Cliente
                                     </button>
                                     <button type="button" @click.prevent="deleteClient"
-                                        v-if="usePage().props.client.deleted_at === null && (hasPermission(usePage().props.auth.permissions, ['Cliente Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                        v-if="usePage().props.client.deleted_at === null && (has(usePage().props.auth.permissions, ['Cliente Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                         class="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-800 focus:outline-none focus:shadow-outline">
                                         Excluir Cliente
                                     </button>
                                     <button type="button" @click.prevent="restoreClient"
-                                        v-if="usePage().props.client.deleted_at !== null && (hasPermission(usePage().props.auth.permissions, ['Cliente Apagar', 'Cliente Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                        v-if="usePage().props.client.deleted_at !== null && (has(usePage().props.auth.permissions, ['Cliente Apagar', 'Cliente Editar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                         class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                         Restaurar Cliente
                                     </button>

@@ -4,6 +4,7 @@ import { toast } from '../../toast'
 import { Link, usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import InnerSection from './InnerSection.vue';
+import has from '@/arrayHelpers'
 
 const props = defineProps(
     {
@@ -140,15 +141,15 @@ function search() {
                                 <td
                                     class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                     <div class="flex justify-center gap-1">
-                                        <Link :href="route('admin.acl.users.roles.list', v.id)">
+                                        <Link v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.roles.list', v.id)">
                                         <mdicon name="shield-account" class="text-green-600 hover:text-green-400"
                                             title="Detalhar Papéis" />
                                         </Link>
-                                        <Link :href="route('admin.acl.users.roles.show', v.id)">
+                                        <Link v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.roles.show', v.id)">
                                         <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
                                             title="Editar Papéis" />
                                         </Link>
-                                        <Link :href="route('admin.acl.users.edit', v.id)">
+                                        <Link v-if="has($page.props.auth.permissions, ['Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.edit', v.id)">
                                         <mdicon name="account-edit" class="text-yellow-400 hover:text-yellow-200"
                                             title="Editar Conta" />
                                         </Link>

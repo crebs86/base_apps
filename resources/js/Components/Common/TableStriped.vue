@@ -1,3 +1,10 @@
+<script setup>
+
+const props = defineProps({
+    object: Object,
+    titles: Array
+})
+</script>
 <template>
     <!-- component -->
     <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 pr-10 lg:px-8">
@@ -77,10 +84,3 @@
         </div>
     </div>
 </template>
-<script setup>
-
-const props = defineProps({
-    object: Object,
-    titles: Array
-})
-</script>

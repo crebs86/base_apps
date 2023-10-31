@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { toast } from '../../toast'
-import hasPermission from '@/permissions'
+import { toast } from '../../toast';
+import has from '@/arrayHelpers';
 import SubSection from '@/Components/Admin/SubSection.vue';
 import InnerSection from '@/Components/Admin/InnerSection.vue';
 
@@ -171,7 +171,7 @@ function createClient() {
                                 Limpar
                             </button>
                             <button type="button" @click.prevent="createClient"
-                                v-if="hasPermission(usePage().props.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+                                v-if="has(usePage().props.auth.permissions, ['Cliente Editar']) || has(usePage().props.auth.roles, ['Super Admin'])"
                                 class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
                                 Criar Cliente
                             </button>

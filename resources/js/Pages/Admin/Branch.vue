@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { toast } from '../../toast'
 import { ref } from 'vue';
-import hasPermission from '@/permissions';
+import has from '@/arrayHelpers';
 import moment from 'moment';
 import swal from 'sweetalert';
 import SubSection from '@/Components/Admin/SubSection.vue';
@@ -250,28 +250,28 @@ function restoreBranch() {
                         </div>
                         <div class="text-center">
                             <button type="button" @click.prevent="edit = true"
-                                v-if="!edit && (hasPermission(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                v-if="!edit && (has(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                 class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                 Habilitar Edição
                             </button>
                             <template
-                                v-else-if="edit && (hasPermission(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))">
+                                v-else-if="edit && (has(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))">
                                 <button type="button" @click.prevent="edit = false"
                                     class="border border-yellow-500 bg-yellow-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-yellow-800 focus:outline-none focus:shadow-outline">
                                     Cancelar
                                 </button>
                                 <button type="button" @click.prevent="saveBranch"
-                                    v-if="hasPermission(usePage().props.auth.permissions, ['Unidade Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+                                    v-if="has(usePage().props.auth.permissions, ['Unidade Editar']) || has(usePage().props.auth.roles, ['Super Admin'])"
                                     class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline">
                                     Atualizar Unidade
                                 </button>
                                 <button type="button" @click.prevent="deleteBranch"
-                                    v-if="usePage().props.branch.deleted_at === null && (hasPermission(usePage().props.auth.permissions, ['Unidade Apagar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                    v-if="usePage().props.branch.deleted_at === null && (has(usePage().props.auth.permissions, ['Unidade Apagar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                     class="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-800 focus:outline-none focus:shadow-outline">
                                     Excluir Unidade
                                 </button>
                                 <button type="button" @click.prevent="restoreBranch"
-                                    v-if="usePage().props.branch.deleted_at !== null && (hasPermission(usePage().props.auth.permissions, ['Unidade Apagar', 'Unidade Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin']))"
+                                    v-if="usePage().props.branch.deleted_at !== null && (has(usePage().props.auth.permissions, ['Unidade Apagar', 'Unidade Editar']) || has(usePage().props.auth.roles, ['Super Admin']))"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Restaurar Unidade
                                 </button>

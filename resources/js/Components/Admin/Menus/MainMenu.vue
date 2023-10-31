@@ -1,34 +1,34 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
-import hasPermission from '@/permissions'
+import has from '@/arrayHelpers';
 
 const numberMenuItems = ref(2);
 const classNumberMenuItems = ref('7');
 onMounted: {
-    if (hasPermission(
+    if (has(
         usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']
     )
-        || hasPermission(usePage().props.auth.roles, ['Super Admin'])
+        || has(usePage().props.auth.roles, ['Super Admin'])
     ) {
         numberMenuItems.value++
     }
 
-    if (hasPermission(
+    if (has(
         usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar']
     )
-        || hasPermission(usePage().props.auth.roles, ['Super Admin'])
+        || has(usePage().props.auth.roles, ['Super Admin'])
     ) {
         numberMenuItems.value++
     }
-    if (hasPermission(
+    if (has(
         usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar']
     )
-        || hasPermission(usePage().props.auth.roles, ['Super Admin'])
+        || has(usePage().props.auth.roles, ['Super Admin'])
     ) {
         numberMenuItems.value++
     }
-    if (hasPermission(usePage().props.auth.roles, ['Super Admin'])
+    if (has(usePage().props.auth.roles, ['Super Admin'])
     ) {
         numberMenuItems.value++
         numberMenuItems.value++
@@ -55,8 +55,8 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="hasPermission(usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
-            || hasPermission(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            <div v-if="has(usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
+            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('admin.acl.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -66,8 +66,8 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="hasPermission(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
-            || hasPermission(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            <div v-if="has(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
+            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('clients.index')" :active="route().current('clients.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('clients.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -77,8 +77,8 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="hasPermission(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
-            || hasPermission(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+            <div v-if="has(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
+            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('branches.index')" :active="route().current('branches.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('branches.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -88,7 +88,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
                 class="flex flex-col items-center">
                 <Link :href="route('settings.index')" :active="route().current('settings.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
@@ -99,7 +99,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
                 class="flex flex-col items-center">
                 <Link :href="route('audit.index')" :active="route().current('audit.*')"
                     class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"

@@ -1,3 +1,28 @@
+<script setup>
+import { ref } from 'vue';
+import { emittery } from '../../events'
+
+const props = defineProps({
+    loadData: String | null,
+    buttonTitle: String,
+    showOpenModalButton: Boolean
+});
+
+const showModal = ref(false);
+
+function openModal(value) {
+    if (value) {
+
+        if (props.loadData !== undefined) {
+            emittery.emit(props.loadData)
+        }
+        showModal.value = true
+    } else {
+        showModal.value = false
+    }
+}
+
+</script>
 <template>
     <div>
         <h2 class="flex justify-center text-lg dark:text-gray-300">
@@ -40,29 +65,3 @@
         <div v-if="showModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { emittery } from '../../events'
-
-const props = defineProps({
-    loadData: String | null,
-    buttonTitle: String,
-    showOpenModalButton: Boolean
-});
-
-const showModal = ref(false);
-
-function openModal(value) {
-    if (value) {
-
-        if (props.loadData !== undefined) {
-            emittery.emit(props.loadData)
-        }
-        showModal.value = true
-    } else {
-        showModal.value = false
-    }
-}
-
-</script>

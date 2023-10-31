@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { toast } from '../../toast'
-import hasPermission from '@/permissions'
+import { toast } from '../../toast';
+import has from '@/arrayHelpers';
 
 const user = useForm({
     name: '',
@@ -134,7 +134,7 @@ function createUser() {
                                     Limpar
                                 </button>
                                 <button type="button" @click.prevent="createUser"
-                                    v-if="hasPermission(usePage().props.auth.permissions, ['Cliente Editar']) || hasPermission(usePage().props.auth.roles, ['Super Admin'])"
+                                    v-if="has(usePage().props.auth.permissions, ['Cliente Editar']) || has(usePage().props.auth.roles, ['Super Admin'])"
                                     class="border border-green-500 bg-green-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-800 focus:outline-none focus:shadow-outline">
                                     Criar Usuário
                                 </button>
