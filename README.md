@@ -11,7 +11,6 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 - [Laravel documentation](https://laravel.com/docs).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
 ## Instalação
 - configurar banco de dados, cache e queue;
