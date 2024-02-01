@@ -116,7 +116,7 @@ function search() {
                                         <div v-if="v.link === null" v-html="v.label"></div>
                                         <Link v-else :href="v.url" v-html="v.label"
                                             class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 dark:bg-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-300 dark:hover:text-gray-800"
-                                            :class="v.active ? 'bg-blue-300 text-white dark:bg-gray-100 dark:text-gray-800' : ''">
+                                            :class="v.active ? 'bg-blue-300 text-blue-900 font-extrabold dark:bg-gray-100 dark:text-gray-800' : ''">
                                         </Link>
                                     </template>
                                 </nav>
@@ -178,7 +178,7 @@ function search() {
                                         <div v-if="v.link === null" v-html="v.label"></div>
                                         <Link v-else :href="v.url" v-html="v.label"
                                             class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary dark:bg-gray-600 dark:text-gray-300"
-                                            :class="{ 'bg-blue-300 text-white dark:bg-white dark:text-gray-800': v.active }">
+                                            :class="{ 'bg-blue-300 text-blue-900 font-extrabold dark:bg-white dark:text-gray-800': v.active }">
                                         </Link>
                                     </template>
                                 </nav>

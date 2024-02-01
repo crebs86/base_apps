@@ -75,7 +75,7 @@ class HandleInertiaRequests extends Middleware
 
     private function isInstalled()
     {
-        if (!file_exists(!app_path('/instalar'))) {
+        if (!file_exists(app_path('/instalar'))) {
           return true;
         }
         return false;
