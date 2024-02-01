@@ -276,3 +276,4 @@ class SettingStylesRequest extends FormRequest
             'textActive_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu', 'innerSectionIcons', 'footer'])), Rule::in($this->text_options)],
         ];
     }
+}
