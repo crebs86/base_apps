@@ -19,6 +19,7 @@ use App\Mail\WelcomeUser;
 use App\Models\AclUpdate;
 use App\Models\UserUpdate;
 use App\Traits\Helpers;
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 
@@ -304,14 +305,24 @@ class UserController extends Controller
                 'password' => Hash::make($pass),
             ]);
 
-            if (config('queue.default') === 'redis') {
-                Mail::to($user)->queue(new WelcomeUser($user, $pass));
-            } else {
-                Mail::to($user)->send(new WelcomeUser($user, $pass));
+            $message = 'Usuário ' . $user->name . ' foi criado com sucesso! Enviado email de boas vindas';
+            $type = 'success';
+
+            try {
+                throw new Exception('Algo errado');
+                if (config('queue.default') === 'redis') {
+                    Mail::to($user)->queue(new WelcomeUser($user, $pass));
+                } else {
+                    Mail::to($user)->send(new WelcomeUser($user, $pass));
+                }
+            } catch (Exception $e) {
+                $message  = 'Usuário ' . $user->name . ' foi criado com sucesso! Erro ao enviar email de boas vindas';
+                $type = 'warning';
             }
 
+
             if ($user) {
-                return redirect(route('admin.acl.users.show', $user->id))->with('success', 'Usuário ' . $user->name . ' foi criado com sucesso!');
+                return redirect(route('admin.acl.users.show', $user->id))->with($type, $message);
             }
 
             return redirect()->back()->with('error', 'Ocorreu um erro ao criar usuário');

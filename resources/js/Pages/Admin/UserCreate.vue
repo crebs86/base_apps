@@ -16,9 +16,17 @@ function createUser() {
     user.post(route('admin.acl.users.store'), {
         onSuccess: () => {
             if (usePage().props.flash.success) {
-                toast.success(usePage().props.flash.success);
+                toast.success(usePage().props.flash.success, {
+                    duration: 8000
+                });
+            } else if (usePage().props.flash.warning) {
+                toast.warning(usePage().props.flash.warning, {
+                    duration: 8000
+                });
             } else if (usePage().props.flash.error) {
-                toast.error(usePage().props.flash.error);
+                toast.error(usePage().props.flash.error, {
+                    duration: 8000
+                });
             }
 
         },
@@ -33,7 +41,6 @@ function createUser() {
 </script>
 
 <template>
-
     <Head title="Criar Usuário" />
 
     <AuthenticatedLayout>

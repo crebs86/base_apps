@@ -13,7 +13,7 @@ class RoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check();;
+        return auth()->check();
     }
 
     /**

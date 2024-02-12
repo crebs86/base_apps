@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -48,7 +49,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'cpf' => [
-                'cpf',
+                $this->cpfNull($request->cpf,),
                 Rule::unique('users'),
                 Rule::requiredIf(fn () => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
                     return Setting::where('name', 'general')->first();
@@ -67,8 +68,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
-
+        try {
+            event(new Registered($user));
+        } catch (Exception $e) {
+            return '<strong>Servidor de e-mail pode não estar configurado: </strong><br/>' . $e->getMessage() . '<br/><br/>Alguns recursos da aplicação não funcionarão corretamente sem um servidor de email configurado.';
+        }
         Auth::login($user);
 
         if (json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
@@ -78,5 +82,22 @@ class RegisteredUserController extends Controller
         }
 
         return redirect()->route('admin.acl.users.edit', $user->id);
+    }
+
+    private function cpfNull($cpf): string
+    {
+        if (
+            json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                return Setting::where('name', 'general')->first();
+            })->settings)->requireCpf[1]
+            ||
+            (!json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                return Setting::where('name', 'general')->first();
+            })->settings)->requireCpf[1] && $cpf)
+        ) {
+            return 'cpf';
+        } else {
+            return 'nullable';
+        }
     }
 }
