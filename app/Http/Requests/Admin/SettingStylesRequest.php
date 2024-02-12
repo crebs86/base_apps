@@ -268,12 +268,51 @@ class SettingStylesRequest extends FormRequest
             'bg_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
             'text_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
             'bg_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
-            'link_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu'])), Rule::in($this->text_options)],
-            'link_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu'])), Rule::in($this->text_options)],
-            'linkHover_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu'])), Rule::in($this->text_options)],
-            'linkHover_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu'])), Rule::in($this->text_options)],
-            'textActive_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu', 'innerSectionIcons', 'footer'])), Rule::in($this->text_options)],
-            'textActive_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'mainMenu', 'innerSectionIcons', 'footer'])), Rule::in($this->text_options)],
+            'link_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'link_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'linkHover_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'linkHover_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'textActive_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
+            'textActive_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
         ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'text_light.in' => $this->customMessage('text_light', $this->section),
+            'bg_light.in' => $this->customMessage('bg_light', $this->section),
+            'text_dark.in' => $this->customMessage('text_dark', $this->section),
+            'bg_dark.in' => $this->customMessage('bg_dark', $this->section),
+            'link_light.in' => $this->customMessage('link_light', $this->section),
+            'link_dark.in' => $this->customMessage('link_dark', $this->section),
+            'linkHover_light.in' => $this->customMessage('linkHover_light', $this->section),
+            'linkHover_dark.in' => $this->customMessage('linkHover_dark', $this->section),
+            'text_light.required' => 'Campo obrigatório',
+            'bg_light.required' => 'Campo obrigatório',
+            'text_dark.required' => 'Campo obrigatório',
+            'bg_dark.required' => 'Campo obrigatório',
+            'link_light.required' => 'Campo obrigatório',
+            'link_dark.required' => 'Campo obrigatório',
+            'linkHover_light.required' => 'Campo obrigatório',
+            'linkHover_dark.required' => 'Campo obrigatório',
+        ];
+    }
+
+    /**
+     * @param string $attr
+     * @param string $section
+     * 
+     * @return string
+     */
+    private function customMessage($attr, $section): string
+    {
+        $a = explode('_', $attr);
+        return 'A classe "' . $this->$attr . '" informada em ' . Str::ucfirst($section) . ' > ' . $this->labels[$a[0]] . ' > ' . $this->labels[$a[1]] . ' não existe';
     }
 }

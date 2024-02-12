@@ -29,13 +29,15 @@ class UserRequest extends FormRequest
             'name' => 'required|min:3|max:255|string',
             'email' => 'email|required|max:255|unique:users,email,' . $this->user,
             'cpf' => [
-                'cpf', Rule::unique('users')->ignore($this->user),
+                $this->cpfNull(),
+                Rule::unique('users')->ignore($this->user),
                 Rule::requiredIf(fn () => json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
                     return Setting::where('name', 'general')->first();
                 })->settings)->requireCpf[1])
             ],
             'branch_id' => 'array|nullable|exists:branches,id',
-            'notes' => 'nullable|min:3|max:510'
+            'notes' => 'nullable|min:3|max:510',
+            'password' => 'nullable|min:8|confirmed'
         ];
     }
 
@@ -46,5 +48,22 @@ class UserRequest extends FormRequest
             'cpf.required' => 'Informe seu CPF',
             'branch_id.exists' => 'Uma ou mais unidades informadas não existem. Favor selecionar um item da lista.'
         ];
+    }
+
+    private function cpfNull(): string
+    {
+        if (
+            json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                return Setting::where('name', 'general')->first();
+            })->settings)->requireCpf[1]
+            ||
+            (!json_decode(cache()->remember('settings', 60 * 60 * 2, function () {
+                return Setting::where('name', 'general')->first();
+            })->settings)->requireCpf[1] && $this->cpf)
+        ) {
+            return 'cpf';
+        } else {
+            return 'nullable';
+        }
     }
 }

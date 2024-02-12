@@ -742,7 +742,7 @@ if (section === 'footer') {
                                     </footer>
                                 </div>
                             </div>
-                            <div class="relative mb-3 w-full">
+                            <div class="relative mb-3 w-full text-center">
                                 <button type="button" @click.prevent="saveStyles('footer')"
                                     class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-300 focus:outline-none focus:shadow-outline">
                                     Salvar Estilos de <span class="italic underline">footer</span>

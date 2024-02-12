@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         if ($this->can('ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar')) {
             if (!$request->user) {
-                $users = User::orderBy('updated_at', 'desc')->orderBy('id', 'desc')->paginate(10)->through(
+                $users = User::orderBy('updated_at', 'desc')->withTrashed()->paginate(10)->through(
                     function ($users) {
                         return $this->setUser($users);
                     }
@@ -375,17 +375,26 @@ class UserController extends Controller
                     ->find($request->user);
                 $user->branch_id = json_decode($user->branch_id);
                 $u = collect($user)->all();
+
                 $updated = $user->update(
                     [
                         'email' => $request->email,
                         'name' => $request->name,
-                        'cpf' => $request->cpf,
+                        'cpf' => $request->cpf ? str_replace(['-', '.'], '', $request->cpf) : null,
                         'deleted_at' => $request->active ? null : now(),
                         'branch_id' => $request->branch_id,
                         'notes' => $request->notes
                     ]
                 );
+
                 if ($updated) {
+                    //se sucesso na atualização do usuário e pedido de reset de senha.
+                    if ($request->password) {
+                        $password = $user->forceFill([
+                            'password' => Hash::make($request->password)
+                        ])->save();
+                    }
+
                     $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at'], ['branch_id']) : null;
                     return redirect()->back()->with('success', 'O usuário foi atuzalizado');
                 } else {
