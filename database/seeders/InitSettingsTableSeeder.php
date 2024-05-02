@@ -16,7 +16,6 @@ class InitSettingsTableSeeder extends Seeder
     public function run()
     {
 
-
         DB::table('settings')->delete();
 
         DB::table('settings')->insert(array(
@@ -45,29 +44,32 @@ class InitSettingsTableSeeder extends Seeder
             array(
                 'id' => 2,
                 'name' => 'styles',
-                'settings' => '{
-                                "main":
-                                        {
-                                            "body":"text-green-600 dark:text-stone-200 bg-stone-200 dark:bg-green-600",
-                                            "container":"text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-600",
-                                            "subSection":"text-teal-700 dark:text-teal-200 bg-teal-200 dark:bg-teal-700",
-                                            "innerSectionIcons":"text-lime-700 dark:text-zinc-200 hover:text-zinc-600 dark:hover:text-stone-800",
-                                            "innerSection":"text-teal-600 dark:text-teal-100 bg-teal-100 dark:bg-teal-600",
-                                            "footer":"text-emerald-200 dark:text-emerald-300 bg-teal-500 dark:bg-emerald-900",
-                                            "footerLinks":"text-emerald-900 dark:text-emerald-600 hover:text-emerald-50 dark:hover:text-emerald-50"
-                                        },
-                                "mainMenu":
-                                        {
-                                            "body":"bg-teal-500 dark:bg-gray-700",
-                                            "icons":"text-lime-200 dark:text-green-400 hover:text-lime-400 dark:hover:text-green-300",
-                                            "iconsActive":"text-yellow-300 dark:text-green-600 hover:text-green-300 dark:hover:text-green-300"
-                                        },
-                                "aclMenu":
-                                        {
-                                            "body":"text-gray-700 dark:text-white bg-white dark:bg-gray-700",
-                                            "icons":"text-yellow-700 dark:text-green-600 hover:text-white dark:hover:text-red-700"
-                                        }
-                                }',
+                'settings' => '
+                
+                    {
+                        "main":
+                            {
+                                "body":"text-green-800 dark:text-gray-300 bg-teal-200 dark:bg-gray-700",
+                                "container":"text-green-800 dark:text-gray-300 bg-teal-300 dark:bg-gray-800",
+                                "subSection":"text-green-800 dark:text-gray-200 bg-teal-200 dark:bg-gray-700",
+                                "innerSectionIcons":"text-amber-500 dark:text-yellow-100 hover:text-amber-700 dark:hover:text-yellow-200",
+                                "innerSection":"text-teal-600 dark:text-gray-300 bg-teal-200 dark:bg-gray-700",
+                                "formsStyles":"text-green-800 dark:text-slate-700 bg-teal-300 dark:bg-gray-400",
+                                "footer":"text-slate-600 dark:text-slate-200 bg-teal-400 dark:bg-gray-900",
+                                "footerLinks":"text-amber-500 dark:text-yellow-400 hover:text-amber-700 dark:hover:text-white"
+                            },
+                        "mainMenu":
+                        {
+                            "body":"bg-teal-400 dark:bg-gray-900",
+                            "icons":"text-teal-100 dark:text-slate-200 hover:text-teal-600 dark:hover:text-slate-600",
+                            "iconsActive":"text-amber-500 dark:text-yellow-300 hover:text-amber-700 dark:hover:text-yellow-500"
+                        },
+                        "aclMenu":
+                            {
+                                "body":"text-gray-700 dark:text-white bg-white dark:bg-gray-700",
+                                "icons":"text-yellow-700 dark:text-green-600 hover:text-white dark:hover:text-red-700"
+                            }
+                    }',
                 'updated_at' => now(),
             ),
         ));

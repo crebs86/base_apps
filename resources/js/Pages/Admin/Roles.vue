@@ -100,7 +100,7 @@ function getPermissionsListForm() {
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " />
                                         <label for="full_name"
-                                            class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Nome do Papél
                                         </label>
                                     </div>
@@ -119,10 +119,10 @@ function getPermissionsListForm() {
                                 <form id="new_permissions_role">
                                     <tr v-for="(v, i) in permissionsList" :key="i">
                                         <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                            {{ v.name }}
+                                            <label :for="v.id">{{ v.name }}</label>
                                         </td>
                                         <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
-                                            <input type="checkbox" :name="v.name" :value="v.name"
+                                            <input type="checkbox" :name="v.name" :value="v.name" :id="v.id"
                                                 class="w-4 h-4 text-blue-600 bg-blue-200 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
                                         </td>
                                     </tr>
