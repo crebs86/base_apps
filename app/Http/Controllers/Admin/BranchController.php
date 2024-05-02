@@ -36,9 +36,9 @@ class BranchController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Admin/BranchCreate');
     }
 
     /**
@@ -47,9 +47,10 @@ class BranchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-    public function store(Request $request)
+    public function store(BranchRequest $request, Branch $branch)
     {
-        //
+        $b = $branch->create($request->validated());
+        return redirect()->route('branches.show', [$b->id]);
     }
 
     /**
