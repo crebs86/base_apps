@@ -25,16 +25,17 @@ import InnerSection from '@/Components/Admin/InnerSection.vue';
                                 class="align-middle inline-block min-w-full shadow overflow-hidden shadow-dashboard p-1 rounded-bl-lg rounded-br-lg dark:text-gray-300">
                                 <table class="min-w-full mb-2 px-1">
                                     <thead>
-                                        <tr>
+                                        <tr class="bg-slate-500">
                                             <th v-for="(value, index) in ['ID', 'Nome', 'CNPJ', 'e-mail', 'Endereço', 'Situação', 'Ações']"
                                                 :key="index + '' + value"
-                                                class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                                class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider text-gray-200">
                                                 {{ value }}
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white dark:bg-gray-600">
-                                        <tr v-for="(v, i) in usePage().props.branches" :key="i">
+                                    <tbody>
+                                        <tr v-for="(v, i) in usePage().props.branches" :key="i"
+                                            :class="i % 2 ? 'bg-slate-400 text-gray-100' : 'bg-slate-300 text-gray-700'">
                                             <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
                                                 v-for="(value, index) in v" :key="i.id + '' + index">
                                                 <template v-if="index === 'deleted_at'">
@@ -52,7 +53,7 @@ import InnerSection from '@/Components/Admin/InnerSection.vue';
 
                                                 </template>
                                                 <template v-else>
-                                                    <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                                    <div class="text-sm leading-5">
                                                         {{ value }}
                                                     </div>
                                                 </template>

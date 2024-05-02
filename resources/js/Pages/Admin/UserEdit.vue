@@ -25,7 +25,9 @@ const user = useForm({
     active: props.user.deleted_at === null,
     _checker: props._checker,
     branch_id: props.user.branch_id,
-    notes: props.user.notes
+    notes: props.user.notes,
+    password: '',
+    password_confirmation: ''
 })
 
 const _branches = ref(props.user.branch_id);
@@ -123,7 +125,7 @@ function userEmail(withoutCheck = false) {
                             <div class="p-1.5 overflow-x-auto mt-2 bg-transparent">
                                 <div class="grid xl:grid-cols-1 xl:gap-1">
                                     <div class="relative mb-6 w-full group">
-                                        <label class="text-sm text-gray-500 dark:text-gray-400">
+                                        <label class="text-sm dark:text-gray-400">
                                             Unidades Vinculadas
                                         </label>
                                         <VueMultiselect v-model="_branches" :options="options" :multiple="true"
@@ -138,10 +140,10 @@ function userEmail(withoutCheck = false) {
                                 <div class="grid xl:grid-cols-2 xl:gap-6">
                                     <div class="relative z-0 mb-6 w-full group">
                                         <input type="text" name="name" id="name" v-model="user.name"
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="name"
-                                            class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Nome
                                         </label>
                                         <div v-if="usePage().props.errors.name" class="text-sm text-red-500">
@@ -150,10 +152,10 @@ function userEmail(withoutCheck = false) {
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
                                         <input type="email" name="email" id="email" v-model="user.email"
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="email"
-                                            class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             E-mail
                                         </label>
                                         <div v-if="usePage().props.errors.email" class="text-sm text-red-500">
@@ -162,10 +164,10 @@ function userEmail(withoutCheck = false) {
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
                                         <input type="text" name="cpf" id="cpf" v-model="user.cpf"
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="cpf"
-                                            class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             CPF
                                         </label>
                                         <div v-if="usePage().props.errors.cpf" class="text-sm text-red-500">
@@ -179,7 +181,7 @@ function userEmail(withoutCheck = false) {
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="notes"
-                                            class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 text-gray-900 dark:text-gray-300">
+                                        class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Observações
                                         </label>
                                         <div v-if="usePage().props.errors.notes" class="text-sm text-red-500">
@@ -195,6 +197,32 @@ function userEmail(withoutCheck = false) {
                                                 Ativo?
                                             </span>
                                         </label>
+                                    </div>
+                                    <div class="relative z-0 mb-6 w-full group">
+                                        <input type="password" name="password" id="password" v-model="user.password"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" " required />
+                                        <label for="password"
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Senha
+                                        </label>
+                                        <div v-if="usePage().props.errors.password" class="text-sm text-red-500">
+                                            {{ usePage().props.errors.password }}
+                                        </div>
+                                    </div>
+                                    <div class="relative z-0 mb-6 w-full group">
+                                        <input type="password" name="password_confirmation" id="password_confirmation"
+                                            v-model="user.password_confirmation"
+                                            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" " required />
+                                        <label for="password_confirmation"
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Repetir Senha
+                                        </label>
+                                        <div v-if="usePage().props.errors.password_confirmation"
+                                            class="text-sm text-red-500">
+                                            {{ usePage().props.errors.password_confirmation }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="text-center">

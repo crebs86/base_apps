@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Branch;
 use App\Models\Client;
+use App\Models\Setting;
 use App\Traits\Helpers;
 use App\Models\AclUpdate;
 use App\Models\RoleUpdate;
@@ -19,7 +20,6 @@ use App\Models\SettingUpdate;
 use App\Models\PermissionUpdate;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Spatie\Permission\Models\Permission;
 
 class AuditController extends Controller
@@ -116,7 +116,14 @@ class AuditController extends Controller
     public function userShow(Request $request, UserUpdate $userUpdate)
     {
         $user = $userUpdate->where('id', $request->user)->first();
-        $users = User::select('id', 'name')->withTrashed()->find(json_decode($user?->updates)?->user_id)?->toArray();
+        $ids = json_decode($user?->updates)?->user_id ?? [];
+        $usersId = [];
+        foreach ($ids as $userId) {
+            if ($userId !== 0 && !in_array($userId, $usersId)) {
+                array_push($usersId, $userId);
+            }
+        }
+        $users = User::select('id', 'name')->withTrashed()->find($usersId)?->toArray();
         $branches = Branch::select('id', 'name')->withTrashed()->find(collect(json_decode($user?->updates)?->branch_id)->collapse()->unique()->all())?->toArray();
         $updates = json_decode($user?->updates);
         if ($this->isSuperAdmin()) {

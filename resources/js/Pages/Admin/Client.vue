@@ -133,14 +133,13 @@ function restoreClient() {
                             <div class="grid xl:grid-cols-3 xl:gap-6">
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="hidden" name="id" id="id" v-model="client.id" />
-
                                     <input type="text" name="name" id="name" v-model="client.name"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " :readonly="!edit" />
                                     <label for="name"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Nome
                                     </label>
                                     <div v-if="usePage().props.errors.name" class="text-sm text-red-500">
@@ -150,11 +149,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="email" name="email" id="email" v-model="client.email"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " :readonly="!edit" />
                                     <label for="email"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         E-mail
                                     </label>
                                     <div v-if="usePage().props.errors.email" class="text-sm text-red-500">
@@ -164,11 +163,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" name="cpf" id="cpf" v-model="client.cpf"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " :readonly="!edit" />
                                     <label for="cpf"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         CPF
                                     </label>
                                     <div v-if="usePage().props.errors.cpf" class="text-sm text-red-500">
@@ -181,11 +180,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" name="cep" id="cep" v-model="client.cep"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " :readonly="!edit" />
                                     <label for="cep"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         CEP
                                     </label>
                                     <div v-if="usePage().props.errors.cep" class="text-sm text-red-500">
@@ -195,11 +194,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" name="address" id="address" v-model="client.address"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " required :readonly="!edit" />
                                     <label for="address"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Endereço
                                     </label>
                                     <div v-if="usePage().props.errors.address" class="text-sm text-red-500">
@@ -211,11 +210,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="text" name="phones" id="phones" v-model="client.phones"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " required :readonly="!edit" />
                                     <label for="phones"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Telefones
                                     </label>
                                     <div v-if="usePage().props.errors.phones" class="text-sm text-red-500">
@@ -224,7 +223,7 @@ function restoreClient() {
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
                                     <select name="branch_id" id="branch_id" v-model="client.branch_id"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         :disabled="!edit">
                                         <option value="" selected>selecione</option>
@@ -234,8 +233,8 @@ function restoreClient() {
                                         </option>
                                     </select>
                                     <label for="branch_id"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Unidade
                                     </label>
                                     <div v-if="usePage().props.errors.branch_id" class="text-sm text-red-500">
@@ -247,11 +246,11 @@ function restoreClient() {
                                 <div class="relative z-0 mb-6 w-full group">
                                     <textarea type="text" name="notes" id="notes" v-model="client.notes"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
                                         placeholder=" " required :readonly="!edit" />
                                     <label for="notes"
-                                        :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                        :class="$page.props.app.settingsStyles.main.formsStyles"
+                                        class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Observações
                                     </label>
                                     <div v-if="usePage().props.errors.notes" class="text-sm text-red-500">

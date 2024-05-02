@@ -253,7 +253,7 @@ class SettingStylesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        return true;
     }
 
     /**
@@ -268,12 +268,12 @@ class SettingStylesRequest extends FormRequest
             'bg_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
             'text_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
             'bg_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['innerSectionIcons'])), Rule::in($this->text_options)],
-            'link_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
-            'link_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
-            'linkHover_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
-            'linkHover_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
-            'textActive_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
-            'textActive_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
+            'link_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'link_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'linkHover_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'linkHover_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu'])), Rule::in($this->text_options)],
+            'textActive_light' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
+            'textActive_dark' => [Rule::requiredIf(fn () => !in_array($this->section, ['body', 'container', 'subSection', 'innerSection', 'formsStyles', 'innerSectionIcons', 'mainMenu', 'footer'])), Rule::in($this->text_options)],
         ];
     }
 

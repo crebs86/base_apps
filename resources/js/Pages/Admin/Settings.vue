@@ -1,11 +1,12 @@
 <script setup>
 import VueMultiselect from 'vue-multiselect';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
 import BodyStyles from './Settings/Styles/Body.vue';
 import ContainerStyles from './Settings/Styles/Container.vue';
 import SubSectionStyles from './Settings/Styles/SubSection.vue';
 import InnerSectionStyles from './Settings/Styles/InnerSection.vue';
+import FormsStyles from './Settings/Styles/FormsStyles.vue';
 import InnerSectionIconsStyles from './Settings/Styles/InnerSectionIcons.vue';
 import MainMenuStyles from './Settings/Styles/MainMenuStyles.vue';
 import { toast } from '@/toast'
@@ -306,7 +307,7 @@ function saveSettings() {
 }
 
 function saveStyles(section) {
-if (section === 'footer') {
+    if (section === 'footer') {
         stylesFooter.put(route('settings.update.styles', 'footer'), {
             onSuccess: () => {
                 if (usePage().props.flash.success) {
@@ -331,16 +332,16 @@ if (section === 'footer') {
 <template>
     <Head title="Configurações" />
 
-    <AuthenticatedLayout>
+    <SettingsLayout>
 
-        <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
+        <h1 class="text-lg font-bold text-center mb-2 text-gray-800 bg-gray-300 dark:bg-gray-400 mx-1.5 rounded flex justify-center">
             Configurações
         </h1>
-        <div class="p-0 dark:bg-gray-800 rounded-lg">
-            <div class="mx-auto dark:bg-gray-800 p-0.5 md:p-3 rounded-lg">
-                <div class="py-2 overflow-x-auto mt-2 bg-transparent">
+        <div class="p-0 rounded-lg bg-teal-50 dark:bg-slate-600 text-gray-800">
+            <div class="mx-auto p-0.5 md:p-3 rounded-lg">
+                <div class="py-2 overflow-x-auto mt-2">
                     <div
-                        class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg dark:bg-gray-800 dark:text-gray-300">
+                        class="align-middle inline-block min-w-full shadow overflow-hidden shadow-dashboard px-1 md:px-8 pt-1 rounded-bl-lg rounded-br-lg text-gray-800">
                         <div class="grid cols-1">
                             <div v-if="usePage().props.errors.canRegister" class="text-sm text-red-500">
                                 {{ usePage().props.errors.canRegister }}
@@ -575,21 +576,23 @@ if (section === 'footer') {
                 </div>
             </div>
         </div>
-        <h1 class="text-lg font-bold text-center my-2 text-gray-800 bg-gray-400 mx-1.5 rounded flex justify-center">
+        <h1 class="text-lg font-bold text-center mb-2 my-2 text-gray-800 bg-gray-300 dark:bg-gray-400 mx-1.5 rounded flex justify-center">
             Estilos
         </h1>
 
-        <BodyStyles :options="textOptions"/>
-        
-        <ContainerStyles :options="textOptions"/>
+        <BodyStyles :options="textOptions" />
 
-        <SubSectionStyles :options="textOptions"/>
+        <ContainerStyles :options="textOptions" />
 
-        <InnerSectionStyles :options="textOptions"/>
+        <SubSectionStyles :options="textOptions" />
 
-        <InnerSectionIconsStyles :options="textOptions"/>
+        <InnerSectionStyles :options="textOptions" />
 
-        <MainMenuStyles :options="textOptions"/>
+        <InnerSectionIconsStyles :options="textOptions" />
+
+        <FormsStyles :options="textOptions" />
+
+        <MainMenuStyles :options="textOptions" />
 
 
         <!-- Footer >> Rodapé -->
@@ -742,7 +745,7 @@ if (section === 'footer') {
                                     </footer>
                                 </div>
                             </div>
-                            <div class="relative mb-3 w-full text-center">
+                            <div class="relative mb-3 w-full">
                                 <button type="button" @click.prevent="saveStyles('footer')"
                                     class="border border-blue-500 bg-blue-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-300 focus:outline-none focus:shadow-outline">
                                     Salvar Estilos de <span class="italic underline">footer</span>
@@ -753,7 +756,7 @@ if (section === 'footer') {
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </SettingsLayout>
 </template>
 <style scoped>
 input:checked~.dot {

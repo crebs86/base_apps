@@ -13,8 +13,6 @@ const props = defineProps(
     }
 )
 
-
-
 const usersList = ref(props.users);
 const searchUsers = ref(props.keyword);
 
@@ -69,7 +67,7 @@ function search() {
             </svg>Buscar
         </button>
     </form>
-    <small class="text-blue-500 ml-2 dark:text-gray-300">Para buscas por nome ou e-mail insira ao menos 4
+    <small class="ml-2">Para buscas por nome ou e-mail insira ao menos 4
         caracteres
     </small>
     <InnerSection>
@@ -79,7 +77,7 @@ function search() {
                 <div class="overflow-x-auto">
                     <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                         <div v-if="usersList?.total > 0">
-                            <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
+                            <p class="text-sm leading-5">
                                 Exibindo de
                                 <span class="font-medium">{{ usersList.from }}</span>
                                 a
@@ -90,7 +88,7 @@ function search() {
                             </p>
                         </div>
                         <div v-else>
-                            <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">Nenhum resultado
+                            <p class="text-sm leading-5">Nenhum resultado
                                 encontrado</p>
                         </div>
                     </div>
@@ -107,18 +105,20 @@ function search() {
                             </nav>
                         </div>
                     </div>
+                    
                     <table class="min-w-full mb-2 dark:bg-gray-600">
                         <thead>
-                            <tr>
+                            <tr class="bg-slate-500">
                                 <th v-for="(value, index) in ['ID', 'Nome', 'E-mail', 'CPF', 'Situação', 'Ações']"
                                     :key="index + '' + value"
-                                    class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                    class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider text-gray-200">
                                     {{ value }}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-gray-600">
-                            <tr v-for="(v, i) in usersList?.data" :key="i">
+                        <tbody>
+                            <tr v-for="(v, i) in usersList?.data" :key="i"
+                                :class="i % 2 ? 'bg-slate-400 text-gray-100' : 'bg-slate-300 text-gray-700'">
                                 <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
                                     v-for="(value, index) in v" :key="i.id + '' + index">
                                     <template v-if="index === 'deleted_at'">
@@ -133,23 +133,28 @@ function search() {
                                         </span>
                                     </template>
                                     <template v-else>
-                                        <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                        <div class="text-sm leading-5">
                                             {{ value }}
                                         </div>
                                     </template>
                                 </td>
-                                <td
-                                    class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
+                                <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500">
                                     <div class="flex justify-center gap-1">
-                                        <Link v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.roles.list', v.id)">
+                                        <Link
+                                            v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])"
+                                            :href="route('admin.acl.users.roles.list', v.id)">
                                         <mdicon name="shield-account" class="text-green-600 hover:text-green-400"
                                             title="Detalhar Papéis" />
                                         </Link>
-                                        <Link v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.roles.show', v.id)">
+                                        <Link
+                                            v-if="has($page.props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar']) || has($page.props.auth.roles, ['Super Admin'])"
+                                            :href="route('admin.acl.users.roles.show', v.id)">
                                         <mdicon name="shield-edit" class="text-blue-600 hover:text-blue-400"
                                             title="Editar Papéis" />
                                         </Link>
-                                        <Link v-if="has($page.props.auth.permissions, ['Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('admin.acl.users.edit', v.id)">
+                                        <Link
+                                            v-if="has($page.props.auth.permissions, ['Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']) || has($page.props.auth.roles, ['Super Admin'])"
+                                            :href="route('admin.acl.users.edit', v.id)">
                                         <mdicon name="account-edit" class="text-yellow-400 hover:text-yellow-200"
                                             title="Editar Conta" />
                                         </Link>
@@ -160,7 +165,7 @@ function search() {
                     </table>
                     <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                         <div v-if="usersList?.total > 0">
-                            <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
+                            <p class="text-sm leading-5">
                                 Exibindo de
                                 <span class="font-medium">{{ usersList.from }}</span>
                                 a

@@ -80,13 +80,13 @@ function search() {
                 </button>
             </form>
             <div class="mx-0.5 p-1.5">
-                <label class="flex items-center dark:text-gray-300">
+                <label class="flex items-center">
                     <input type="checkbox" v-model="searchClients.includeTrash"
-                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-xs text-gray-600 dark:text-gray-300">Incluir contas desativadas</span>
+                        class="rounded border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <span class="ml-2 text-xs">Incluir contas desativadas</span>
                 </label>
             </div>
-            <small class="text-blue-500 ml-2 dark:text-gray-300">
+            <small class="ml-2">
                 Para buscas por nome ou e-mail insira ao menos 4 caracteres
             </small>
             <div class="py-0 px-0">
@@ -94,7 +94,7 @@ function search() {
                     <div class="overflow-x-auto">
                         <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                             <div v-if="clientsList?.total > 0">
-                                <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
+                                <p class="text-sm leading-5">
                                     Exibindo de
                                     <span class="font-medium">{{ clientsList.from }}</span>
                                     a
@@ -105,7 +105,7 @@ function search() {
                                 </p>
                             </div>
                             <div v-else>
-                                <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">Nenhum resultado
+                                <p class="text-sm leading-5">Nenhum resultado
                                     encontrado</p>
                             </div>
                         </div>
@@ -116,27 +116,28 @@ function search() {
                                         <div v-if="v.link === null" v-html="v.label"></div>
                                         <Link v-else :href="v.url" v-html="v.label"
                                             class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 dark:bg-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-300 dark:hover:text-gray-800"
-                                            :class="v.active ? 'bg-blue-300 text-blue-900 font-extrabold dark:bg-gray-100 dark:text-gray-800' : ''">
+                                            :class="v.active ? 'bg-blue-300 dark:bg-gray-100 text-gray-800' : ''">
                                         </Link>
                                     </template>
                                 </nav>
                             </div>
                         </div>
-                        <table class="min-w-full mb-2 dark:bg-gray-600">
+                        <table class="min-w-full mb-2">
                             <thead>
-                                <tr>
+                                <tr class="bg-slate-500">
                                     <th v-for="(value, index) in ['ID', 'Nome', 'E-mail', 'CPF', 'Ações']"
                                         :key="index + '' + value"
-                                        class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                        class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider text-slate-200">
                                         {{ value }}
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white dark:bg-gray-600">
-                                <tr v-for="(v, i) in clientsList?.data" :key="i">
+                            <tbody>
+                                <tr v-for="(v, i) in clientsList?.data" :key="i"
+                                    :class="i % 2 ? 'bg-slate-400 text-gray-100' : 'bg-slate-300 text-gray-700'">
                                     <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500"
                                         v-for="(value, index) in v" :key="i.id + '' + index">
-                                        <div class="text-sm leading-5 text-blue-900 dark:text-gray-300">
+                                        <div class="text-sm leading-5">
                                             {{ value }}
                                         </div>
                                     </td>
@@ -157,7 +158,7 @@ function search() {
                         </table>
                         <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans">
                             <div v-if="clientsList?.total > 0">
-                                <p class="text-sm leading-5 text-blue-700 dark:text-gray-300">
+                                <p class="text-sm leading-5">
                                     Exibindo de
                                     <span class="font-medium">{{ clientsList.from }}</span>
                                     a
@@ -168,7 +169,7 @@ function search() {
                                 </p>
                             </div>
                             <div v-else>
-                                <p class="text-sm leading-5 text-blue-700">Nenhum resultado encontrado</p>
+                                <p class="text-sm leading-5">Nenhum resultado encontrado</p>
                             </div>
                         </div>
                         <div class="sm:flex-1 sm:flex sm:items-center sm:justify-center mt-4 work-sans pb-4">
@@ -178,7 +179,7 @@ function search() {
                                         <div v-if="v.link === null" v-html="v.label"></div>
                                         <Link v-else :href="v.url" v-html="v.label"
                                             class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary dark:bg-gray-600 dark:text-gray-300"
-                                            :class="{ 'bg-blue-300 text-blue-900 font-extrabold dark:bg-white dark:text-gray-800': v.active }">
+                                            :class="{ 'bg-blue-300 dark:bg-white text-gray-800': v.active }">
                                         </Link>
                                     </template>
                                 </nav>

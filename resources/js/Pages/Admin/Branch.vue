@@ -125,11 +125,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="text" name="name" id="name" v-model="branch.name"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " :readonly="!edit" />
                                 <label for="name"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Nome
                                 </label>
                                 <div v-if="usePage().props.errors.name" class="text-sm text-red-500">
@@ -139,11 +137,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="email" name="email" id="email" v-model="branch.email"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " :readonly="!edit" />
                                 <label for="email"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     E-mail
                                 </label>
                                 <div v-if="usePage().props.errors.email" class="text-sm text-red-500">
@@ -156,11 +152,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="text" name="cep" id="cep" v-model="branch.cep"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " :readonly="!edit" />
                                 <label for="cep"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     CEP
                                 </label>
                                 <div v-if="usePage().props.errors.cep" class="text-sm text-red-500">
@@ -170,11 +164,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="text" name="address" id="address" v-model="branch.address"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " required :readonly="!edit" />
                                 <label for="address"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Endereço
                                 </label>
                                 <div v-if="usePage().props.errors.address" class="text-sm text-red-500">
@@ -186,11 +178,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="text" name="phones" id="phones" v-model="branch.phones"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " required :readonly="!edit" />
                                 <label for="phones"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Telefones
                                 </label>
                                 <div v-if="usePage().props.errors.phones" class="text-sm text-red-500">
@@ -200,11 +190,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <input type="text" name="cnpj" id="cnpj" v-model="branch.cnpj"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " :readonly="!edit" />
                                 <label for="cnpj"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     CNPJ
                                 </label>
                                 <div v-if="usePage().props.errors.cnpj" class="text-sm text-red-500">
@@ -216,11 +204,9 @@ function restoreBranch() {
                             <div class="relative z-0 mb-6 w-full group">
                                 <textarea type="text" name="notes" id="notes" v-model="branch.notes"
                                     class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
                                     placeholder=" " required :readonly="!edit" />
                                 <label for="notes"
-                                    :class="!edit ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-300'"
-                                    class="absolute text-sm duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-first:left-1 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Observações
                                 </label>
                                 <div v-if="usePage().props.errors.notes" class="text-sm text-red-500">
@@ -232,19 +218,19 @@ function restoreBranch() {
                             <small>
                                 Criado:
                                 {{
-                                    moment(usePage().props.branch.created_at).format('DD/MM/YYYY HH:mm:ss')
+                                    usePage().props.branch.created_at ? moment(usePage().props.branch.created_at).format('DD/MM/YYYY HH:mm:ss') : ''
                                 }}
                             </small>
                             <small>
                                 Atualizado:
                                 {{
-                                    moment(usePage().props.branch.updated_at).format('DD/MM/YYYY HH:mm:ss')
+                                    usePage().props.branch.updated_at ? moment(usePage().props.branch.updated_at).format('DD/MM/YYYY HH:mm:ss') : ''
                                 }}
                             </small>
                             <small v-show="(usePage().props.branch.deleted_at)">
                                 Desativado:
                                 {{
-                                    moment(usePage().props.branch.deleted_at).format('DD/MM/YYYY HH:mm:ss')
+                                    usePage().props.branch.deleted_at ? moment(usePage().props.branch.deleted_at).format('DD/MM/YYYY HH:mm:ss') : ''
                                 }}
                             </small>
                         </div>

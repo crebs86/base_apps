@@ -138,22 +138,22 @@ function loadData() {
                     <thead>
                         <tr>
                             <th
-                                class="px-3 py-1.5 md:px-6 md:py-3 bg-red-100 border-b-2 border-gray-300 text-center leading-4 tracking-wider dark:bg-red-300 text-gray-800">
+                                class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 leading-4 tracking-wider bg-red-300 text-gray-800 text-center">
                                 Coluna
                             </th>
                             <th v-for="(value, index) in permissionData?.updated_at" :key="index"
-                                class="px-3 py-1.5 md:px-6 md:py-3 bg-gray-100 border-b-2 border-gray-300 text-center leading-4 text-blue-500 tracking-wider dark:bg-gray-700 dark:text-gray-300">
+                                class="px-3 py-1.5 md:px-6 md:py-3 border-b-2 border-gray-300 text-center leading-4 tracking-wider bg-gray-500 text-gray-100">
                                 {{ moment(value).format('DD/MM/YYYY HH:mm:ss') }}
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white text-center dark:bg-gray-600">
+                    <tbody class="text-center bg-gray-500 text-gray-100">
                         <tr v-for="(v, i) in permissionData" :key="i">
                             <th
-                                class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center text-gray-800 bg-red-100 dark:bg-red-300">
+                                class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-400 text-center text-gray-800 bg-red-300">
                                 {{ labels[i] }}
                             </th>
-                            <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-500 text-center"
+                            <td class="px-3 py-1.5 md:px-6 md:py-3 whitespace-no-wrap border-b border-gray-400 text-center"
                                 v-for="(value, index) in v" :key="i + '' + index">
                                 <template v-if="i === 'user_id'">
                                     {{ users[value]['name'] }}

@@ -47,7 +47,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
         <div class="px-2 py-1 items-center justify-around " :class="showMenuItems">
             <div class="flex flex-col items-center">
                 <Link :href="route('dashboard')" :active="route().current('dashboard')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('dashboard') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="view-dashboard" title="Dashboard" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -58,7 +58,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             <div v-if="has(usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
             || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('admin.acl.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="shield-lock-outline" title="Controle de Acesso" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -69,7 +69,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             <div v-if="has(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
             || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('clients.index')" :active="route().current('clients.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('clients.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="account-heart" title="Clientes" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -79,9 +79,9 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             </div>
             <div v-if="has(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
             || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
-                <Link :href="route('branches.index')" :active="route().current('branches.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
-                    :class="route().current('branches.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
+                <Link :href="route('branches.index')" :active="route().current('branches.*') || route().current('nova-unidade')"
+                    class="col-span-1 flex flex-col items-center max-w-max"
+                    :class="route().current('branches.*') || route().current('nova-unidade') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="source-branch" title="Unidades" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
                     Unidades
@@ -91,7 +91,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
                 class="flex flex-col items-center">
                 <Link :href="route('settings.index')" :active="route().current('settings.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('settings.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="cog" title="Configurações" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -102,7 +102,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
                 class="flex flex-col items-center">
                 <Link :href="route('audit.index')" :active="route().current('audit.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('audit.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="lightbulb-on-outline" title="Auditar" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">
@@ -112,7 +112,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
             </div>
             <div class="flex flex-col items-center">
                 <Link :href="route('user.account')" :active="route().current('admin.*')"
-                    class="text-teal-100 col-span-1 flex flex-col items-center max-w-max"
+                    class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('user.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="account" title="Minha Conta" class="h-6 w-6" />
                 <span class="text-[9px] md:text-[14px] font-medium text-center">

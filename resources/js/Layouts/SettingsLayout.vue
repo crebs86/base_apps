@@ -5,14 +5,12 @@ import moment from 'moment';
 </script>
 
 <template>
-    <div :class="$page.props.app.settingsStyles.main.body">
-        <div class="h-full flex flex-col shadow-xl overflow-y-scroll mb-0.5 pb-4"
-            :class="$page.props.app.settingsStyles.main.layout">
+    <div class="bg-teal-100 text-teal-900 dark:bg-slate-700 dark:text-slate-100">
+        <div class="h-full flex flex-col shadow-xl overflow-y-scroll mb-0.5 pb-4 bg-teal-50 dark:bg-slate-600">
             <MainMenu />
             <!-- Page Content -->
             <slot name="inner_menu" />
-            <div class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg"
-                :class="$page.props.app.settingsStyles.main.container">
+            <div class="container mx-auto mt-1 text-justify px-0 md:px-3 rounded-lg bg-teal-100 dark:bg-slate-700">
                 <div class="p-2 md:p-4">
                     <slot />
                 </div>
