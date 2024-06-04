@@ -14,7 +14,7 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 ## Instalação
 - configurar banco de dados, cache e queue;
-- acesse a raiz do site e siga as instruções para instalação (instalação via url não funciona com o servidor imbutido do Laravel).
+- acesse a raiz do site e siga as instruções para instalação (instalação via url não funciona com o servidor embutido do Laravel).
 
 ## License
 
