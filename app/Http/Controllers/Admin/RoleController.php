@@ -73,10 +73,10 @@ class RoleController extends Controller
             /**
              * se papél não existir ou necessitar de privilégios elevados não designados ao usuário
              */
+
             if (
                 !isset($roleWithPermissions[0]) //papél existe
-                || !(array_intersect([$roleWithPermissions[0]['name']], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
-                    && $this->hasRole(config('crebs86.admin_roles_edit'))) //..e usuário tem privilégio?
+                || !verifyPermissionLevel([$roleWithPermissions[0]['name']], config('crebs86.admin_roles')) //é um papél protegido e usuário tem privilégio?
             ) {
                 return Inertia::render('Admin/403');
             }
@@ -116,8 +116,7 @@ class RoleController extends Controller
 
         if (
             $this->can('ACL Editar')
-            && array_intersect([$request->name], config('crebs86.admin_roles')) > 0 //é um papél protegido?...
-            && $this->hasRole(config('crebs86.admin_roles_edit')) //... e usuário possui privilégios?
+            && verifyPermissionLevel([$request->name], config('crebs86.admin_roles')) //é um papél protegido e usuário tem privilégio?
         ) {
             if ((int) getKeyValue($request->_checker, 'edit_role_permissions') === (int) $request->id) {
                 $request->validated();

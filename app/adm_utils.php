@@ -63,3 +63,33 @@ if (!function_exists('getSettingMustVerifyEmail')) {
         })->settings)->mustVerifyEmail[1];
     }
 }
+
+if (!function_exists('verifyPermissionLevel')) {
+    /**
+     * @return Setting
+     */
+    function verifyPermissionLevel(array $role, array $admin_role)
+    {
+        if (count(array_intersect($role, $admin_role)) > 0) {
+            //return 'if';
+            return auth()->user()->hasRole(config('crebs86.admin_roles_edit'));
+        } else {
+            //return 'else';
+            return true;
+        }
+    }
+}
+
+if (!function_exists('verifyUserLevel')) {
+    /**
+     * @return Setting
+     */
+    function verifyUserLevel(bool $role, array $admin_role)
+    {
+        if ($role) {
+            return auth()->user()->hasRole($admin_role);
+        } else {
+            return true;
+        }
+    }
+}

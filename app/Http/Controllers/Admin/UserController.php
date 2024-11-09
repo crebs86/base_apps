@@ -224,10 +224,10 @@ class UserController extends Controller
     public function editUserRole(Request $request): JsonResponse|User
     {
         $r = $request->all();
-        $hasNoPrivileges = !$this->hasRole(config('crebs86.admin_roles_edit'));
-        if (count(array_intersect($r['roles'], config('crebs86.admin_roles'))) > 0 && $hasNoPrivileges) {
-            return response()->json('Papéis de usuário: você não possui permissão para editar papél administrador', 403);
+        if (!verifyPermissionLevel($r['roles'], config('crebs86.admin_roles'))) {
+            return response()->json('Papéis de usuário: você não possui permissão para editar papél de administrador', 403);
         }
+        /** verifica se permissões são protegidas e se usuário tem permissão */
         if ($this->can('ACL Editar')) {
             if (getKeyValue($r['_checker'], 'edit_user_role') === $request->id) {
 
@@ -242,11 +242,13 @@ class UserController extends Controller
                         ]
                     )
                     ->first();
+                    
                 $before = array_merge(collect($user)->all(), ['roles' => [$user->roles->pluck('id', 'name')->all()]]);
 
-                if ($user->hasRole(config('crebs86.admin_roles')) && $hasNoPrivileges) {
+                if (!verifyUserLevel($user->hasRole(config('crebs86.admin_roles')), config('crebs86.admin_roles_edit'))) {
                     return response()->json('Papéis de usuário: você não possui permissão para editar usuário administrador', 403);
                 }
+                /** verifica se usuário editado é um administrador e se o usuário editor possui permissão para edita-lo*/
 
                 $return = $user->syncRoles($r['roles']);
 
@@ -381,12 +383,10 @@ class UserController extends Controller
         if ($this->can('Usuario Editar', 'Usuario Apagar')) {
 
             if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->user) {
-
                 $user = User::withTrashed()
                     ->find($request->user);
                 $user->branch_id = json_decode($user->branch_id);
                 $u = collect($user)->all();
-
                 $updated = $user->update(
                     [
                         'email' => $request->email,
