@@ -101,6 +101,7 @@ function userEmail(withoutCheck = false) {
 
 </script>
 <template>
+
     <Head title="Editar usuário" />
 
     <AuthenticatedLayout>
@@ -116,7 +117,8 @@ function userEmail(withoutCheck = false) {
                     <template #content>
                         <div class="p-0 rounded-lg">
                             <div class="pt-0.5" v-if="usePage().props.flash.info">
-                                <div class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
+                                <div
+                                    class="max-w-lg bg-yellow-500 text-sm text-white rounded-md shadow-lg mx-auto my-2">
                                     <div class="p-3 text-center">
                                         {{ usePage().props.flash.info }}
                                     </div>
@@ -151,7 +153,7 @@ function userEmail(withoutCheck = false) {
                                         </div>
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
-                                        <input type="email" name="email" id="email" v-model="user.email"
+                                        <input type="email" name="email" id="email" v-model="user.email" autocomplete="email"
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="email"
@@ -167,7 +169,7 @@ function userEmail(withoutCheck = false) {
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="cpf"
-                                        class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             CPF
                                         </label>
                                         <div v-if="usePage().props.errors.cpf" class="text-sm text-red-500">
@@ -181,7 +183,7 @@ function userEmail(withoutCheck = false) {
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="notes"
-                                        class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Observações
                                         </label>
                                         <div v-if="usePage().props.errors.notes" class="text-sm text-red-500">
@@ -199,7 +201,8 @@ function userEmail(withoutCheck = false) {
                                         </label>
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
-                                        <input type="password" name="password" id="password" v-model="user.password"
+                                        <input type="password" id="password" v-model="user.password"
+                                            autocomplete="new-password"
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="password"
@@ -211,10 +214,10 @@ function userEmail(withoutCheck = false) {
                                         </div>
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
-                                        <input type="password" name="password_confirmation" id="password_confirmation"
-                                            v-model="user.password_confirmation"
+                                        <input type="password" id="password_confirmation"
+                                            v-model="user.password_confirmation" autocomplete="new-password"
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                            placeholder=" " required />
+                                            placeholder="" required />
                                         <label for="password_confirmation"
                                             class="absolute text-sm dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-0 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Repetir Senha
@@ -246,8 +249,8 @@ function userEmail(withoutCheck = false) {
                                     <div class="relative z-0 mb-1 w-full group text-center">
                                         {{
                                             $page.props.user.email_verified_at ? 'Verificado em ' +
-                                        moment($page.props.user.email_verified_at).format('DD/MM/YYYY HH:mm:ss')
-                                            : ''
+                                                moment($page.props.user.email_verified_at).format('DD/MM/YYYY HH:mm:ss')
+                                                : ''
                                         }}
                                     </div>
                                     <div class="relative z-0 mb-3 w-full group text-center"

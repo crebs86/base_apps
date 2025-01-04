@@ -30,7 +30,7 @@ class UserController extends Controller
      * página inicial de controle de acesso de usuários
      *
      * @param Request $request
-     * 
+     *
      * @return Response
      */
     public function index(Request $request): Response
@@ -59,7 +59,7 @@ class UserController extends Controller
      * termos exatos: id e CPF.
      *
      * @param string $keyword
-     * 
+     *
      * @return LengthAwarePaginator
      */
     private function findUsers(string $keyword): LengthAwarePaginator
@@ -109,7 +109,7 @@ class UserController extends Controller
      * lança dados da pesquisa do usuário em um array
      *
      * @param User $user
-     * 
+     *
      * @return array
      */
     private function setUser(User $user): array
@@ -131,7 +131,7 @@ class UserController extends Controller
      * página exibe dados básicos do usuário e papéis vinculados a este
      *
      * @param Request $request
-     * 
+     *
      * @return Response
      */
     public function showUserAndRoles(Request $request): Response
@@ -177,7 +177,7 @@ class UserController extends Controller
      *
      * @param mixed $allRoles
      * @param mixed $r
-     * 
+     *
      * @return array
      */
     private function setCurrentRoles($allRoles, $r): array
@@ -199,7 +199,7 @@ class UserController extends Controller
      * busca papeis de usuários
      *
      * @param mixed $id
-     * 
+     *
      * @return User
      */
     private function getUserRoles($id): User
@@ -218,7 +218,7 @@ class UserController extends Controller
      * Sincroniza papéis dos usuários
      *
      * @param Request $request
-     * 
+     *
      * @return JsonResponse
      */
     public function editUserRole(Request $request): JsonResponse|User
@@ -242,7 +242,7 @@ class UserController extends Controller
                         ]
                     )
                     ->first();
-                    
+
                 $before = array_merge(collect($user)->all(), ['roles' => [$user->roles->pluck('id', 'name')->all()]]);
 
                 if (!verifyUserLevel($user->hasRole(config('crebs86.admin_roles')), config('crebs86.admin_roles_edit'))) {
@@ -341,7 +341,7 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * 
+     *
      * @return Response
      */
     public function edit(Request $request): Response
@@ -375,7 +375,7 @@ class UserController extends Controller
      * atualiza usuário com dados recebidos do formulário
      *
      * @param UserRequest $request
-     * 
+     *
      * @return Response
      */
     public function update(UserRequest $request): Response|RedirectResponse
@@ -401,7 +401,7 @@ class UserController extends Controller
                 if ($updated) {
                     //se sucesso na atualização do usuário e pedido de reset de senha.
                     if ($request->password) {
-                        $password = $user->forceFill([
+                        $user->forceFill([
                             'password' => Hash::make($request->password)
                         ])->save();
                     }
@@ -426,7 +426,7 @@ class UserController extends Controller
      * marca e-mail como verificado
      *
      * @param Request $request
-     * 
+     *
      * @return Response
      */
     public function userVerifyEmail(Request $request): Response|RedirectResponse
@@ -435,13 +435,14 @@ class UserController extends Controller
             if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
                 $user = User::withTrashed()
                     ->find($request->id);
+                $user->branch_id = json_decode($user->branch_id);
                 $u = collect($user)->all();
                 if ($user->update(
                     [
                         'email_verified_at' => now()
                     ]
                 )) {
-                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at']) : null;
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at'], ['branch_id']) : null;
                     return redirect()->back()->with('success', 'Email verificardo com sucesso');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
@@ -457,7 +458,7 @@ class UserController extends Controller
      * envia link de verificação de e-mail para o endereço cadastrado
      *
      * @param Request $request
-     * 
+     *
      * @return [type]
      */
     public function requireEmailVerification(Request $request)
@@ -466,13 +467,14 @@ class UserController extends Controller
             if ((int) getKeyValue($request->_checker, 'edit_user_account') === (int) $request->id) {
                 $user = User::withTrashed()
                     ->find($request->id);
+                $user->branch_id = json_decode($user->branch_id);
                 $u = collect($user)->all();
                 if ($user->update(
                     [
                         'email_verified_at' => null
                     ]
                 )) {
-                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at']) : null;
+                    $this->auditable('users') ? $this->saveUpdates($u, $user, UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at'], ['branch_id']) : null;
                     return redirect()->back()->with('success', 'Usuário deverá fazer login e solicitar link de verificação de e-mail');
                 } else {
                     return redirect()->back()->with('error', 'Erro ao solicitar verificação de e-mail');
@@ -497,7 +499,7 @@ class UserController extends Controller
      * atualiza os dados do usuário
      *
      * @param Request $request
-     * 
+     *
      * @return Response
      */
     public function updateAccount(Request $request): Response
@@ -515,7 +517,8 @@ class UserController extends Controller
             'email' => $request->email,
             'email_verified_at' => $request->user()->email === $request->email ? $request->user()->email_verified_at : null
         ]);
-        $this->auditable('users') ? $this->saveUpdates($account, $request->user(), UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at']) : null;
+        $request->user()->branch_id = json_decode($request->user()->branch_id);
+        $this->auditable('users') ? $this->saveUpdates($account, $request->user(), UserUpdate::class, ['name', 'email', 'cpf', 'email_verified_at', 'notes', 'deleted_at', 'branch_id', 'updated_at'], ['branch_id']) : null;
 
         return Inertia::render('Admin/Account', [
             'message' => 'Sua conta foi atualizada!'
@@ -526,7 +529,7 @@ class UserController extends Controller
      * atualiza senha
      *
      * @param Request $request
-     * 
+     *
      * @return [type]
      */
     public function updatePassword(Request $request)

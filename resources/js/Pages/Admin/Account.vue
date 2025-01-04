@@ -114,7 +114,7 @@ function updatePassword() {
                                         </div>
                                     </div>
                                     <div class="relative z-0 mb-6 w-full group">
-                                        <input type="email" name="email" id="email" v-model="user.email"
+                                        <input type="email" name="email" id="email" v-model="user.email" autocomplete="email"
                                             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" " required />
                                         <label for="email"
@@ -154,7 +154,7 @@ function updatePassword() {
                             <div class="grid xl:grid-cols-3 xl:gap-6">
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="password" name="current_password" id="current_password"
-                                        v-model="password.current_password"
+                                        v-model="password.current_password" autocomplete="new-password"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
                                     <label for="current_password"
@@ -166,7 +166,7 @@ function updatePassword() {
                                     </div>
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
-                                    <input type="password" name="password" id="password" v-model="password.password"
+                                    <input type="password" name="password" id="password" v-model="password.password" autocomplete="new-password"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
                                     <label for="password"
@@ -179,7 +179,7 @@ function updatePassword() {
                                 </div>
                                 <div class="relative z-0 mb-6 w-full group">
                                     <input type="password" name="password_confirmation" id="password_confirmation"
-                                        v-model="password.password_confirmation"
+                                        v-model="password.password_confirmation" autocomplete="new-password"
                                         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" " required />
                                     <label for="password_confirmation"
