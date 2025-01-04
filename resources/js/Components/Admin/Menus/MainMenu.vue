@@ -1,11 +1,11 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import has from '@/arrayHelpers';
 
 const numberMenuItems = ref(2);
-const classNumberMenuItems = ref('7');
-onMounted: {
+const classNumberMenuItems = ref(2);
+onMounted(() => {
     if (has(
         usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar']
     )
@@ -34,13 +34,13 @@ onMounted: {
         numberMenuItems.value++
     }
     classNumberMenuItems.value = numberMenuItems.value > 7 ? parseInt(numberMenuItems.value / 2) : numberMenuItems.value;
-}
-const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
+})
+const showMenuItems = computed(() => 'grid grid-cols-' + classNumberMenuItems.value);
 
 </script>
 <template>
     <div class="shadow-lg pb-1 rounded-b-3xl min-w-full md:min-w-[50%] lg:min-w-[35%] mx-auto"
-    :class="$page.props.app.settingsStyles.mainMenu.body">
+        :class="$page.props.app.settingsStyles.mainMenu.body">
         <div class="flex rounded-b-3xl bg-gray-100 dark:bg-gray-700 space-y-5 flex-col items-center text-[10px]">
             Olá, {{ usePage().props.auth.user.name }}!
         </div>
@@ -56,7 +56,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="has(usePage().props.auth.permissions, ['ACL Editar', 'ACL Ver', 'ACL Criar', 'ACL Apagar', 'Usuario Editar', 'Usuario Ver', 'Usuario Criar', 'Usuario Apagar'])
-            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+                || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('admin.acl.acl')" :active="route().current('admin.acl.*')"
                     class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('admin.acl.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -67,7 +67,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="has(usePage().props.auth.permissions, ['Cliente Editar', 'Cliente Ver', 'Cliente Criar', 'Cliente Apagar'])
-            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+                || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('clients.index')" :active="route().current('clients.*')"
                     class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('clients.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -78,8 +78,9 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </Link>
             </div>
             <div v-if="has(usePage().props.auth.permissions, ['Unidade Editar', 'Unidade Ver', 'Unidade Criar', 'Unidade Apagar'])
-            || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
-                <Link :href="route('branches.index')" :active="route().current('branches.*') || route().current('nova-unidade')"
+                || has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
+                <Link :href="route('branches.index')"
+                    :active="route().current('branches.*') || route().current('nova-unidade')"
                     class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('branches.*') || route().current('nova-unidade') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
                 <mdicon name="source-branch" title="Unidades" class="h-6 w-6" />
@@ -88,8 +89,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
-                class="flex flex-col items-center">
+            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('settings.index')" :active="route().current('settings.*')"
                     class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('settings.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
@@ -99,8 +99,7 @@ const showMenuItems = 'grid grid-cols-' + classNumberMenuItems.value;
                 </span>
                 </Link>
             </div>
-            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])"
-                class="flex flex-col items-center">
+            <div v-if="has(usePage().props.auth.roles, ['Super Admin'])" class="flex flex-col items-center">
                 <Link :href="route('audit.index')" :active="route().current('audit.*')"
                     class="col-span-1 flex flex-col items-center max-w-max"
                     :class="route().current('audit.*') ? $page.props.app.settingsStyles.mainMenu.iconsActive : $page.props.app.settingsStyles.mainMenu.icons">
