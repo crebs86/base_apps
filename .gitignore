@@ -20,3 +20,10 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+
+/app/instalar
+/app/_instalar
+/bootstrap/ssr
+/bootstrap/public
+Testes.vue
+worker.log
