@@ -4,7 +4,8 @@ import { Link, Head, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SubSection from '@/Components/Admin/SubSection.vue';
 import InnerSection from '@/Components/Admin/InnerSection.vue';
-
+import has from "@/arrayHelpers.js";
+    
 </script>
 <template>
     <Head title="Unidades" />
