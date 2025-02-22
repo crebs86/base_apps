@@ -65,7 +65,7 @@ import InnerSection from '@/Components/Admin/InnerSection.vue';
                                                     <mdicon name="source-branch-check"
                                                         class="text-green-600 hover:text-green-400" title="Ver Filial" />
                                                     </Link>
-                                                    <Link :href="route('branches.edit', v.id)">
+                                                    <Link v-if="has($page.props.auth.permissions ,['Unidade Editar']) || has($page.props.auth.roles, ['Super Admin'])" :href="route('branches.edit', v.id)">
                                                     <mdicon name="source-branch-sync"
                                                         class="text-yellow-400 hover:text-yellow-200"
                                                         :title="'Editar filial' + v.name" />
